@@ -1,0 +1,9 @@
+name,role,country,country_code,method,amount,wallet,email
+Diego Hernández,Mobile Engineer,Mexico,MX,USDC,4400,0x3f5CE5FBFe3E9af3971dD833D26bA9b5C936f0bE,diego.hernandez@example.com
+Priya Nair,QA Lead,India,IN,USDT,3600,0x8ba1f109551bD432803012645Ac136ddd64DBA72,priya.nair@example.com
+Tomás Becker,DevOps Engineer,Argentina,AR,USDC,4800,0x71C7656EC7ab88b098defB751B7401B5f6d8976F,tomas.becker@example.com
+Nia Achebe,Brand Designer,Nigeria,NG,USDT,3300,0x2546BcD3c84621e976D8185a91A922aE77ECEc30,nia.achebe@example.com
+Camille Dubois,Content Strategist,France,FR,EUR Bank,3900,,camille.dubois@example.com
+Kenji Watanabe,iOS Engineer,Japan,JP,USDC,6100,0xbDA5747bFD65F08deb54cb465eB87D40e51B197E,kenji.watanabe@example.com
+Maria Santos,Customer Success,Philippines,PH,USDT,2400,0xdD2FD4581271e230360230F9337D5c0430Bf44C0,maria.santos@example.com
+"Okafor, Chidi",Data Engineer,Ghana,GH,USDC,5200,0xcd3B766CCDd6AE721141F452C550Ca635964ce71,chidi.okafor@example.com
