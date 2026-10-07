@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Logo } from './Logo'
 import { IconDashboard, IconPayroll, IconTreasury, IconTeam, IconTx, IconReports, IconSettings, IconChevronDown, IconX } from './Icons'
@@ -25,6 +25,36 @@ const themeOptions: { id: Theme; label: string }[] = [
 ]
 
 const DESKTOP_QUERY = '(min-width: 1024px)'
+const RESTORE_DELAY_MS = 400
+
+/**
+ * Deferred "focus the new view's heading" after navigating from the mobile drawer.
+ * Only one restoration can be pending; it is cancelled on demand and on unmount, and it
+ * never steals focus from an open dialog (command palette, shortcut help).
+ */
+function useHeadingFocusRestore() {
+  const timerRef = useRef<number | null>(null)
+  const cancel = useCallback(() => {
+    if (timerRef.current !== null) {
+      window.clearTimeout(timerRef.current)
+      timerRef.current = null
+    }
+  }, [])
+  const schedule = useCallback(() => {
+    cancel()
+    timerRef.current = window.setTimeout(() => {
+      timerRef.current = null
+      const active = document.activeElement
+      if (active instanceof Element && active.closest('[role="dialog"]')) return
+      const target = document.querySelector<HTMLElement>('main h1') ?? document.querySelector<HTMLElement>('main')
+      if (!target) return
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1')
+      target.focus({ preventScroll: true })
+    }, RESTORE_DELAY_MS)
+  }, [cancel])
+  useEffect(() => cancel, [cancel])
+  return useMemo(() => ({ schedule, cancel }), [schedule, cancel])
+}
 
 export function Sidebar() {
   const { view, setView, navigate, toast, paletteOpen, setPaletteOpen, theme, setTheme, sidebarOpen, setSidebarOpen } = useApp()
@@ -32,9 +62,13 @@ export function Sidebar() {
   const menuRef = useRef<HTMLDivElement>(null)
   const asideRef = useRef<HTMLElement>(null)
   const returnFocusRef = useRef<HTMLElement | null>(null)
+  // True only while the mobile drawer session (focus trap) is active.
+  const drawerSessionRef = useRef(false)
+  // True when a nav item was chosen during the current drawer session.
   const navigatingRef = useRef(false)
+  const headingRestore = useHeadingFocusRestore()
   const goView = (v: View) => {
-    navigatingRef.current = true
+    if (drawerSessionRef.current) navigatingRef.current = true
     setView(v)
   }
   const isMac = typeof navigator !== 'undefined' && /Mac/.test(navigator.platform)
@@ -60,6 +94,9 @@ export function Sidebar() {
     if (!sidebarOpen) return
     const mq = window.matchMedia(DESKTOP_QUERY)
     if (mq.matches) return
+    headingRestore.cancel()
+    drawerSessionRef.current = true
+    navigatingRef.current = false
     returnFocusRef.current = document.activeElement as HTMLElement | null
     const aside = asideRef.current
     const focusables = () =>
@@ -98,25 +135,24 @@ export function Sidebar() {
       mq.removeEventListener('change', onChange)
       window.clearTimeout(focusTimer)
       const prev = returnFocusRef.current
+      const navigated = navigatingRef.current
       returnFocusRef.current = null
-      if (navigatingRef.current) {
+      drawerSessionRef.current = false
+      navigatingRef.current = false
+      if (navigated) {
         // The outgoing view (and its menu button) unmounts; land on the new view's heading.
-        navigatingRef.current = false
-        window.setTimeout(() => {
-          const target = document.querySelector<HTMLElement>('main h1') ?? document.querySelector<HTMLElement>('main')
-          if (!target) return
-          if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1')
-          target.focus({ preventScroll: true })
-        }, 400)
+        headingRestore.schedule()
       } else if (prev && document.body.contains(prev)) {
         prev.focus()
       }
     }
-  }, [sidebarOpen, setSidebarOpen])
+  }, [sidebarOpen, setSidebarOpen, headingRestore])
 
   useEffect(() => {
-    if (paletteOpen && sidebarOpen) setSidebarOpen(false)
-  }, [paletteOpen, sidebarOpen, setSidebarOpen])
+    if (!paletteOpen) return
+    headingRestore.cancel()
+    if (sidebarOpen) setSidebarOpen(false)
+  }, [paletteOpen, sidebarOpen, setSidebarOpen, headingRestore])
 
   const onThemeKey = (e: React.KeyboardEvent, i: number) => {
     const keys: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }
