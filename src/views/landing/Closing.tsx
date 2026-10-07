@@ -2,6 +2,7 @@ import { Logo } from '../../components/Logo'
 import { Button } from '../../components/UI'
 import { useApp } from '../../context/AppContext'
 import { preloadView } from '../../preload'
+import { onPlainClick } from '../../lib/plainClick'
 import { Container, GitHubIcon, REPO_URL } from './shared'
 
 export function FinalCta() {
@@ -53,13 +54,13 @@ export function Footer() {
         </div>
         <p className="text-[13px] text-text-muted">Prototype. No real funds move.</p>
         <div className="flex flex-wrap items-center gap-x-5 gap-y-1 self-start sm:self-auto">
-          <button
-            type="button"
-            onClick={() => navigate('download')}
+          <a
+            href="/download"
+            onClick={onPlainClick(() => navigate('download'))}
             className="inline-flex h-9 items-center rounded-[6px] text-[13px] text-text-secondary hover:text-text-primary focus-ring"
           >
             Download
-          </button>
+          </a>
           <a
             href={`${REPO_URL}/releases`}
             target="_blank"

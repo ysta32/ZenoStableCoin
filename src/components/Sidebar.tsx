@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Logo } from './Logo'
 import { IconDashboard, IconPayroll, IconTreasury, IconTeam, IconTx, IconReports, IconSettings, IconChevronDown, IconX } from './Icons'
+import { onPlainClick } from '../lib/plainClick'
 import { useApp, View, Theme } from '../context/AppContext'
 import { preloadView } from '../preload'
 
@@ -318,12 +319,13 @@ export function Sidebar() {
           </button>
           <div className="flex items-center justify-between px-1 text-[11px] text-text-muted">
             <p>Prototype · mock data</p>
-            <button
-              onClick={() => navigate('download')}
+            <a
+              href="/download"
+              onClick={onPlainClick(() => navigate('download'))}
               className="focus-ring rounded-control underline-offset-2 transition-colors hover:text-text-primary hover:underline"
             >
               Get the app
-            </button>
+            </a>
           </div>
         </div>
       </aside>

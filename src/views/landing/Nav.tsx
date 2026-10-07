@@ -3,6 +3,7 @@ import { Logo } from '../../components/Logo'
 import { Button } from '../../components/UI'
 import { useApp } from '../../context/AppContext'
 import { preloadView } from '../../preload'
+import { onPlainClick } from '../../lib/plainClick'
 import { Container, GitHubIcon, LIClose, LIMenu, LIMoon, LISun, REPO_URL } from './shared'
 
 const LINKS = [
@@ -81,13 +82,13 @@ export function Nav() {
         </nav>
         <div className="hidden items-center gap-1.5 md:flex">
           <ThemeToggle />
-          <button
-            type="button"
-            onClick={() => navigate('download')}
+          <a
+            href="/download"
+            onClick={onPlainClick(() => navigate('download'))}
             className="inline-flex h-9 items-center rounded-[6px] px-3 text-[14px] text-text-secondary transition-colors hover:bg-text-primary/[0.05] hover:text-text-primary focus-ring"
           >
             Download
-          </button>
+          </a>
           <a
             href={REPO_URL}
             target="_blank"
@@ -133,16 +134,13 @@ export function Nav() {
                   </li>
                 ))}
                 <li className="border-b border-border-subtle">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setOpen(false)
-                      navigate('download')
-                    }}
+                  <a
+                    href="/download"
+                    onClick={onPlainClick(() => navigate('download'), () => setOpen(false))}
                     className="flex h-12 w-full items-center text-[16px] text-text-primary focus-ring"
                   >
                     Download
-                  </button>
+                  </a>
                 </li>
                 <li className="border-b border-border-subtle">
                   <a

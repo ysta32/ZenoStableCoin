@@ -24,6 +24,8 @@ function swPrecache(): Plugin {
       if (!existsSync(swPath) || !existsSync(assetsDir)) return
       const assets = readdirSync(assetsDir)
         .filter((f) => /\.(js|css|woff2?|ttf|otf|svg|png|webp)$/.test(f))
+        // Fonts: precache only the latin subsets; other subsets load lazily via unicode-range.
+        .filter((f) => !/\.woff2?$/.test(f) || (f.includes('-latin-') && !f.includes('-latin-ext-')))
         .sort()
         .map((f) => `/assets/${f}`)
       const html = readFileSync(path.join(dist, 'index.html'))
