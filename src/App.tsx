@@ -6,6 +6,7 @@ import { ToastHost } from './components/Toast'
 import { CommandPalette } from './components/CommandPalette'
 import { ShortcutHelp } from './components/ShortcutHelp'
 import { ErrorBoundary } from './components/ErrorBoundary'
+import { NotFound } from './views/NotFound'
 
 const Landing = lazy(() => import('./views/Landing').then((m) => ({ default: m.Landing })))
 const Dashboard = lazy(() => import('./views/Dashboard').then((m) => ({ default: m.Dashboard })))
@@ -77,6 +78,16 @@ function Shell() {
           <Suspense fallback={<div className="h-screen bg-bg-base" />}>
             <Landing />
           </Suspense>
+        </motion.div>
+      ) : route === 'notfound' ? (
+        <motion.div
+          key="notfound"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <NotFound />
         </motion.div>
       ) : (
         <motion.div

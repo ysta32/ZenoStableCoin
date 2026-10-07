@@ -10,9 +10,11 @@ export type Member = {
   amount: number
   initials: string
   avatarColor: string
+  wallet?: string
+  email?: string
 }
 
-export type ActivityType = 'Payroll' | 'Yield' | 'Deposit' | 'Swap'
+export type ActivityType = 'Payroll' | 'Yield' | 'Deposit' | 'Swap' | 'Withdrawal'
 
 export type Activity = {
   id: string
@@ -22,6 +24,33 @@ export type Activity = {
   date: string
   createdAt?: number
 }
+
+export type PayrollRecipient = {
+  memberId: string
+  name: string
+  method: Method
+  amount: number
+  txHash: string
+  status: 'sent' | 'failed'
+}
+
+export type PayrollRun = {
+  id: string
+  clientRunId: string
+  createdAt: number
+  total: number
+  fee: number
+  recipients: PayrollRecipient[]
+}
+
+export type PayrollRunInput = {
+  clientRunId: string
+  total: number
+  fee: number
+  recipients: Array<Omit<PayrollRecipient, 'txHash'> & { txHash?: string }>
+}
+
+export type Theme = 'light' | 'dark' | 'system'
 
 export const team: Member[] = [
   { id: '1', name: 'Ana Silva', role: 'Lead Engineer', country: 'Brazil', countryCode: 'BR', method: 'USDC', amount: 4200, initials: 'AS', avatarColor: 'bg-emerald-600' },
