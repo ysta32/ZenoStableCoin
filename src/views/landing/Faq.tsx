@@ -65,7 +65,7 @@ const QA: { q: string; a: ReactNode }[] = [
 
 export function Faq() {
   return (
-    <Section id="faq" n="07" label="FAQ" title="Straight answers." lead="If something here is unclear, open an issue on GitHub.">
+    <Section id="faq" n="06" label="FAQ" title="Straight answers." lead="If something here is unclear, open an issue on GitHub.">
       <div className="border-t border-border-subtle">
         {QA.map(({ q, a }) => (
           <details key={q} className="group border-b border-border-subtle">

@@ -20,13 +20,13 @@ test('landing renders every section and opens the dashboard', async ({ page }) =
     'The parts of payroll that usually hurt.',
     'A small API shaped like your payroll.',
     'Side by side.',
-    'Who is building it.',
     'Straight answers.',
     'Run a payroll end to end, in the browser.',
   ]
   for (const name of headings) {
     await expect(page.getByRole('heading', { name, exact: true })).toBeVisible()
   }
+  await expect(page.getByRole('heading', { name: 'Who is building it.' })).toHaveCount(0)
   await page.getByRole('banner').getByRole('button', { name: 'Open the demo' }).click()
   await expect(page).toHaveURL('/app')
   await expect(page.getByRole('heading', { name: 'Dashboard', exact: true })).toBeVisible()
