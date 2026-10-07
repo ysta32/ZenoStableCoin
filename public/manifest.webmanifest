@@ -1,0 +1,21 @@
+{
+  "name": "Zeno — Stablecoin payroll",
+  "short_name": "Zeno",
+  "description": "An open-source prototype of stablecoin payroll for teams paying contractors worldwide. Not a production financial service.",
+  "id": "/app",
+  "start_url": "/app",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F6F5F1",
+  "theme_color": "#0B5D45",
+  "categories": ["finance", "business"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Run payroll", "short_name": "Payroll", "url": "/app/payroll", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "Treasury", "short_name": "Treasury", "url": "/app/treasury", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }] }
+  ]
+}

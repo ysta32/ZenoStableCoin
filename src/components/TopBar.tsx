@@ -3,8 +3,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useApp } from '../context/AppContext'
 import { IconRotate, IconCheck, IconX } from './Icons'
 
-export function TopBar({ title, children }: { title: string; children?: ReactNode }) {
-  const { resetDemo, isExecuting, toast } = useApp()
+export function TopBar({ title, subtitle, children }: { title: string; subtitle?: string; children?: ReactNode }) {
+  const { resetDemo, isExecuting, toast, sidebarOpen, setSidebarOpen } = useApp()
   const [armed, setArmed] = useState(false)
   const armTimerRef = useRef<number | null>(null)
 
@@ -36,11 +36,27 @@ export function TopBar({ title, children }: { title: string; children?: ReactNod
   }
 
   return (
-    <div className="flex items-center justify-between border-b border-border-subtle px-8 py-4">
-      <h1 className="text-[18px] font-semibold">{title}</h1>
-      <div className="flex items-center gap-3">
+    <div className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-border-subtle bg-bg-base px-4 py-3 sm:px-6 lg:px-8 lg:py-4">
+      <div className="flex min-w-0 items-center gap-2">
+        <button
+          onClick={() => setSidebarOpen(true)}
+          className="focus-ring -ml-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-control text-text-secondary hover:bg-bg-inset hover:text-text-primary lg:hidden"
+          aria-label="Open menu"
+          aria-controls="app-sidebar"
+          aria-expanded={sidebarOpen}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" />
+          </svg>
+        </button>
+        <div className="min-w-0">
+          <h1 className="truncate font-display text-[22px] font-medium leading-tight text-text-primary sm:text-[26px]">{title}</h1>
+          {subtitle && <p className="truncate text-[13px] text-text-muted">{subtitle}</p>}
+        </div>
+      </div>
+      <div className="flex flex-wrap items-center gap-2 max-sm:w-full sm:gap-3">
         {children}
-        <div className="ml-1 relative">
+        <div className="relative">
           <AnimatePresence mode="wait" initial={false}>
             {armed ? (
               <motion.div
@@ -49,12 +65,12 @@ export function TopBar({ title, children }: { title: string; children?: ReactNod
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.96 }}
                 transition={{ duration: 0.12 }}
-                className="flex items-center gap-1.5 rounded-lg border border-rose-500/40 bg-rose-500/10 px-1.5 py-1 text-[11.5px]"
+                className="flex items-center gap-1.5 rounded-control border border-negative/40 bg-negative-soft px-1.5 py-1 text-[12px]"
               >
-                <span className="px-1.5 text-rose-300">Reset demo?</span>
+                <span className="px-1.5 text-negative">Reset demo?</span>
                 <button
                   onClick={cancel}
-                  className="inline-flex h-6 items-center gap-1 rounded-md px-2 text-text-muted transition-colors hover:bg-white/[0.04] hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-white/30"
+                  className="focus-ring inline-flex h-7 items-center gap-1 rounded-[5px] px-2 text-text-secondary transition-colors hover:bg-bg-inset hover:text-text-primary"
                   aria-label="Cancel reset"
                 >
                   <IconX width={11} height={11} /> Cancel
@@ -62,7 +78,7 @@ export function TopBar({ title, children }: { title: string; children?: ReactNod
                 <button
                   onClick={confirm}
                   autoFocus
-                  className="inline-flex h-6 items-center gap-1 rounded-md bg-rose-500/80 px-2 text-white transition-colors hover:bg-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50"
+                  className="focus-ring inline-flex h-7 items-center gap-1 rounded-[5px] bg-negative px-2 text-text-inverse transition-colors hover:opacity-90"
                   aria-label="Confirm reset"
                 >
                   <IconCheck width={11} height={11} /> Confirm
@@ -77,7 +93,7 @@ export function TopBar({ title, children }: { title: string; children?: ReactNod
                 transition={{ duration: 0.12 }}
                 onClick={arm}
                 disabled={isExecuting}
-                className="group inline-flex items-center gap-1.5 rounded-lg border border-border-subtle bg-transparent px-2.5 py-1.5 text-[11.5px] text-text-muted transition-colors hover:border-brand-500/40 hover:text-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500/40 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-border-subtle disabled:hover:text-text-muted"
+                className="focus-ring group inline-flex h-9 items-center gap-1.5 rounded-control border border-border-subtle bg-transparent px-2.5 text-[12px] text-text-muted transition-colors hover:border-border hover:text-text-primary disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-border-subtle disabled:hover:text-text-muted"
                 title={isExecuting ? 'Reset disabled while payroll is executing' : 'Reset demo state'}
                 aria-label="Reset demo"
                 aria-disabled={isExecuting}

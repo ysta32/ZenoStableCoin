@@ -1,42 +1,62 @@
 /** @type {import('tailwindcss').Config} */
+// "Ledger" design system. Colors resolve to CSS variables defined in
+// src/styles.css (:root = light, :root.dark = dark) so opacity modifiers
+// such as `bg-brand-500/10` keep working.
+const v = (name) => `rgb(var(--${name}) / <alpha-value>)`
+
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
         bg: {
-          base: '#0a0b0d',
-          surface: '#121317',
-          elevated: '#17181c',
-          sidebar: '#0e0f12',
+          base: v('bg-base'),
+          surface: v('bg-surface'),
+          elevated: v('bg-elevated'),
+          sidebar: v('bg-sidebar'),
+          inset: v('bg-inset'),
         },
         border: {
-          subtle: '#23252b',
-          DEFAULT: '#2a2c33',
+          subtle: v('border-subtle'),
+          DEFAULT: v('border'),
         },
         text: {
-          primary: '#e7e9ec',
-          secondary: '#a1a5ad',
-          muted: '#6b6f78',
+          primary: v('text-primary'),
+          secondary: v('text-secondary'),
+          muted: v('text-muted'),
+          inverse: v('text-inverse'),
         },
         brand: {
-          50: '#e9fcef',
-          300: '#6ee7a3',
-          400: '#3bd77a',
-          500: '#22c55e',
-          600: '#16a34a',
-          700: '#0f7a38',
+          50: v('brand-50'),
+          300: v('brand-300'),
+          400: v('brand-400'),
+          500: v('brand-500'),
+          600: v('brand-600'),
+          700: v('brand-700'),
         },
         info: {
-          500: '#3b82f6',
+          500: v('info'),
         },
+        positive: { DEFAULT: v('positive'), soft: v('positive-soft') },
+        negative: { DEFAULT: v('negative'), soft: v('negative-soft') },
+        warning: { DEFAULT: v('warning'), soft: v('warning-soft') },
       },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+        display: ['Newsreader', 'ui-serif', 'Georgia', 'serif'],
+        sans: ['Geist', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+        mono: ['"Geist Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+      },
+      borderRadius: {
+        control: '6px',
+        card: '10px',
       },
       boxShadow: {
-        'glow-green': '0 0 0 1px rgba(34,197,94,0.25), 0 8px 24px -12px rgba(34,197,94,0.4)',
+        card: '0 1px 2px rgb(0 0 0 / 0.04)',
+        pop: '0 1px 2px rgb(0 0 0 / 0.06), 0 8px 24px -6px rgb(0 0 0 / 0.14)',
+      },
+      transitionTimingFunction: {
+        out: 'cubic-bezier(0.16, 1, 0.3, 1)',
       },
     },
   },

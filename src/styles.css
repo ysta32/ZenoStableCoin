@@ -2,8 +2,74 @@
 @tailwind components;
 @tailwind utilities;
 
+/* "Ledger" tokens. Values are space-separated RGB channels so Tailwind can
+   apply opacity: rgb(var(--x) / <alpha>). See docs/DESIGN.md. */
 :root {
+  color-scheme: light;
+
+  --bg-base: 246 245 241;       /* #F6F5F1 paper */
+  --bg-surface: 255 255 255;    /* #FFFFFF */
+  --bg-elevated: 251 250 248;   /* #FBFAF8 */
+  --bg-sidebar: 240 238 232;    /* #F0EEE8 */
+  --bg-inset: 239 237 231;      /* #EFEDE7 */
+
+  --border-subtle: 231 228 220; /* #E7E4DC */
+  --border: 217 213 202;        /* #D9D5CA */
+
+  --text-primary: 22 24 27;     /* #16181B */
+  --text-secondary: 86 91 98;   /* #565B62 */
+  --text-muted: 104 108 114;    /* #686C72, AA on all light surfaces */
+  --text-inverse: 255 255 255;  /* on brand / primary fills */
+
+  --brand-50: 232 241 237;      /* #E8F1ED */
+  --brand-300: 121 181 157;     /* #79B59D */
+  --brand-400: 31 122 92;       /* #1F7A5C */
+  --brand-500: 11 93 69;        /* #0B5D45 */
+  --brand-600: 8 74 55;         /* #084A37 */
+  --brand-700: 6 56 41;         /* #063829 */
+
+  --info: 43 92 158;            /* #2B5C9E */
+
+  --positive: 23 120 79;        /* #17784F */
+  --positive-soft: 231 242 236; /* #E7F2EC */
+  --negative: 180 35 24;        /* #B42318 */
+  --negative-soft: 251 234 232; /* #FBEAE8 */
+  --warning: 161 92 7;          /* #A15C07 */
+  --warning-soft: 251 240 223;  /* #FBF0DF */
+}
+
+:root.dark {
   color-scheme: dark;
+
+  --bg-base: 15 17 16;          /* #0F1110 */
+  --bg-surface: 21 24 23;       /* #151817 */
+  --bg-elevated: 27 30 29;      /* #1B1E1D */
+  --bg-sidebar: 18 21 20;       /* #121514 */
+  --bg-inset: 11 13 12;         /* #0B0D0C */
+
+  --border-subtle: 36 40 38;    /* #242826 */
+  --border: 47 52 49;           /* #2F3431 */
+
+  --text-primary: 236 237 233;  /* #ECEDE9 */
+  --text-secondary: 166 171 166;/* #A6ABA6 */
+  --text-muted: 133 139 133;    /* #858B85, AA on all dark surfaces */
+  --text-inverse: 15 17 16;     /* #0F1110 on light-green fills */
+
+  --brand-50: 19 38 31;         /* #13261F */
+  --brand-300: 154 219 192;     /* #9ADBC0 */
+  --brand-400: 111 203 166;     /* #6FCBA6 */
+  --brand-500: 76 184 143;      /* #4CB88F */
+  --brand-600: 58 157 120;      /* #3A9D78 */
+  --brand-700: 42 122 92;       /* #2A7A5C */
+
+  --info: 122 167 224;          /* #7AA7E0 */
+
+  --positive: 76 184 143;       /* #4CB88F */
+  --positive-soft: 20 42 33;    /* #142A21 */
+  --negative: 240 113 106;      /* #F0716A */
+  --negative-soft: 46 23 22;    /* #2E1716 */
+  --warning: 224 165 75;        /* #E0A54B */
+  --warning-soft: 44 34 20;     /* #2C2214 */
 }
 
 html, body, #root {
@@ -12,7 +78,12 @@ html, body, #root {
 
 body {
   @apply bg-bg-base text-text-primary font-sans antialiased;
-  font-feature-settings: 'cv11', 'ss01';
+  font-feature-settings: 'ss01';
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgb(var(--brand-500) / 0.18);
 }
 
 /* Hide number spinner */
@@ -25,19 +96,42 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
+@layer components {
+  /* Money, percentages, counts, KPI figures: Geist with tabular figures.
+     Hashes, addresses, code and key hints use `font-mono tabular-nums` instead. */
+  .num {
+    @apply font-sans tabular-nums;
+    font-feature-settings: 'tnum' 1, 'zero' 0;
+    letter-spacing: -0.01em;
+  }
+
+  /* Uppercase section label. Use sparingly. */
+  .eyebrow {
+    @apply text-[11px] font-medium uppercase text-text-muted;
+    letter-spacing: 0.08em;
+  }
+
+  /* Visible 2px brand focus ring with offset (keyboard focus only). */
+  .focus-ring {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base;
+  }
+}
+
 .hairline {
-  background-image: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent);
+  background-color: rgb(var(--border-subtle));
   height: 1px;
 }
 
-.grid-bg {
-  background-image:
-    linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
-  background-size: 40px 40px;
-  background-position: -1px -1px;
-}
+/* Legacy decorative helpers, intentionally neutralized under "Ledger"
+   (no grid backgrounds, no glows). Kept so existing markup does not break. */
+.grid-bg {}
+.glow-radial {}
 
-.glow-radial {
-  background: radial-gradient(60% 50% at 50% 0%, rgba(34,197,94,0.18) 0%, rgba(34,197,94,0) 60%);
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

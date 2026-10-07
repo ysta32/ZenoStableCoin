@@ -2,16 +2,34 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // Pre-paint theme: avoid a flash of the wrong theme before React mounts.
+      ;(function () {
+        var t = 'light'
+        try {
+          var s = localStorage.getItem('zeno.theme')
+          if (s === 'light' || s === 'dark' || s === 'system') t = s
+        } catch (e) {}
+        var dark = t === 'dark' || (t === 'system' && !!window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        if (dark) document.documentElement.classList.add('dark')
+      })()
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Zeno" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0a0b0d" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F6F5F1" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F1110" />
+    <meta name="color-scheme" content="light dark" />
     <title>Zeno — Stablecoin payroll for global teams</title>
-    <meta name="description" content="Pay global contractors in under 3 minutes at 0.2% — versus 2–7% and 3–5 days with SWIFT." />
+    <meta name="description" content="An open-source prototype of stablecoin payroll for teams paying contractors worldwide." />
     <meta name="author" content="Zeno Labs" />
     <meta property="og:title" content="Zeno — Stablecoin payroll for global teams" />
-    <meta property="og:description" content="Pay global contractors in under 3 minutes at 0.2% — versus 2–7% and 3–5 days with SWIFT." />
+    <meta property="og:description" content="An open-source prototype of stablecoin payroll for teams paying contractors worldwide." />
     <meta property="og:site_name" content="Zeno" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="/og-cover.svg" />
@@ -20,23 +38,27 @@
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Zeno — Stablecoin payroll for global teams" />
-    <meta name="twitter:description" content="Pay global contractors in under 3 minutes at 0.2% — versus 2–7% and 3–5 days with SWIFT." />
+    <meta name="twitter:description" content="An open-source prototype of stablecoin payroll for teams paying contractors worldwide." />
     <meta name="twitter:image" content="/og-cover.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+    <style>
+      /* Splash-only tokens; mirror src/styles.css so the splash matches before CSS loads. */
+      html { --splash-bg: #F6F5F1; --splash-fg: #565B62; --splash-mark: #0B5D45; background: var(--splash-bg); }
+      html.dark { --splash-bg: #0F1110; --splash-fg: #A6ABA6; --splash-mark: #4CB88F; }
+      @keyframes zenoFade { to { opacity: 1 } }
+      @media (prefers-reduced-motion: reduce) { .zeno-splash { animation: none !important; opacity: 1 !important } }
+    </style>
   </head>
-  <body style="margin:0;background:#0a0b0d;color:#e7e9ec;font-family:Inter,system-ui,sans-serif">
+  <body style="margin:0">
     <div id="root">
       <div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center">
-        <div style="display:flex;align-items:center;gap:12px;opacity:0;animation:zenoFade 0.35s ease-out 0.25s forwards">
-          <div style="width:32px;height:32px;border-radius:8px;background:#22c55e;display:flex;align-items:center;justify-content:center">
-            <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="#0a0b0d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 10h12l-9 12h9"/></svg>
-          </div>
-          <span style="font-size:15px;font-weight:500;letter-spacing:-0.2px">Loading Zeno…</span>
+        <div class="zeno-splash" style="color:var(--splash-fg);font-family:Geist,ui-sans-serif,system-ui,sans-serif;display:flex;align-items:center;gap:10px;opacity:0;animation:zenoFade 0.2s ease-out 0.25s forwards">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="color:var(--splash-mark)"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M3 12A9 9 0 0 0 21 12Z" fill="currentColor"/></svg>
+          <span style="font-size:14px;font-weight:500">Loading Zeno</span>
         </div>
       </div>
-      <style>@keyframes zenoFade{to{opacity:1}}</style>
     </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

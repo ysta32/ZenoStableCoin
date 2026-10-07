@@ -6,15 +6,16 @@ import { ToastHost } from './components/Toast'
 import { CommandPalette } from './components/CommandPalette'
 import { ShortcutHelp } from './components/ShortcutHelp'
 import { ErrorBoundary } from './components/ErrorBoundary'
+import { NotFound } from './views/NotFound'
 
 const Landing = lazy(() => import('./views/Landing').then((m) => ({ default: m.Landing })))
 const Dashboard = lazy(() => import('./views/Dashboard').then((m) => ({ default: m.Dashboard })))
 const Payroll = lazy(() => import('./views/Payroll').then((m) => ({ default: m.Payroll })))
 const Treasury = lazy(() => import('./views/Treasury').then((m) => ({ default: m.Treasury })))
-const Team = lazy(() => import('./views/Simple').then((m) => ({ default: m.Team })))
-const Transactions = lazy(() => import('./views/Simple').then((m) => ({ default: m.Transactions })))
-const Reports = lazy(() => import('./views/Simple').then((m) => ({ default: m.Reports })))
-const Settings = lazy(() => import('./views/Simple').then((m) => ({ default: m.Settings })))
+const Team = lazy(() => import('./views/Team').then((m) => ({ default: m.Team })))
+const Transactions = lazy(() => import('./views/Transactions').then((m) => ({ default: m.Transactions })))
+const Reports = lazy(() => import('./views/Reports').then((m) => ({ default: m.Reports })))
+const Settings = lazy(() => import('./views/Settings').then((m) => ({ default: m.Settings })))
 
 function ViewFallback() {
   return <div className="h-full bg-bg-base" />
@@ -77,6 +78,16 @@ function Shell() {
           <Suspense fallback={<div className="h-screen bg-bg-base" />}>
             <Landing />
           </Suspense>
+        </motion.div>
+      ) : route === 'notfound' ? (
+        <motion.div
+          key="notfound"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <NotFound />
         </motion.div>
       ) : (
         <motion.div

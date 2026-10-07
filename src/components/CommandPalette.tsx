@@ -11,12 +11,13 @@ type Action = {
 }
 
 export function CommandPalette() {
-  const { setView, goToPayroll, resetDemo, navigate, toast, isExecuting, paletteOpen: open, setPaletteOpen: setOpen } = useApp()
+  const { setView, goToPayroll, resetDemo, navigate, toast, isExecuting, setTheme, paletteOpen: open, setPaletteOpen: setOpen } = useApp()
   const [query, setQuery] = useState('')
   const [idx, setIdx] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLUListElement>(null)
   const lastFocusedRef = useRef<HTMLElement | null>(null)
+  const dialogRef = useRef<HTMLDivElement>(null)
 
   const actions = useMemo<Action[]>(() => {
     const goView = (v: View, label: string, shortcutKey: string): Action => ({
@@ -47,9 +48,25 @@ export function CommandPalette() {
           resetDemo()
         },
       },
+      {
+        id: 'theme',
+        label: 'Toggle theme',
+        hint: 'Action',
+        run: () => {
+          const dark = document.documentElement.classList.contains('dark')
+          setTheme(dark ? 'light' : 'dark')
+        },
+      },
+      { id: 'deposit', label: 'Deposit', hint: 'Action', run: () => setView('treasury') },
+      {
+        id: 'github',
+        label: 'Open GitHub repo',
+        hint: 'Link',
+        run: () => { window.open('https://github.com/ysta32/ZenoStableCoin', '_blank', 'noopener,noreferrer') },
+      },
       { id: 'home', label: 'Back to landing page', hint: 'Navigate', run: () => navigate('landing') },
     ]
-  }, [setView, goToPayroll, resetDemo, navigate, toast, isExecuting])
+  }, [setView, goToPayroll, resetDemo, navigate, toast, isExecuting, setTheme])
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -84,6 +101,18 @@ export function CommandPalette() {
     setIdx(0)
     const t = window.setTimeout(() => inputRef.current?.focus(), 30)
     return () => clearTimeout(t)
+  }, [open])
+
+  // Trap Tab inside the dialog (focus entry and restore are handled above).
+  useEffect(() => {
+    if (!open) return
+    const onTab = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return
+      e.preventDefault()
+      inputRef.current?.focus()
+    }
+    window.addEventListener('keydown', onTab)
+    return () => window.removeEventListener('keydown', onTab)
   }, [open])
 
   // Keep highlight in bounds when filter changes
@@ -136,7 +165,7 @@ export function CommandPalette() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.12 }}
-          className="fixed inset-0 z-[200] flex items-start justify-center bg-black/50 backdrop-blur-[2px] pt-[14vh]"
+          className="fixed inset-0 z-[200] flex items-start justify-center bg-text-primary/40 px-4 pt-[14vh]"
           onClick={() => setOpen(false)}
         >
           <motion.div
@@ -145,8 +174,10 @@ export function CommandPalette() {
             exit={{ opacity: 0, scale: 0.97, y: -6 }}
             transition={{ duration: 0.16, ease: 'easeOut' }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-[560px] overflow-hidden rounded-xl border border-border-subtle bg-bg-elevated shadow-2xl"
+            className="w-full max-w-[560px] overflow-hidden rounded-card border border-border-subtle bg-bg-surface shadow-pop"
+            ref={dialogRef}
             role="dialog"
+            aria-modal="true"
             aria-label="Command palette"
           >
             <div className="flex items-center gap-3 border-b border-border-subtle px-4">
@@ -164,7 +195,7 @@ export function CommandPalette() {
                 aria-label="Search commands"
                 className="h-12 flex-1 bg-transparent text-[14px] text-text-primary placeholder:text-text-muted outline-none"
               />
-              <kbd className="hidden rounded border border-border-subtle bg-white/[0.04] px-1.5 py-0.5 font-mono text-[10.5px] text-text-muted sm:inline">esc</kbd>
+              <kbd className="hidden rounded border border-border-subtle bg-bg-inset px-1.5 py-0.5 font-mono tabular-nums text-[10.5px] text-text-muted sm:inline">esc</kbd>
             </div>
 
             <ul ref={listRef} className="max-h-[320px] overflow-y-auto py-1.5">
@@ -183,12 +214,12 @@ export function CommandPalette() {
                       setOpen(false)
                     }}
                     className={[
-                      'mx-1.5 flex cursor-pointer items-center justify-between rounded-md px-3 py-2 text-[13.5px]',
-                      active ? 'bg-brand-500/10 text-text-primary' : 'text-text-secondary hover:bg-white/[0.03]',
+                      'mx-1.5 flex cursor-pointer items-center justify-between rounded-control min-h-[36px] px-3 py-2 text-[13.5px]',
+                      active ? 'bg-bg-inset text-text-primary' : 'text-text-secondary hover:bg-bg-inset',
                     ].join(' ')}
                   >
                     <span className="flex items-center gap-2.5">
-                      <span className={`flex h-5 w-5 items-center justify-center rounded ${active ? 'bg-brand-500/20 text-brand-400' : 'bg-white/[0.04] text-text-muted'}`}>
+                      <span className={`flex h-5 w-5 items-center justify-center rounded ${active ? 'bg-brand-50 text-brand-500' : 'bg-bg-inset text-text-muted'}`}>
                         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M5 12h14M13 5l7 7-7 7" />
                         </svg>
@@ -197,16 +228,16 @@ export function CommandPalette() {
                     </span>
                     <span className="flex items-center gap-2">
                       {a.shortcut && (
-                        <span className="hidden font-mono text-[10.5px] text-text-muted sm:inline">{a.shortcut}</span>
+                        <span className="hidden font-mono tabular-nums text-[10.5px] text-text-muted sm:inline">{a.shortcut}</span>
                       )}
-                      <span className="font-mono text-[10.5px] uppercase tracking-wider text-text-muted">{a.hint}</span>
+                      <span className="font-mono tabular-nums text-[10.5px] uppercase tracking-wider text-text-muted">{a.hint}</span>
                     </span>
                   </li>
                 )
               })}
             </ul>
 
-            <div className="flex items-center justify-between border-t border-border-subtle bg-white/[0.015] px-4 py-2 text-[11px] text-text-muted">
+            <div className="flex items-center justify-between border-t border-border-subtle bg-bg-elevated px-4 py-2 text-[11px] text-text-muted">
               <div className="flex items-center gap-3">
                 <KbHint>↑↓</KbHint>
                 <span>navigate</span>
@@ -228,7 +259,7 @@ export function CommandPalette() {
 
 function KbHint({ children }: { children: React.ReactNode }) {
   return (
-    <kbd className="rounded border border-border-subtle bg-white/[0.04] px-1.5 py-0.5 font-mono text-[10.5px] text-text-muted">
+    <kbd className="rounded border border-border-subtle bg-bg-inset px-1.5 py-0.5 font-mono tabular-nums text-[10.5px] text-text-muted">
       {children}
     </kbd>
   )
