@@ -22,6 +22,7 @@ function Slider({
   hint,
   value,
   display,
+  valueText,
   min,
   max,
   step,
@@ -31,6 +32,7 @@ function Slider({
   hint: string
   value: number
   display: string
+  valueText?: string
   min: number
   max: number
   step: number
@@ -54,7 +56,7 @@ function Slider({
         max={max}
         step={step}
         value={value}
-        aria-valuetext={display}
+        aria-valuetext={valueText ?? display}
         onChange={(e) => onChange(Number(e.target.value))}
         className="mt-3 h-6 w-full cursor-pointer accent-brand-500 focus-ring rounded-[4px]"
       />
@@ -89,7 +91,9 @@ function Linkified({ text }: { text: string }) {
 
 export function Calculator() {
   const [contractors, setContractors] = useState(25)
-  const [payroll, setPayroll] = useState(120_000)
+  // Keep the raw slider position so arrow keys always move; the amount is derived and rounded.
+  const [payrollPos, setPayrollPos] = useState(() => posFromPayroll(120_000))
+  const payroll = payrollFromPos(payrollPos)
   const [idle, setIdle] = useState(400_000)
 
   const rows = useMemo(
@@ -129,6 +133,7 @@ export function Calculator() {
             hint="Paid once a month"
             value={contractors}
             display={String(contractors)}
+            valueText={`${contractors} contractor${contractors === 1 ? '' : 's'}`}
             min={1}
             max={200}
             step={1}
@@ -137,18 +142,20 @@ export function Calculator() {
           <Slider
             label="Monthly payroll"
             hint="Total sent per month, $5k to $2M"
-            value={posFromPayroll(payroll)}
+            value={payrollPos}
             display={formatUSD(payroll)}
+            valueText={`${formatUSD(payroll)} per month`}
             min={0}
             max={STEPS}
             step={1}
-            onChange={(p) => setPayroll(payrollFromPos(p))}
+            onChange={setPayrollPos}
           />
           <Slider
             label="Idle balance"
             hint={`Held between runs, earning an assumed ${(ASSUMED_APY * 100).toFixed(1)}% APY`}
             value={idle}
             display={formatUSD(idle)}
+            valueText={`${formatUSD(idle)} idle balance`}
             min={0}
             max={5_000_000}
             step={25_000}
@@ -182,10 +189,10 @@ export function Calculator() {
                     <td className="hidden py-3 pr-3 text-[13px] text-text-secondary sm:table-cell">{settlement[r.id]}</td>
                     <td className="num py-3 text-right text-text-primary">{formatUSD(r.annualFees)}</td>
                     <td className={`num hidden py-3 text-right min-[480px]:table-cell ${r.yieldEarned > 0 ? 'text-positive' : 'text-text-muted'}`}>
-                      {r.yieldEarned > 0 ? formatUSD(-r.yieldEarned) : '—'}
+                      {r.yieldEarned > 0 ? formatUSD(r.yieldEarned, { sign: true }) : '—'}
                     </td>
                     <td className={`num py-3 text-right font-medium ${r.net < 0 ? 'text-positive' : 'text-text-primary'}`}>
-                      {formatUSD(r.net)}
+                      {r.net < 0 ? `${formatUSD(-r.net)} gain` : formatUSD(r.net)}
                     </td>
                   </tr>
                 ))}
@@ -193,7 +200,7 @@ export function Calculator() {
             </table>
           </div>
           <p className="mt-3 text-[12.5px] text-text-muted">
-            Net = fees minus yield. A negative net means modeled yield exceeds fees. Illustrative. Not a quote.
+            Net = fees minus yield. When modeled yield exceeds fees, net is shown as a gain. Illustrative. Not a quote.
           </p>
           <ol className="mt-6 space-y-2 border-t border-border-subtle pt-4 text-[12px] leading-[1.55] text-text-muted">
             {PROVIDERS.map((p, i) => (

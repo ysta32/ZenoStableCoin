@@ -142,7 +142,7 @@ export function HowItWorks() {
     >
       <ol className="border-t border-border-subtle">
         {STEPS.map((s, i) => (
-          <li key={s.title} className="grid gap-x-10 gap-y-5 border-b border-border-subtle py-8 sm:py-10 lg:grid-cols-12">
+          <li key={s.title} className="grid gap-x-10 gap-y-5 border-b border-border-subtle py-8 last:border-b-0 last:pb-0 sm:py-10 sm:last:pb-0 lg:grid-cols-12">
             <div className="num pt-1 text-[13px] text-text-muted lg:col-span-1">{String(i + 1).padStart(2, '0')}</div>
             <div className="lg:col-span-4">
               <h3 className="font-display text-[24px] leading-tight tracking-[-0.01em] text-text-primary">{s.title}</h3>
