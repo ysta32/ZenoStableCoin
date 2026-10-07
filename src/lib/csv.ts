@@ -1,6 +1,7 @@
 import type { Member } from '../data'
 
 type TeamRow = Pick<Member, 'name' | 'role' | 'country' | 'countryCode' | 'method' | 'amount'> & {
+  line: number
   wallet?: string
   email?: string
 }
@@ -143,6 +144,7 @@ export function parseTeamCsv(text: string): { rows: TeamRow[]; errors: CsvError[
       continue
     }
     rows.push({
+      line: record.line,
       name: value('name'),
       role: value('role'),
       country: value('country'),

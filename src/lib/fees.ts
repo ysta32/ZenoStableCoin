@@ -39,7 +39,7 @@ export const PROVIDERS: Provider[] = [
     name: 'SWIFT',
     feePct: [1, 3],
     flatPerPayment: 37.5,
-    settlement: '1–5 business days',
+    settlement: '1–5 business days (illustrative)',
     note: 'Illustrative $25–50 wire fee (midpoint $37.50) plus 1–3% FX spread; bank and intermediary fees vary. Bank of America publishes a $45 USD international wire fee and notes FX markups for foreign-currency wires; the combined model is not its tariff. Source: https://info.bankofamerica.com/en/digital-banking/wire-transfers',
   },
 ]

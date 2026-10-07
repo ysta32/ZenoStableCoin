@@ -20,7 +20,7 @@ describe('toCsv', () => {
 describe('parseTeamCsv', () => {
   it('parses a complete row and numeric amount', () => {
     expect(parseTeamCsv(`${header}\n${row}`)).toEqual({
-      rows: [{ name: 'Ana', role: 'Engineer', country: 'Brazil', countryCode: 'BR', method: 'USDC', amount: 4200 }],
+      rows: [{ line: 2, name: 'Ana', role: 'Engineer', country: 'Brazil', countryCode: 'BR', method: 'USDC', amount: 4200 }],
       errors: [],
     })
   })
@@ -48,6 +48,11 @@ describe('parseTeamCsv', () => {
     const wallet = `0x${'a'.repeat(40)}`
     expect(parseTeamCsv(`${header},wallet,email\n${row},${wallet},ana@example.com`).rows[0])
       .toMatchObject({ wallet, email: 'ana@example.com' })
+  })
+  it.each(['\n', '\r\n', '\r'])('tracks record start lines after multiline fields with %j', (newline) => {
+    const result = parseTeamCsv(`${header}${newline}"Ana${newline}Silva",Engineer,Brazil,BR,USDC,42${newline}${row}`)
+    expect(result.rows.map(({ line }) => line)).toEqual([2, 4])
+    expect(result.errors).toEqual([])
   })
   it('omits blank optional fields', () => {
     const result = parseTeamCsv(`${header},wallet,email\n${row},,`)
