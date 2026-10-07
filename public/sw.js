@@ -1,15 +1,17 @@
-const VERSION = 'v1'
+// Replaced at build time by the zeno-sw-precache plugin (vite.config.ts).
+const VERSION = '__BUILD__'
+const BUILD_ASSETS = [] /*__PRECACHE__*/
 const CACHE = `zeno-${VERSION}`
-const FONTS = `zeno-fonts-${VERSION}`
+const FONTS = 'zeno-fonts'
 const PRECACHE = [
   '/',
-  '/app',
   '/manifest.webmanifest',
   '/favicon.svg',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
   '/icons/maskable-512.png',
   '/icons/apple-touch-icon-180.png',
+  ...BUILD_ASSETS,
 ]
 
 self.addEventListener('install', (event) => {
