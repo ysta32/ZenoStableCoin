@@ -12,10 +12,10 @@ const Landing = lazy(() => import('./views/Landing').then((m) => ({ default: m.L
 const Dashboard = lazy(() => import('./views/Dashboard').then((m) => ({ default: m.Dashboard })))
 const Payroll = lazy(() => import('./views/Payroll').then((m) => ({ default: m.Payroll })))
 const Treasury = lazy(() => import('./views/Treasury').then((m) => ({ default: m.Treasury })))
-const Team = lazy(() => import('./views/Simple').then((m) => ({ default: m.Team })))
-const Transactions = lazy(() => import('./views/Simple').then((m) => ({ default: m.Transactions })))
-const Reports = lazy(() => import('./views/Simple').then((m) => ({ default: m.Reports })))
-const Settings = lazy(() => import('./views/Simple').then((m) => ({ default: m.Settings })))
+const Team = lazy(() => import('./views/Team').then((m) => ({ default: m.Team })))
+const Transactions = lazy(() => import('./views/Transactions').then((m) => ({ default: m.Transactions })))
+const Reports = lazy(() => import('./views/Reports').then((m) => ({ default: m.Reports })))
+const Settings = lazy(() => import('./views/Settings').then((m) => ({ default: m.Settings })))
 
 function ViewFallback() {
   return <div className="h-full bg-bg-base" />
