@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, ReactNode } from 'react'
+import { parseBackup, serializeBackup, type Persisted } from '../lib/backup'
 import { isFiniteNum, isMethod, isObj, isPayrollRun } from '../lib/persistGuards'
 import { team as seedTeam, treasury as seedTreasury, recentActivity as seedActivity, Member, Method, Activity, ActivityType, PayrollRun, PayrollRunInput, Theme } from '../data'
 
@@ -37,15 +38,6 @@ function parseLocation(pathname: string): Loc {
 
 const pathForView = (v: View) => (v === 'dashboard' ? '/app' : `/app/${v}`)
 
-type Persisted = {
-  team: Member[]
-  activity: Activity[]
-  payrollRuns: PayrollRun[]
-  treasuryBalance: number
-  treasuryYieldMtd: number
-  defaultMethod: Method
-}
-
 const isOptStr = (x: unknown) => x === undefined || typeof x === 'string'
 const isMember = (x: unknown): x is Member =>
   isObj(x) &&
@@ -72,6 +64,15 @@ const isActivity = (x: unknown): x is Activity =>
   (x.createdAt === undefined || isFiniteNum(x.createdAt))
 const arrayOf = <T,>(x: unknown, guard: (v: unknown) => v is T): T[] | null =>
   Array.isArray(x) && x.every(guard) ? (x as T[]) : null
+const isPersisted = (x: unknown): x is Persisted =>
+  isObj(x) &&
+  arrayOf(x.team, isMember) !== null &&
+  arrayOf(x.activity, isActivity) !== null &&
+  arrayOf(x.payrollRuns, isPayrollRun) !== null &&
+  isFiniteNum(x.treasuryBalance) &&
+  x.treasuryBalance >= 0 &&
+  isFiniteNum(x.treasuryYieldMtd) &&
+  isMethod(x.defaultMethod)
 
 function readJson(key: string): unknown {
   try {
@@ -201,6 +202,8 @@ type Ctx = {
   setPaletteOpen: (v: boolean) => void
 
   resetDemo: () => void
+  exportState: () => string
+  importState: (json: string) => { ok: true } | { ok: false; error: string }
 }
 
 const AppCtx = createContext<Ctx | null>(null)
@@ -482,24 +485,39 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return run
   }, [addTransaction])
 
-  const resetDemo = useCallback(() => {
-    setTeam(seedTeam)
+  const applyState = useCallback((p: Persisted) => {
+    setTeam(p.team)
     setPayrollStep(0)
     setAuthorized(false)
-    setActivity(seedActivity)
-    setPayrollRuns([])
-    payrollRunsRef.current = []
-    setDefaultMethod('USDC')
-    setTreasuryBalance(seedTreasury.balance)
-    setTreasuryYieldMtd(seedTreasury.yieldMtd)
-    balanceTargetRef.current = seedTreasury.balance
-    balanceRef.current = seedTreasury.balance
-    try {
-      window.localStorage.removeItem(STATE_KEY)
-      window.localStorage.removeItem(LEGACY_TEAM_KEY)
-    } catch {}
+    setActivity(p.activity)
+    setPayrollRuns(p.payrollRuns)
+    payrollRunsRef.current = p.payrollRuns
+    setDefaultMethod(p.defaultMethod)
+    setTreasuryBalance(p.treasuryBalance)
+    setTreasuryYieldMtd(p.treasuryYieldMtd)
+    balanceTargetRef.current = p.treasuryBalance
+    balanceRef.current = p.treasuryBalance
+    snapshotRef.current = p
+    savePersisted(p)
+  }, [])
+
+  const resetDemo = useCallback(() => {
+    applyState(seedState())
     toast('Demo reset', 'green')
-  }, [toast])
+  }, [applyState, toast])
+
+  const exportState = useCallback(
+    () => serializeBackup({ team, activity, payrollRuns, treasuryBalance, treasuryYieldMtd, defaultMethod }),
+    [team, activity, payrollRuns, treasuryBalance, treasuryYieldMtd, defaultMethod],
+  )
+
+  const importState = useCallback((json: string): { ok: true } | { ok: false; error: string } => {
+    const res = parseBackup(json, isPersisted)
+    if (!res.ok) return res
+    applyState(res.state)
+    toast('Backup imported', 'green')
+    return { ok: true }
+  }, [applyState, toast])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -521,8 +539,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     theme, setTheme,
     toasts, toast, dismissToast,
     paletteOpen, setPaletteOpen,
-    resetDemo,
-  }), [route, navigate, view, setView, goToPayroll, sidebarOpen, team, replaceTeam, defaultMethod, setAmount, addMember, updateMember, removeMember, payrollStep, authorized, isExecuting, treasuryBalance, treasuryYieldMtd, activity, addTransaction, deposit, withdraw, payrollRuns, recordPayrollRun, theme, setTheme, toasts, toast, dismissToast, paletteOpen, resetDemo])
+    resetDemo, exportState, importState,
+  }), [route, navigate, view, setView, goToPayroll, sidebarOpen, team, replaceTeam, defaultMethod, setAmount, addMember, updateMember, removeMember, payrollStep, authorized, isExecuting, treasuryBalance, treasuryYieldMtd, activity, addTransaction, deposit, withdraw, payrollRuns, recordPayrollRun, theme, setTheme, toasts, toast, dismissToast, paletteOpen, resetDemo, exportState, importState])
 
   return <AppCtx.Provider value={value}>{children}</AppCtx.Provider>
 }
