@@ -27,11 +27,16 @@ const themeOptions: { id: Theme; label: string }[] = [
 const DESKTOP_QUERY = '(min-width: 1024px)'
 
 export function Sidebar() {
-  const { view, setView, navigate, toast, setPaletteOpen, theme, setTheme, sidebarOpen, setSidebarOpen } = useApp()
+  const { view, setView, navigate, toast, paletteOpen, setPaletteOpen, theme, setTheme, sidebarOpen, setSidebarOpen } = useApp()
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const asideRef = useRef<HTMLElement>(null)
   const returnFocusRef = useRef<HTMLElement | null>(null)
+  const navigatingRef = useRef(false)
+  const goView = (v: View) => {
+    navigatingRef.current = true
+    setView(v)
+  }
   const isMac = typeof navigator !== 'undefined' && /Mac/.test(navigator.platform)
 
   useEffect(() => {
@@ -59,10 +64,14 @@ export function Sidebar() {
     const aside = asideRef.current
     const focusables = () =>
       aside ? Array.from(aside.querySelectorAll<HTMLElement>('button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])')) : []
-    window.setTimeout(() => focusables()[0]?.focus(), 30)
+    const focusTimer = window.setTimeout(() => focusables()[0]?.focus(), 30)
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.preventDefault()
+        setSidebarOpen(false)
+        return
+      }
+      if (e.key === '?') {
         setSidebarOpen(false)
         return
       }
@@ -87,11 +96,39 @@ export function Sidebar() {
     return () => {
       window.removeEventListener('keydown', onKey)
       mq.removeEventListener('change', onChange)
+      window.clearTimeout(focusTimer)
       const prev = returnFocusRef.current
       returnFocusRef.current = null
-      if (prev && document.body.contains(prev)) prev.focus()
+      if (navigatingRef.current) {
+        // The outgoing view (and its menu button) unmounts; land on the new view's heading.
+        navigatingRef.current = false
+        window.setTimeout(() => {
+          const target = document.querySelector<HTMLElement>('main h1') ?? document.querySelector<HTMLElement>('main')
+          if (!target) return
+          if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1')
+          target.focus({ preventScroll: true })
+        }, 400)
+      } else if (prev && document.body.contains(prev)) {
+        prev.focus()
+      }
     }
   }, [sidebarOpen, setSidebarOpen])
+
+  useEffect(() => {
+    if (paletteOpen && sidebarOpen) setSidebarOpen(false)
+  }, [paletteOpen, sidebarOpen, setSidebarOpen])
+
+  const onThemeKey = (e: React.KeyboardEvent, i: number) => {
+    const keys: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }
+    let next = i
+    if (e.key in keys) next = (i + keys[e.key] + themeOptions.length) % themeOptions.length
+    else if (e.key === 'Home') next = 0
+    else if (e.key === 'End') next = themeOptions.length - 1
+    else return
+    e.preventDefault()
+    setTheme(themeOptions[next].id)
+    ;(e.currentTarget.parentElement?.children[next] as HTMLElement | undefined)?.focus()
+  }
 
   return (
     <>
@@ -134,14 +171,14 @@ export function Sidebar() {
           <SectionLabel>Main</SectionLabel>
           <ul className="space-y-0.5">
             {mainNav.map((item) => (
-              <NavItem key={item.id} item={item} active={view === item.id} onClick={() => setView(item.id)} onPrefetch={() => preloadView[item.id]()} />
+              <NavItem key={item.id} item={item} active={view === item.id} onClick={() => goView(item.id)} onPrefetch={() => preloadView[item.id]()} />
             ))}
           </ul>
 
           <SectionLabel className="mt-7">Finance</SectionLabel>
           <ul className="space-y-0.5">
             {financeNav.map((item) => (
-              <NavItem key={item.id} item={item} active={view === item.id} onClick={() => setView(item.id)} onPrefetch={() => preloadView[item.id]()} />
+              <NavItem key={item.id} item={item} active={view === item.id} onClick={() => goView(item.id)} onPrefetch={() => preloadView[item.id]()} />
             ))}
           </ul>
 
@@ -198,13 +235,15 @@ export function Sidebar() {
           </AnimatePresence>
 
           <div role="radiogroup" aria-label="Theme" className="grid grid-cols-3 gap-0.5 rounded-control border border-border-subtle bg-bg-inset p-0.5">
-            {themeOptions.map((o) => {
+            {themeOptions.map((o, i) => {
               const on = theme === o.id
               return (
                 <button
                   key={o.id}
                   role="radio"
                   aria-checked={on}
+                  tabIndex={on ? 0 : -1}
+                  onKeyDown={(e) => onThemeKey(e, i)}
                   onClick={() => setTheme(o.id)}
                   className={[
                     'focus-ring min-h-[28px] rounded-[5px] px-2 text-[12px] transition-colors',

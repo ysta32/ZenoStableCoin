@@ -17,6 +17,7 @@ export function CommandPalette() {
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLUListElement>(null)
   const lastFocusedRef = useRef<HTMLElement | null>(null)
+  const dialogRef = useRef<HTMLDivElement>(null)
 
   const actions = useMemo<Action[]>(() => {
     const goView = (v: View, label: string, shortcutKey: string): Action => ({
@@ -102,6 +103,18 @@ export function CommandPalette() {
     return () => clearTimeout(t)
   }, [open])
 
+  // Trap Tab inside the dialog (focus entry and restore are handled above).
+  useEffect(() => {
+    if (!open) return
+    const onTab = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return
+      e.preventDefault()
+      inputRef.current?.focus()
+    }
+    window.addEventListener('keydown', onTab)
+    return () => window.removeEventListener('keydown', onTab)
+  }, [open])
+
   // Keep highlight in bounds when filter changes
   useEffect(() => {
     setIdx((i) => {
@@ -162,6 +175,7 @@ export function CommandPalette() {
             transition={{ duration: 0.16, ease: 'easeOut' }}
             onClick={(e) => e.stopPropagation()}
             className="w-full max-w-[560px] overflow-hidden rounded-card border border-border-subtle bg-bg-surface shadow-pop"
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-label="Command palette"

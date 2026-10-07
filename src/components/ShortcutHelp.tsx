@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useApp } from '../context/AppContext'
 
@@ -27,9 +27,50 @@ const shortcuts: { section: string; rows: Row[] }[] = [
   },
 ]
 
+
+function useDialogFocus(open: boolean, ref: React.RefObject<HTMLElement>, initial?: React.RefObject<HTMLElement>) {
+  useEffect(() => {
+    if (!open) return
+    const prev = document.activeElement as HTMLElement | null
+    const items = () =>
+      ref.current ? Array.from(ref.current.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled]), [href], [tabindex]:not([tabindex="-1"])')) : []
+    const t = window.setTimeout(() => (initial?.current ?? ref.current)?.focus(), 30)
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return
+      const els = items()
+      if (els.length === 0) {
+        e.preventDefault()
+        return
+      }
+      const first = els[0]
+      const last = els[els.length - 1]
+      const active = document.activeElement
+      if (!ref.current?.contains(active)) {
+        e.preventDefault()
+        first.focus()
+      } else if (e.shiftKey && active === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault()
+        first.focus()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      window.clearTimeout(t)
+      window.removeEventListener('keydown', onKey)
+      if (prev && document.body.contains(prev)) prev.focus()
+    }
+  }, [open, ref, initial])
+}
+
 export function ShortcutHelp() {
   const { paletteOpen, route } = useApp()
   const [open, setOpen] = useState(false)
+  const dialogRef = useRef<HTMLDivElement>(null)
+  const closeRef = useRef<HTMLButtonElement>(null)
+  useDialogFocus(open, dialogRef, closeRef)
   const isMac = typeof navigator !== 'undefined' && /Mac/.test(navigator.platform)
 
   useEffect(() => {
@@ -73,12 +114,14 @@ export function ShortcutHelp() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.97, y: -4 }}
             transition={{ duration: 0.16, ease: 'easeOut' }}
+            ref={dialogRef}
             onClick={(e) => e.stopPropagation()}
             className="w-full max-w-md overflow-hidden rounded-card border border-border-subtle bg-bg-surface shadow-pop"
           >
             <div className="flex items-center justify-between border-b border-border-subtle px-5 py-3.5">
               <h2 className="font-display text-[18px] font-medium text-text-primary">Keyboard shortcuts</h2>
               <button
+                ref={closeRef}
                 onClick={() => setOpen(false)}
                 className="focus-ring rounded-control px-2 py-1.5 text-[11px] text-text-muted transition-colors hover:bg-bg-inset hover:text-text-primary"
                 aria-label="Close shortcuts"
