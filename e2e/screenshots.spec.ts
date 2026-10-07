@@ -42,6 +42,13 @@ for (const mobile of [false, true]) {
   })
 }
 
+test('capture download', async ({ page }) => {
+  await page.goto('/download')
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+  await settle(page)
+  await capture(page, 'download')
+})
+
 for (const view of ['dashboard', 'dashboard-dark', 'treasury', 'team', 'transactions']) {
   test(`capture ${view}`, async ({ page }) => {
     const route = view.startsWith('dashboard') ? '' : `/${view}`

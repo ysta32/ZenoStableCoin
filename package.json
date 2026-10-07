@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "e2e": "playwright test",
     "screenshots": "node scripts/screenshots.mjs",
+    "og": "node scripts/og.mjs",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
