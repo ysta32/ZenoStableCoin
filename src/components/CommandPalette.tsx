@@ -64,6 +64,7 @@ export function CommandPalette() {
         hint: 'Link',
         run: () => { window.open('https://github.com/ysta32/ZenoStableCoin', '_blank', 'noopener,noreferrer') },
       },
+      { id: 'download', label: 'Install Zeno / Download', hint: 'Navigate', run: () => navigate('download') },
       { id: 'home', label: 'Back to landing page', hint: 'Navigate', run: () => navigate('landing') },
     ]
   }, [setView, goToPayroll, resetDemo, navigate, toast, isExecuting, setTheme])

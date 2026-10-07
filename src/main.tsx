@@ -3,6 +3,10 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import { initInstallPrompt } from './lib/installPrompt'
+import '@fontsource-variable/newsreader/opsz.css'
+import '@fontsource-variable/newsreader/opsz-italic.css'
+import '@fontsource-variable/geist'
+import '@fontsource-variable/geist-mono'
 import './styles.css'
 
 // Capture the install prompt before any lazy route chunk loads; it fires once.

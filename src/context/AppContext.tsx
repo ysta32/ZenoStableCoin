@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, ReactNode } from 'react'
+import { isFiniteNum, isMethod, isObj, isPayrollRun } from '../lib/persistGuards'
 import { team as seedTeam, treasury as seedTreasury, recentActivity as seedActivity, Member, Method, Activity, ActivityType, PayrollRun, PayrollRunInput, Theme } from '../data'
 
 export type { Activity, PayrollRun, PayrollRunInput, PayrollRecipient, Theme } from '../data'
@@ -45,10 +46,6 @@ type Persisted = {
   defaultMethod: Method
 }
 
-const METHODS: readonly Method[] = ['USDC', 'USDT', 'EUR Bank']
-const isMethod = (x: unknown): x is Method => typeof x === 'string' && (METHODS as readonly string[]).includes(x)
-const isObj = (x: unknown): x is Record<string, unknown> => typeof x === 'object' && x !== null && !Array.isArray(x)
-const isFiniteNum = (x: unknown): x is number => typeof x === 'number' && Number.isFinite(x)
 const isOptStr = (x: unknown) => x === undefined || typeof x === 'string'
 const isMember = (x: unknown): x is Member =>
   isObj(x) &&
@@ -73,8 +70,6 @@ const isActivity = (x: unknown): x is Activity =>
   typeof x.date === 'string' &&
   isFiniteNum(x.amount) &&
   (x.createdAt === undefined || isFiniteNum(x.createdAt))
-const isPayrollRun = (x: unknown): x is PayrollRun =>
-  isObj(x) && typeof x.id === 'string' && typeof x.clientRunId === 'string' && isFiniteNum(x.createdAt) && isFiniteNum(x.total) && isFiniteNum(x.fee) && Array.isArray(x.recipients)
 const arrayOf = <T,>(x: unknown, guard: (v: unknown) => v is T): T[] | null =>
   Array.isArray(x) && x.every(guard) ? (x as T[]) : null
 

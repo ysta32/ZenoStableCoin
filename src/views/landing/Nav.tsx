@@ -81,6 +81,13 @@ export function Nav() {
         </nav>
         <div className="hidden items-center gap-1.5 md:flex">
           <ThemeToggle />
+          <button
+            type="button"
+            onClick={() => navigate('download')}
+            className="inline-flex h-9 items-center rounded-[6px] px-3 text-[14px] text-text-secondary transition-colors hover:bg-text-primary/[0.05] hover:text-text-primary focus-ring"
+          >
+            Download
+          </button>
           <a
             href={REPO_URL}
             target="_blank"
@@ -125,6 +132,18 @@ export function Nav() {
                     </a>
                   </li>
                 ))}
+                <li className="border-b border-border-subtle">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpen(false)
+                      navigate('download')
+                    }}
+                    className="flex h-12 w-full items-center text-[16px] text-text-primary focus-ring"
+                  >
+                    Download
+                  </button>
+                </li>
                 <li className="border-b border-border-subtle">
                   <a
                     href={REPO_URL}
