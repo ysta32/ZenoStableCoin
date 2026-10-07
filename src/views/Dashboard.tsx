@@ -65,13 +65,13 @@ export function Dashboard() {
             </div>
             <Sparkline
               values={[245000, 268000, 282000, 325000, 358000, 392140]}
-              label="Illustrative treasury balance, January to June"
+              label="Illustrative treasury balance, last six months"
             />
           </Card>
 
           <Card className="p-6">
             <h2 className="font-display text-xl">Next payroll</h2>
-            <div className="num mt-3 text-[28px] tracking-tight">{formatUSD(monthly)}</div>
+            <div className="num mt-3 text-[28px] font-semibold tracking-tight">{formatUSD(monthly)}</div>
             <div className="text-[12.5px] text-text-secondary">
               Month end · {nextPayroll.label}{' '}
               <span className="text-text-muted">· {nextPayroll.inLabel}</span>
@@ -138,7 +138,7 @@ export function Dashboard() {
                     <MethodBadge method={m.method} />
                   </div>
                   <div className="num col-span-2 text-right text-[13px] sm:col-span-1">
-                    {formatUSD(m.amount, { cents: true })}
+                    {formatUSD(m.amount)}
                   </div>
                 </li>
               ))}
@@ -203,7 +203,7 @@ function Stat({
   return (
     <Card className="p-5">
       <div className="text-[12px] text-text-muted">{label}</div>
-      <div className="num mt-3 text-[26px] tracking-tight">{valueEl}</div>
+      <div className="num mt-3 text-[26px] font-semibold tracking-tight">{valueEl}</div>
       <div
         className={`num mt-2 text-[11px] ${subTone === 'green' ? 'text-positive' : 'text-text-muted'}`}
       >

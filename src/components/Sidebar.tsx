@@ -244,8 +244,8 @@ export function Sidebar() {
               Search…
             </span>
             <span className="flex items-center gap-1">
-              <kbd className="num rounded border border-border-subtle bg-bg-inset px-1 py-px text-[10px]">{isMac ? '⌘' : 'Ctrl'}</kbd>
-              <kbd className="num rounded border border-border-subtle bg-bg-inset px-1 py-px text-[10px]">K</kbd>
+              <kbd className="font-mono tabular-nums rounded border border-border-subtle bg-bg-inset px-1 py-px text-[10px]">{isMac ? '⌘' : 'Ctrl'}</kbd>
+              <kbd className="font-mono tabular-nums rounded border border-border-subtle bg-bg-inset px-1 py-px text-[10px]">K</kbd>
             </span>
           </button>
         </nav>

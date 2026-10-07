@@ -129,7 +129,7 @@ export function Avatar({ initials, size = 36 }: { initials: string; color: strin
 export function CountryBadge({ code, name }: { code: string; name: string }) {
   return (
     <div className="inline-flex items-center gap-2">
-      <span className="num rounded-[4px] bg-bg-inset px-1.5 py-0.5 text-[10.5px] font-medium text-text-secondary ring-1 ring-inset ring-border-subtle">
+      <span className="font-mono tabular-nums rounded-[4px] bg-bg-inset px-1.5 py-0.5 text-[10.5px] font-medium text-text-secondary ring-1 ring-inset ring-border-subtle">
         {code}
       </span>
       <span className="text-[13.5px] text-text-primary">{name}</span>

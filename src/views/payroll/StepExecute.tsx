@@ -83,7 +83,7 @@ export function StepExecute({
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             <div className="eyebrow">{finished ? 'Payroll sent' : 'Executing payroll'}</div>
-            <div className="num mt-2 text-[32px] leading-none text-text-primary sm:text-[40px]">{usd(run.total)}</div>
+            <div className="num mt-2 font-display text-[32px] leading-none text-text-primary sm:text-[40px]">{usd(run.total)}</div>
             <p className="mt-2 text-[13.5px] text-text-secondary">
               {finished
                 ? `Settled to ${n} recipient${n === 1 ? '' : 's'} in ${REAL_SECONDS} seconds.`
@@ -150,7 +150,7 @@ export function StepExecute({
                     {settled && (
                       <>
                         {' · '}
-                        <span className="num" title={r.txHash}>
+                        <span className="font-mono tabular-nums" title={r.txHash}>
                           {shortHash(r.txHash)}
                         </span>
                       </>
@@ -175,7 +175,7 @@ export function StepExecute({
                   {failed === 0 ? 'Payroll complete' : `Payroll complete with ${failed} failed payment${failed === 1 ? '' : 's'}`}
                 </h2>
                 <p className="mt-1 text-[13px] text-text-secondary">
-                  Recorded {formatRunDate(run.createdAt)} · run <span className="num">{run.id}</span>. A receipt is recorded for{' '}
+                  Recorded {formatRunDate(run.createdAt)} · run <span className="font-mono tabular-nums">{run.id}</span>. A receipt is recorded for{' '}
                   {n === 1 ? 'the payment' : `each of the ${n} payments`}.
                 </p>
                 <div className="mt-3 max-w-sm">

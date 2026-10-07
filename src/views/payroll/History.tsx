@@ -91,7 +91,7 @@ function RunRow({ run, expanded, onToggle }: { run: PayrollRun; expanded: boolea
               <li key={`${r.memberId}-${i}`} className="flex flex-wrap items-center gap-x-3 gap-y-1 py-2.5">
                 <span className="min-w-0 basis-full truncate text-[13px] text-text-primary sm:basis-auto sm:flex-1">{r.name || 'Unnamed'}</span>
                 <MethodBadge method={r.method} />
-                <span className="num text-[12px] text-text-muted" title={r.txHash}>
+                <span className="font-mono tabular-nums text-[12px] text-text-muted" title={r.txHash}>
                   {shortHash(r.txHash)}
                 </span>
                 <span className="num ml-auto w-24 text-right text-[13px] text-text-primary">{usd(r.amount)}</span>
@@ -99,7 +99,7 @@ function RunRow({ run, expanded, onToggle }: { run: PayrollRun; expanded: boolea
             ))}
           </ul>
           <p className="py-2 text-[12px] text-text-muted">
-            Run <span className="num">{run.id}</span>
+            Run <span className="font-mono tabular-nums">{run.id}</span>
           </p>
         </div>
       )}

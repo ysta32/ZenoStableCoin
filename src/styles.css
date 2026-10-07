@@ -97,10 +97,12 @@ input[type='number'] {
 }
 
 @layer components {
-  /* Monetary amounts, addresses, hashes: always mono + tabular figures. */
+  /* Money, percentages, counts, KPI figures: Geist with tabular figures.
+     Hashes, addresses, code and key hints use `font-mono tabular-nums` instead. */
   .num {
-    @apply font-mono tabular-nums;
-    font-feature-settings: 'tnum';
+    @apply font-sans tabular-nums;
+    font-feature-settings: 'tnum' 1, 'zero' 0;
+    letter-spacing: -0.01em;
   }
 
   /* Uppercase section label. Use sparingly. */

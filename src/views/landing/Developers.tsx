@@ -134,7 +134,7 @@ export function Developers() {
               ))}
             </div>
             <div className="flex items-center gap-3">
-              <span className="num hidden text-[11.5px] text-text-muted sm:inline">{tab.file}</span>
+              <span className="font-mono tabular-nums hidden text-[11.5px] text-text-muted sm:inline">{tab.file}</span>
               <button
                 type="button"
                 onClick={copy}
@@ -147,7 +147,7 @@ export function Developers() {
             </div>
           </div>
           <div role="tabpanel" id={`panel-${tab.id}`} aria-labelledby={`tab-${tab.id}`} tabIndex={0} className="focus-ring">
-            <pre className="num overflow-x-auto px-5 py-5 text-[12.5px] leading-[1.75] text-text-secondary">
+            <pre className="font-mono tabular-nums overflow-x-auto px-5 py-5 text-[12.5px] leading-[1.75] text-text-secondary">
               <code>{highlight(tab.code)}</code>
             </pre>
           </div>
@@ -159,7 +159,7 @@ export function Developers() {
               key={path}
               className={`flex flex-col gap-1 border-b border-border-subtle py-4 ${i % 2 === 1 ? 'sm:border-l sm:pl-6' : 'sm:pr-6'}`}
             >
-              <dt className="num flex items-baseline gap-2.5 text-[13px]">
+              <dt className="font-mono tabular-nums flex items-baseline gap-2.5 text-[13px]">
                 <span className="w-[42px] text-[11px] text-text-muted">{verb}</span>
                 <span className="text-text-primary">{path}</span>
               </dt>

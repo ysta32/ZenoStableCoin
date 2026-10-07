@@ -110,8 +110,8 @@ export function Treasury() {
 
           <Card className="p-6">
             <h2 className="font-display text-xl">Yield this month</h2>
-            <div className="num mt-3 text-[28px] tracking-tight text-positive">
-              {formatUSD(yieldMtd, { sign: true, cents: true })}
+            <div className="num mt-3 text-[28px] font-semibold tracking-tight text-positive">
+              {formatUSD(yieldMtd, { sign: true })}
             </div>
             <div className="mt-2 text-xs text-text-secondary">
               <span className="num">{treasury.apy}%</span> APY · auto-compounded
@@ -180,7 +180,7 @@ export function Treasury() {
                     <span
                       className={`num text-[13px] ${a.amount >= 0 ? 'text-positive' : 'text-text-primary'}`}
                     >
-                      {formatUSD(a.amount, { sign: true, cents: true })}
+                      {formatUSD(a.amount, { sign: true })}
                     </span>
                     <span className="w-16 text-right text-[12px] text-text-muted">
                       {formatActivityDate(a)}
@@ -266,10 +266,13 @@ function TransferForm({
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (submitted.current) return
-    const value = Number(amount)
+    // Accept "1000", "1,000.50" (well-formed thousands separators) and ".5".
+    const raw = amount.trim()
+    const normalized = /^\d{1,3}(,\d{3})+(\.\d{0,2})?$/.test(raw) ? raw.replace(/,/g, '') : raw
+    const value = Number(normalized)
     const next: typeof errors = {}
     if (
-      !/^\d+(\.\d{1,2})?$/.test(amount.trim()) ||
+      !/^(\d+(\.\d{0,2})?|\.\d{1,2})$/.test(normalized) ||
       !Number.isFinite(value) ||
       value <= 0 ||
       !Number.isSafeInteger(Math.round(value * 100))
@@ -369,7 +372,7 @@ function TransferForm({
               maxLength={200}
               aria-invalid={!!errors.destination}
               aria-describedby={errors.destination ? 'transfer-destination-error' : undefined}
-              className={`num ${inputClass}`}
+              className={`font-mono tabular-nums ${inputClass}`}
             />
             {errors.destination && (
               <p

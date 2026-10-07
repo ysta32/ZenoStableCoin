@@ -27,7 +27,7 @@ function BrowserChrome({ url, children, className = '' }: { url: string; childre
           <span className="h-2.5 w-2.5 rounded-full border border-border bg-bg-inset" />
           <span className="h-2.5 w-2.5 rounded-full border border-border bg-bg-inset" />
         </div>
-        <div className="num mx-auto flex h-6 min-w-0 max-w-[280px] flex-1 items-center justify-center truncate rounded-[5px] border border-border-subtle bg-bg-surface px-3 text-[11px] text-text-muted">
+        <div className="font-mono tabular-nums mx-auto flex h-6 min-w-0 max-w-[280px] flex-1 items-center justify-center truncate rounded-[5px] border border-border-subtle bg-bg-surface px-3 text-[11px] text-text-muted">
           {url}
         </div>
         <div className="w-[42px]" />

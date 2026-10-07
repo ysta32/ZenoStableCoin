@@ -218,7 +218,7 @@ function ImportDialogBody({ onClose }: { onClose: () => void }) {
             <div className="text-[13.5px] text-text-primary">
               {fileName ? (
                 <>
-                  <span className="text-text-secondary">Selected:</span> <span className="num">{fileName}</span>
+                  <span className="text-text-secondary">Selected:</span> <span className="font-mono tabular-nums">{fileName}</span>
                 </>
               ) : (
                 'Drop a .csv file here, or choose one'

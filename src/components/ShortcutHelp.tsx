@@ -139,7 +139,7 @@ export function ShortcutHelp() {
                         <span>{r.label}</span>
                         <span className="flex items-center gap-1">
                           {r.keys.map((k, i) => (
-                            <kbd key={i} className="rounded border border-border-subtle bg-bg-inset px-1.5 py-0.5 num text-[10.5px] text-text-primary">
+                            <kbd key={i} className="rounded border border-border-subtle bg-bg-inset px-1.5 py-0.5 font-mono tabular-nums text-[10.5px] text-text-primary">
                               {k === '⌘' && !isMac ? 'Ctrl' : k}
                             </kbd>
                           ))}

@@ -104,7 +104,7 @@ export function Team() {
         <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="eyebrow">Monthly commitment</p>
-            <p className="num mt-1 font-display text-[28px] leading-none text-text-primary">{formatUSD(monthly)}</p>
+            <p className="num mt-1 text-[28px] font-semibold leading-none tracking-tight text-text-primary">{formatUSD(monthly)}</p>
             <p className="mt-1.5 text-[13px] text-text-secondary">
               across {team.length} {team.length === 1 ? 'contractor' : 'contractors'}
             </p>
@@ -463,7 +463,7 @@ function MemberPanel({
                 autoComplete="off"
                 aria-invalid={!!show('wallet')}
                 aria-describedby={show('wallet') ? 'mf-wallet-err' : 'mf-wallet-hint'}
-                className={`${inputCls(!!show('wallet'))} num`}
+                className={`${inputCls(!!show('wallet'))} font-mono tabular-nums`}
               />
             </Field>
           )}

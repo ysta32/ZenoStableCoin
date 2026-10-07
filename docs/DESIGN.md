@@ -44,7 +44,15 @@ Brand green is reserved for primary actions and positive state. Everything else 
 |---|---|---|
 | Display | `font-display` (Newsreader 400/500, italic 400) | Landing headlines, app page titles, hero numbers |
 | UI | `font-sans` (Geist 400–600) | Everything else |
-| Figures | `font-mono tabular-nums` or `.num` (Geist Mono 400–500) | Amounts, addresses, hashes, IDs. Always tabular |
+| Figures | `.num` (Geist, tabular, tracking -0.01em, plain zero) | Money, percentages, counts, KPI figures |
+| Code | `font-mono tabular-nums` (Geist Mono) | Tx hashes, wallet addresses, run IDs, code, URLs, key hints only |
+
+Figure rules:
+- Never set money in Geist Mono; its wide commas read as code.
+- KPI figures (22–32px: dashboard stats, next payroll, yield, team monthly cost) are `.num font-semibold tracking-tight`.
+- One hero figure per view (≥ 32px: treasury balance, payroll receipt total) is `.num font-display`.
+- Whole dollars in summaries, KPIs, charts and activity lists (`formatUSD(n)`). Cents only in payroll
+  ledgers, receipts, balances shown next to an amount input, and the inputs themselves (`{ cents: true }`).
 
 Scale (app): page title 28–32px display / section title 15–16px sans 600 / body 14px / small 13px /
 caption 12px / eyebrow 11px uppercase, `tracking-[0.08em]`, muted (`.eyebrow`).

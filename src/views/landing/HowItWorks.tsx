@@ -23,7 +23,7 @@ function FundFigure() {
     <Vignette title="Treasury">
       <div className="px-4 py-4">
         <div className="text-[11px] uppercase tracking-[0.08em] text-text-muted">Balance</div>
-        <div className="num mt-1 text-[24px] tracking-tight text-text-primary">{formatUSD(treasury.balance, { cents: true })}</div>
+        <div className="num mt-1 text-[24px] font-semibold tracking-tight text-text-primary">{formatUSD(treasury.balance, { cents: true })}</div>
         <div className="mt-4 flex h-2 overflow-hidden rounded-[2px] bg-bg-inset">
           <div className="bg-brand-500" style={{ width: `${treasury.allocation[0].pct}%` }} />
           <div className="bg-brand-300" style={{ width: `${treasury.allocation[1].pct}%` }} />
@@ -103,7 +103,7 @@ function SendFigure() {
         ].map(([name, hash]) => (
           <li key={hash} className="flex items-center justify-between gap-3 py-1">
             <span className="text-text-secondary">{name}</span>
-            <span className="num ml-auto text-text-muted">{hash}</span>
+            <span className="font-mono tabular-nums ml-auto text-text-muted">{hash}</span>
             <Pill tone="positive">Sent</Pill>
           </li>
         ))}

@@ -93,7 +93,7 @@ export function StepReview({ onBack, onExecuted }: { onBack: () => void; onExecu
                       {m.wallet ? (
                         <>
                           {' · '}
-                          <span className="num">{`${m.wallet.slice(0, 6)}…${m.wallet.slice(-4)}`}</span>
+                          <span className="font-mono tabular-nums">{`${m.wallet.slice(0, 6)}…${m.wallet.slice(-4)}`}</span>
                         </>
                       ) : null}
                     </div>

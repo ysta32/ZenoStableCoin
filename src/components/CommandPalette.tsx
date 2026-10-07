@@ -195,7 +195,7 @@ export function CommandPalette() {
                 aria-label="Search commands"
                 className="h-12 flex-1 bg-transparent text-[14px] text-text-primary placeholder:text-text-muted outline-none"
               />
-              <kbd className="hidden rounded border border-border-subtle bg-bg-inset px-1.5 py-0.5 num text-[10.5px] text-text-muted sm:inline">esc</kbd>
+              <kbd className="hidden rounded border border-border-subtle bg-bg-inset px-1.5 py-0.5 font-mono tabular-nums text-[10.5px] text-text-muted sm:inline">esc</kbd>
             </div>
 
             <ul ref={listRef} className="max-h-[320px] overflow-y-auto py-1.5">
@@ -228,9 +228,9 @@ export function CommandPalette() {
                     </span>
                     <span className="flex items-center gap-2">
                       {a.shortcut && (
-                        <span className="hidden num text-[10.5px] text-text-muted sm:inline">{a.shortcut}</span>
+                        <span className="hidden font-mono tabular-nums text-[10.5px] text-text-muted sm:inline">{a.shortcut}</span>
                       )}
-                      <span className="num text-[10.5px] uppercase tracking-wider text-text-muted">{a.hint}</span>
+                      <span className="font-mono tabular-nums text-[10.5px] uppercase tracking-wider text-text-muted">{a.hint}</span>
                     </span>
                   </li>
                 )
@@ -259,7 +259,7 @@ export function CommandPalette() {
 
 function KbHint({ children }: { children: React.ReactNode }) {
   return (
-    <kbd className="rounded border border-border-subtle bg-bg-inset px-1.5 py-0.5 num text-[10.5px] text-text-muted">
+    <kbd className="rounded border border-border-subtle bg-bg-inset px-1.5 py-0.5 font-mono tabular-nums text-[10.5px] text-text-muted">
       {children}
     </kbd>
   )
