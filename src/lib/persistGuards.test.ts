@@ -119,7 +119,9 @@ describe('isSafeString', () => {
 describe('isMember', () => {
   it('accepts a full member and one without optional fields', () => {
     expect(isMember(member)).toBe(true)
-    const { wallet: _w, email: _e, ...bare } = member
+    const bare = Object.fromEntries(
+      Object.entries(member).filter(([k]) => k !== 'wallet' && k !== 'email'),
+    )
     expect(isMember(bare)).toBe(true)
   })
   it.each([
@@ -145,7 +147,9 @@ describe('isMember', () => {
 describe('isActivity', () => {
   it('accepts a valid activity with and without createdAt', () => {
     expect(isActivity(activity)).toBe(true)
-    const { createdAt: _c, ...noCreated } = activity
+    const noCreated = Object.fromEntries(
+      Object.entries(activity).filter(([k]) => k !== 'createdAt'),
+    )
     expect(isActivity(noCreated)).toBe(true)
   })
   it.each([
