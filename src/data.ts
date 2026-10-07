@@ -53,11 +53,11 @@ export type PayrollRunInput = {
 export type Theme = 'light' | 'dark' | 'system'
 
 export const team: Member[] = [
-  { id: '1', name: 'Ana Silva', role: 'Lead Engineer', country: 'Brazil', countryCode: 'BR', method: 'USDC', amount: 4200, initials: 'AS', avatarColor: 'bg-emerald-600' },
-  { id: '2', name: 'Rohan Kumar', role: 'Backend Dev', country: 'India', countryCode: 'IN', method: 'USDT', amount: 5800, initials: 'RK', avatarColor: 'bg-orange-600' },
+  { id: '1', name: 'Ana Silva', role: 'Lead Engineer', country: 'Brazil', countryCode: 'BR', method: 'USDC', amount: 4200, initials: 'AS', avatarColor: 'bg-emerald-600', wallet: '0x0000000000000000000000000000000000000001' },
+  { id: '2', name: 'Rohan Kumar', role: 'Backend Dev', country: 'India', countryCode: 'IN', method: 'USDT', amount: 5800, initials: 'RK', avatarColor: 'bg-orange-600', wallet: '0x0000000000000000000000000000000000000002' },
   { id: '3', name: 'Léa Martin', role: 'Product Designer', country: 'France', countryCode: 'FR', method: 'EUR Bank', amount: 6500, initials: 'LM', avatarColor: 'bg-amber-700' },
-  { id: '4', name: 'Ji-woo Lee', role: 'Data Scientist', country: 'S. Korea', countryCode: 'KR', method: 'USDC', amount: 5200, initials: 'JL', avatarColor: 'bg-fuchsia-700' },
-  { id: '5', name: 'Amara Osei', role: 'Fullstack Dev', country: 'Ghana', countryCode: 'GH', method: 'USDT', amount: 3900, initials: 'AO', avatarColor: 'bg-rose-700' },
+  { id: '4', name: 'Ji-woo Lee', role: 'Data Scientist', country: 'S. Korea', countryCode: 'KR', method: 'USDC', amount: 5200, initials: 'JL', avatarColor: 'bg-fuchsia-700', wallet: '0x0000000000000000000000000000000000000004' },
+  { id: '5', name: 'Amara Osei', role: 'Fullstack Dev', country: 'Ghana', countryCode: 'GH', method: 'USDT', amount: 3900, initials: 'AO', avatarColor: 'bg-rose-700', wallet: '0x0000000000000000000000000000000000000005' },
 ]
 
 export const treasury = {

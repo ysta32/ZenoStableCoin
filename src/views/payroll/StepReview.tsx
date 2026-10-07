@@ -5,6 +5,7 @@ import { useApp } from '../../context/AppContext'
 import type { PayrollRun } from '../../data'
 import { feeFor, memberError, newClientRunId, round2, sumCents, toCents, usd } from './ledger'
 import { TotalsLedger } from './TotalsLedger'
+import { checkRun, confirmationPhrase, matchesConfirmation } from './rails'
 
 const COMPLIANCE = ['Sanctions screening (Chainalysis)', 'KYC verified for all recipients', 'Tax documents on file']
 
@@ -14,6 +15,7 @@ export function StepReview({ onBack, onExecuted }: { onBack: () => void; onExecu
   const [clientRunId] = useState(newClientRunId)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [checks, setChecks] = useState(0)
+  const [confirmText, setConfirmText] = useState('')
 
   useEffect(() => {
     const timers = [300, 600, 900].map((ms, i) => window.setTimeout(() => setChecks(i + 1), ms))
@@ -24,19 +26,29 @@ export function StepReview({ onBack, onExecuted }: { onBack: () => void; onExecu
   const fee = feeFor(subtotal)
   const debit = round2(subtotal + fee)
   const invalid = team.filter((m) => memberError(m) !== null).length
-  const insufficient = debit > treasuryBalance
 
-  const blocker =
-    team.length === 0
-      ? 'There are no recipients in this run.'
-      : invalid > 0
-        ? `${invalid} recipient${invalid === 1 ? ' has' : 's have'} an invalid name or amount. Go back to fix ${invalid === 1 ? 'it' : 'them'}.`
-        : insufficient
-          ? `Treasury balance of ${usd(treasuryBalance)} does not cover the ${usd(debit)} debit. Deposit ${usd(round2(debit - treasuryBalance))} or reduce amounts.`
-          : null
+  const rails = useMemo(
+    () =>
+      checkRun({
+        recipients: team.map((m) => ({ memberId: m.id, name: m.name, method: m.method, amount: m.amount, wallet: m.wallet })),
+        total: subtotal,
+        fee,
+        balance: treasuryBalance,
+      }),
+    [team, subtotal, fee, treasuryBalance],
+  )
+  const blockers: string[] = [
+    ...rails.blockers.map((b) => b.message),
+    ...(invalid > 0
+      ? [`${invalid} recipient${invalid === 1 ? ' has' : 's have'} an invalid name or amount. Go back to fix ${invalid === 1 ? 'it' : 'them'}.`]
+      : []),
+  ]
+  const blocked = blockers.length > 0
 
+  const phrase = confirmationPhrase(debit)
+  const confirmed = matchesConfirmation(confirmText, debit)
   const checksDone = checks >= COMPLIANCE.length
-  const canExecute = !blocker && authorized && checksDone
+  const canExecute = !blocked && authorized && checksDone && confirmed
 
   const execute = () => {
     if (!canExecute) return
@@ -65,10 +77,31 @@ export function StepReview({ onBack, onExecuted }: { onBack: () => void; onExecu
       <h2 className="font-display text-[26px] leading-tight text-text-primary">Review and confirm</h2>
       <p className="mt-1 text-[13.5px] text-text-secondary">Check recipients, routing and the total debit before you execute.</p>
 
-      {blocker && (
-        <p role="alert" className="mt-5 rounded-[6px] border border-negative/30 bg-negative-soft px-4 py-3 text-[13.5px] text-negative">
-          {blocker}
-        </p>
+      {blocked && (
+        <div className="mt-5 space-y-2">
+          {blockers.map((message) => (
+            <p
+              key={message}
+              role="alert"
+              className="rounded-[6px] border border-negative/30 bg-negative-soft px-4 py-3 text-[13.5px] text-negative"
+            >
+              {message}
+            </p>
+          ))}
+        </div>
+      )}
+
+      {rails.warnings.length > 0 && (
+        <ul aria-label="Payroll warnings" className={`${blocked ? 'mt-2' : 'mt-5'} space-y-2`}>
+          {rails.warnings.map((w) => (
+            <li
+              key={`${w.code}-${w.message}`}
+              className="rounded-[6px] border border-warning/30 bg-warning-soft px-4 py-3 text-[13.5px] text-warning"
+            >
+              {w.message}
+            </li>
+          ))}
+        </ul>
       )}
 
       <div className="mt-5 grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
@@ -152,6 +185,24 @@ export function StepReview({ onBack, onExecuted }: { onBack: () => void; onExecu
               <span className="text-[13px] leading-snug text-text-secondary">
                 I authorize this payroll run and confirm the recipients and amounts are correct.
               </span>
+            </label>
+
+            <label className="mt-4 block border-t border-border-subtle pt-4">
+              <span className="text-[13px] leading-snug text-text-secondary">
+                Type the total to confirm: <span className="num font-medium text-text-primary">{phrase}</span>
+              </span>
+              <input
+                type="text"
+                inputMode="decimal"
+                autoComplete="off"
+                spellCheck={false}
+                value={confirmText}
+                onChange={(e) => setConfirmText(e.target.value)}
+                disabled={blocked}
+                aria-invalid={confirmText.trim() !== '' && !confirmed}
+                placeholder={phrase}
+                className="focus-ring num mt-2 h-9 w-full rounded-[6px] border border-border bg-bg-base px-3 text-[13.5px] text-text-primary disabled:opacity-50"
+              />
             </label>
           </Card>
         </div>
