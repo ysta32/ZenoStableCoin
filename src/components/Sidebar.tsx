@@ -44,15 +44,25 @@ function useHeadingFocusRestore() {
     cancel()
     timerRef.current = window.setTimeout(() => {
       timerRef.current = null
-      const active = document.activeElement
-      if (active instanceof Element && active.closest('[role="dialog"]')) return
+      // Never steal focus while any modal/dialog is present (palette, shortcut help, ...).
+      if (document.querySelector('[aria-modal="true"], [role="dialog"]')) return
       const target = document.querySelector<HTMLElement>('main h1') ?? document.querySelector<HTMLElement>('main')
       if (!target) return
       if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1')
       target.focus({ preventScroll: true })
     }, RESTORE_DELAY_MS)
   }, [cancel])
-  useEffect(() => cancel, [cancel])
+  useEffect(() => {
+    // "?" opens the shortcut help dialog; drop any pending restore so it can't race the dialog.
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === '?') cancel()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      cancel()
+    }
+  }, [cancel])
   return useMemo(() => ({ schedule, cancel }), [schedule, cancel])
 }
 
