@@ -13,24 +13,24 @@ script in `index.html` applies `html.dark` before first paint.
 
 ## Color tokens
 
-| Tailwind token | CSS var | Light | Dark | Use |
-|---|---|---|---|---|
-| `bg-base` | `--bg-base` | #F6F5F1 | #0F1110 | Page background (paper) |
-| `bg-surface` | `--bg-surface` | #FFFFFF | #151817 | Cards, tables |
-| `bg-elevated` | `--bg-elevated` | #FBFAF8 | #1B1E1D | Hover rows, popovers |
-| `bg-sidebar` | `--bg-sidebar` | #F0EEE8 | #121514 | App sidebar |
-| `bg-inset` | `--bg-inset` | #EFEDE7 | #0B0D0C | Wells, inputs, avatars, code |
-| `border-subtle` | `--border-subtle` | #E7E4DC | #242826 | Default structural hairline |
-| `border` | `--border` | #D9D5CA | #2F3431 | Controls, emphasized dividers |
-| `text-primary` | `--text-primary` | #16181B | #ECEDE9 | Body, headings, figures |
-| `text-secondary` | `--text-secondary` | #565B62 | #A6ABA6 | Supporting text |
-| `text-muted` | `--text-muted` | #686C72 | #858B85 | Captions, eyebrows, placeholders |
-| `text-inverse` | `--text-inverse` | #FFFFFF | #0F1110 | Text on brand fills |
-| `brand-50…700` | `--brand-*` | 50 #E8F1ED · 300 #79B59D · 400 #1F7A5C · 500 #0B5D45 · 600 #084A37 · 700 #063829 | 50 #13261F · 300 #9ADBC0 · 400 #6FCBA6 · 500 #4CB88F · 600 #3A9D78 · 700 #2A7A5C | Primary actions, selection, focus |
-| `info-500` | `--info` | #2B5C9E | #7AA7E0 | Informational, rare |
-| `positive` / `positive-soft` | `--positive(-soft)` | #17784F / #E7F2EC | #4CB88F / #142A21 | Settled, received, success |
-| `negative` / `negative-soft` | `--negative(-soft)` | #B42318 / #FBEAE8 | #F0716A / #2E1716 | Failed, outflow warnings, destructive |
-| `warning` / `warning-soft` | `--warning(-soft)` | #A15C07 / #FBF0DF | #E0A54B / #2C2214 | Pending, needs attention |
+| Tailwind token               | CSS var             | Light                                                                            | Dark                                                                             | Use                                   |
+| ---------------------------- | ------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------------------------------------- |
+| `bg-base`                    | `--bg-base`         | #F6F5F1                                                                          | #0F1110                                                                          | Page background (paper)               |
+| `bg-surface`                 | `--bg-surface`      | #FFFFFF                                                                          | #151817                                                                          | Cards, tables                         |
+| `bg-elevated`                | `--bg-elevated`     | #FBFAF8                                                                          | #1B1E1D                                                                          | Hover rows, popovers                  |
+| `bg-sidebar`                 | `--bg-sidebar`      | #F0EEE8                                                                          | #121514                                                                          | App sidebar                           |
+| `bg-inset`                   | `--bg-inset`        | #EFEDE7                                                                          | #0B0D0C                                                                          | Wells, inputs, avatars, code          |
+| `border-subtle`              | `--border-subtle`   | #E7E4DC                                                                          | #242826                                                                          | Default structural hairline           |
+| `border`                     | `--border`          | #D9D5CA                                                                          | #2F3431                                                                          | Controls, emphasized dividers         |
+| `text-primary`               | `--text-primary`    | #16181B                                                                          | #ECEDE9                                                                          | Body, headings, figures               |
+| `text-secondary`             | `--text-secondary`  | #565B62                                                                          | #A6ABA6                                                                          | Supporting text                       |
+| `text-muted`                 | `--text-muted`      | #686C72                                                                          | #858B85                                                                          | Captions, eyebrows, placeholders      |
+| `text-inverse`               | `--text-inverse`    | #FFFFFF                                                                          | #0F1110                                                                          | Text on brand fills                   |
+| `brand-50…700`               | `--brand-*`         | 50 #E8F1ED · 300 #79B59D · 400 #1F7A5C · 500 #0B5D45 · 600 #084A37 · 700 #063829 | 50 #13261F · 300 #9ADBC0 · 400 #6FCBA6 · 500 #4CB88F · 600 #3A9D78 · 700 #2A7A5C | Primary actions, selection, focus     |
+| `info-500`                   | `--info`            | #2B5C9E                                                                          | #7AA7E0                                                                          | Informational, rare                   |
+| `positive` / `positive-soft` | `--positive(-soft)` | #17784F / #E7F2EC                                                                | #4CB88F / #142A21                                                                | Settled, received, success            |
+| `negative` / `negative-soft` | `--negative(-soft)` | #B42318 / #FBEAE8                                                                | #F0716A / #2E1716                                                                | Failed, outflow warnings, destructive |
+| `warning` / `warning-soft`   | `--warning(-soft)`  | #A15C07 / #FBF0DF                                                                | #E0A54B / #2C2214                                                                | Pending, needs attention              |
 
 Contrast of `text-muted` (WCAG, small text needs 4.5:1): light #686C72 is 4.84 on base, 5.28 on surface,
 4.55 on sidebar, 4.51 on inset; dark #858B85 is 5.44 on base, 5.13 on surface, 4.82 on elevated.
@@ -40,14 +40,15 @@ Brand green is reserved for primary actions and positive state. Everything else 
 
 ## Typography
 
-| Role | Class | Notes |
-|---|---|---|
-| Display | `font-display` (Newsreader 400/500, italic 400) | Landing headlines, app page titles, hero numbers |
-| UI | `font-sans` (Geist 400–600) | Everything else |
-| Figures | `.num` (Geist, tabular, tracking -0.01em, plain zero) | Money, percentages, counts, KPI figures |
-| Code | `font-mono tabular-nums` (Geist Mono) | Tx hashes, wallet addresses, run IDs, code, URLs, key hints only |
+| Role    | Class                                                 | Notes                                                            |
+| ------- | ----------------------------------------------------- | ---------------------------------------------------------------- |
+| Display | `font-display` (Newsreader 400/500, italic 400)       | Landing headlines, app page titles, hero numbers                 |
+| UI      | `font-sans` (Geist 400–600)                           | Everything else                                                  |
+| Figures | `.num` (Geist, tabular, tracking -0.01em, plain zero) | Money, percentages, counts, KPI figures                          |
+| Code    | `font-mono tabular-nums` (Geist Mono)                 | Tx hashes, wallet addresses, run IDs, code, URLs, key hints only |
 
 Figure rules:
+
 - Never set money in Geist Mono; its wide commas read as code.
 - KPI figures (22–32px: dashboard stats, next payroll, yield, team monthly cost) are `.num font-semibold tracking-tight`.
 - One hero figure per view (≥ 32px: treasury balance, payroll receipt total) is `.num font-display`.
@@ -83,12 +84,14 @@ Scale (landing): hero 56–72px display, tracking -0.02em / h2 36–44px display
 ## Do / don't
 
 Do
+
 - Use sentence case, plain and specific copy. No exclamation marks.
 - Right-align numeric columns and set them in `.num`.
 - Let whitespace and hairlines do the work; one primary button per area.
 - Check both themes and AA contrast for every new screen.
 
 Don't
+
 - Neon glows, gradient blobs, grid backgrounds, glassmorphism, emoji, sparkles.
 - Rainbow avatars or colored icons for decoration.
 - Pills for everything; use them for status only.

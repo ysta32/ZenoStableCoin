@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { centsInt, checkRun, confirmationPhrase, matchesConfirmation, type RailsRecipient } from './rails'
+import {
+  centsInt,
+  checkRun,
+  confirmationPhrase,
+  matchesConfirmation,
+  type RailsRecipient,
+} from './rails'
 
 const W1 = '0x3f5CE5FBFe3E9af3971dD833D26bA9b5C936f0bE'
 const W2 = '0x8ba1f109551bD432803012645Ac136ddd64DBA72'
@@ -25,7 +31,12 @@ describe('centsInt', () => {
 
 describe('checkRun', () => {
   it('passes a clean run', () => {
-    const res = checkRun({ recipients: [r({ memberId: 'a' }), r({ memberId: 'b' })], total: 200, fee: 0.4, balance: 1000 })
+    const res = checkRun({
+      recipients: [r({ memberId: 'a' }), r({ memberId: 'b' })],
+      total: 200,
+      fee: 0.4,
+      balance: 1000,
+    })
     expect(res).toEqual({ blockers: [], warnings: [] })
   })
 
@@ -36,7 +47,12 @@ describe('checkRun', () => {
   })
 
   it('blocks with INSUFFICIENT_BALANCE when total + fee exceeds balance', () => {
-    const res = checkRun({ recipients: [r({ memberId: 'a' })], total: 100, fee: 0.2, balance: 100.19 })
+    const res = checkRun({
+      recipients: [r({ memberId: 'a' })],
+      total: 100,
+      fee: 0.2,
+      balance: 100.19,
+    })
     expect(codes(res.blockers)).toEqual(['INSUFFICIENT_BALANCE'])
     expect(res.blockers[0].message).toContain('$100.20')
     expect(res.blockers[0].message).toContain('$100.19')
@@ -44,23 +60,43 @@ describe('checkRun', () => {
   })
 
   it('allows a debit exactly equal to the balance', () => {
-    const res = checkRun({ recipients: [r({ memberId: 'a' })], total: 100, fee: 0.2, balance: 100.2 })
+    const res = checkRun({
+      recipients: [r({ memberId: 'a' })],
+      total: 100,
+      fee: 0.2,
+      balance: 100.2,
+    })
     expect(res.blockers).toEqual([])
   })
 
   it('compares in integer cents: 0.1 + 0.2 against a 0.3 balance is not a blocker', () => {
     expect(0.1 + 0.2 > 0.3).toBe(true)
-    const res = checkRun({ recipients: [r({ memberId: 'a', amount: 0.3 })], total: 0.1 + 0.2, fee: 0, balance: 0.3 })
+    const res = checkRun({
+      recipients: [r({ memberId: 'a', amount: 0.3 })],
+      total: 0.1 + 0.2,
+      fee: 0,
+      balance: 0.3,
+    })
     expect(res.blockers).toEqual([])
-    const split = checkRun({ recipients: [r({ memberId: 'a', amount: 0.3 })], total: 0.1, fee: 0.2, balance: 0.3 })
+    const split = checkRun({
+      recipients: [r({ memberId: 'a', amount: 0.3 })],
+      total: 0.1,
+      fee: 0.2,
+      balance: 0.3,
+    })
     expect(split.blockers).toEqual([])
   })
 
   it('ignores sub-cent noise below half a cent but blocks a real extra cent', () => {
-    expect(checkRun({ recipients: [r({ memberId: 'a' })], total: 10.004, fee: 0, balance: 10 }).blockers).toEqual([])
-    expect(codes(checkRun({ recipients: [r({ memberId: 'a' })], total: 10.01, fee: 0, balance: 10 }).blockers)).toEqual([
-      'INSUFFICIENT_BALANCE',
-    ])
+    expect(
+      checkRun({ recipients: [r({ memberId: 'a' })], total: 10.004, fee: 0, balance: 10 }).blockers,
+    ).toEqual([])
+    expect(
+      codes(
+        checkRun({ recipients: [r({ memberId: 'a' })], total: 10.01, fee: 0, balance: 10 })
+          .blockers,
+      ),
+    ).toEqual(['INSUFFICIENT_BALANCE'])
   })
 
   it('blocks with MISSING_WALLET for USDC and USDT recipients without a wallet', () => {
@@ -82,13 +118,22 @@ describe('checkRun', () => {
   })
 
   it('does not require a wallet for EUR bank recipients', () => {
-    const res = checkRun({ recipients: [r({ memberId: 'c', method: 'EUR Bank', wallet: undefined })], total: 100, fee: 0.2, balance: 1000 })
+    const res = checkRun({
+      recipients: [r({ memberId: 'c', method: 'EUR Bank', wallet: undefined })],
+      total: 100,
+      fee: 0.2,
+      balance: 1000,
+    })
     expect(res.blockers).toEqual([])
   })
 
   it('warns with ZERO_AMOUNT for recipients that round to $0.00', () => {
     const res = checkRun({
-      recipients: [r({ memberId: 'a', amount: 0 }), r({ memberId: 'b', amount: 0.004 }), r({ memberId: 'c', amount: 0.01, wallet: 'x' })],
+      recipients: [
+        r({ memberId: 'a', amount: 0 }),
+        r({ memberId: 'b', amount: 0.004 }),
+        r({ memberId: 'c', amount: 0.01, wallet: 'x' }),
+      ],
       total: 0.01,
       fee: 0,
       balance: 100,
@@ -122,7 +167,11 @@ describe('checkRun', () => {
 
   it('reports multiple blockers and warnings together', () => {
     const res = checkRun({
-      recipients: [r({ memberId: 'a', wallet: undefined, amount: 0 }), r({ memberId: 'b', wallet: W2 }), r({ memberId: 'c', wallet: W2 })],
+      recipients: [
+        r({ memberId: 'a', wallet: undefined, amount: 0 }),
+        r({ memberId: 'b', wallet: W2 }),
+        r({ memberId: 'c', wallet: W2 }),
+      ],
       total: 200,
       fee: 0.4,
       balance: 50,
@@ -144,7 +193,15 @@ describe('confirmationPhrase', () => {
 
 describe('matchesConfirmation', () => {
   it('accepts the exact phrase and tolerated variants', () => {
-    for (const typed of ['12,450.00', '12450.00', '$12,450.00', '$12450.00', '  12,450.00  ', ' $ 12,450.00', '1,2450.00']) {
+    for (const typed of [
+      '12,450.00',
+      '12450.00',
+      '$12,450.00',
+      '$12450.00',
+      '  12,450.00  ',
+      ' $ 12,450.00',
+      '1,2450.00',
+    ]) {
       expect(matchesConfirmation(typed, 12450)).toBe(true)
     }
   })
@@ -155,7 +212,20 @@ describe('matchesConfirmation', () => {
   })
 
   it('rejects wrong or incomplete amounts', () => {
-    for (const typed of ['', '   ', '$', '12,450', '12450', '12,450.0', '12,450.01', '12,449.99', '124,500.00', 'USD 12,450.00', '$$12,450.00', '12,450.00$']) {
+    for (const typed of [
+      '',
+      '   ',
+      '$',
+      '12,450',
+      '12450',
+      '12,450.0',
+      '12,450.01',
+      '12,449.99',
+      '124,500.00',
+      'USD 12,450.00',
+      '$$12,450.00',
+      '12,450.00$',
+    ]) {
       expect(matchesConfirmation(typed, 12450)).toBe(false)
     }
   })

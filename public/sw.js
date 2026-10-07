@@ -22,8 +22,10 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches
       .keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE && k !== FONTS).map((k) => caches.delete(k))))
-      .then(() => self.clients.claim())
+      .then((keys) =>
+        Promise.all(keys.filter((k) => k !== CACHE && k !== FONTS).map((k) => caches.delete(k))),
+      )
+      .then(() => self.clients.claim()),
   )
 })
 
@@ -65,7 +67,9 @@ self.addEventListener('fetch', (event) => {
           }
           return res
         })
-        .catch(async () => (await caches.match(req)) || (await caches.match('/')) || Response.error())
+        .catch(
+          async () => (await caches.match(req)) || (await caches.match('/')) || Response.error(),
+        ),
     )
     return
   }
@@ -81,8 +85,8 @@ self.addEventListener('fetch', (event) => {
               caches.open(CACHE).then((c) => c.put(req, copy))
             }
             return res
-          })
-      )
+          }),
+      ),
     )
     return
   }

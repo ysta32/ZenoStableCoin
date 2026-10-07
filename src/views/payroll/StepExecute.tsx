@@ -20,7 +20,12 @@ const STAGES = [
 
 type RowState = 'pending' | 'processing' | PayrollRecipient['status']
 
-function rowState(i: number, n: number, elapsedMs: number, final: PayrollRecipient['status']): RowState {
+function rowState(
+  i: number,
+  n: number,
+  elapsedMs: number,
+  final: PayrollRecipient['status'],
+): RowState {
   const distStart = (STAGES[3].at / REAL_SECONDS) * DURATION_MS
   const span = DURATION_MS - distStart
   const sentAt = distStart + ((i + 1) * span) / (n + 1)
@@ -60,7 +65,9 @@ export function StepExecute({
     return (
       <Card className="mx-auto max-w-xl p-6 text-center">
         <h2 className="font-display text-[24px] text-text-primary">No run in progress</h2>
-        <p className="mt-2 text-[13.5px] text-text-secondary">Start a new payroll run to continue.</p>
+        <p className="mt-2 text-[13.5px] text-text-secondary">
+          Start a new payroll run to continue.
+        </p>
         <div className="mt-5">
           <Button variant="primary" onClick={onRestart}>
             Start a new run
@@ -72,7 +79,9 @@ export function StepExecute({
 
   const elapsed = Math.max(0, Math.min(DURATION_MS, now - startedAt))
   const frac = elapsed / DURATION_MS
-  const seconds = finished ? REAL_SECONDS : Math.min(REAL_SECONDS - 1, Math.floor(frac * REAL_SECONDS))
+  const seconds = finished
+    ? REAL_SECONDS
+    : Math.min(REAL_SECONDS - 1, Math.floor(frac * REAL_SECONDS))
   const stageIdx = STAGES.reduce((acc, s, i) => (seconds >= s.at ? i : acc), 0)
   const n = run.recipients.length
   const failed = run.recipients.filter((r) => r.status === 'failed').length
@@ -83,7 +92,9 @@ export function StepExecute({
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             <div className="eyebrow">{finished ? 'Payroll sent' : 'Executing payroll'}</div>
-            <div className="num mt-2 font-display text-[32px] leading-none text-text-primary sm:text-[40px]">{usd(run.total)}</div>
+            <div className="num mt-2 font-display text-[32px] leading-none text-text-primary sm:text-[40px]">
+              {usd(run.total)}
+            </div>
             <p className="mt-2 text-[13.5px] text-text-secondary">
               {finished
                 ? `Settled to ${n} recipient${n === 1 ? '' : 's'} in ${REAL_SECONDS} seconds.`
@@ -106,7 +117,10 @@ export function StepExecute({
           aria-valuemax={100}
           aria-valuenow={Math.round(frac * 100)}
         >
-          <div className="h-full bg-brand-500 transition-[width] duration-100 ease-linear" style={{ width: `${frac * 100}%` }} />
+          <div
+            className="h-full bg-brand-500 transition-[width] duration-100 ease-linear"
+            style={{ width: `${frac * 100}%` }}
+          />
         </div>
 
         <ol className="mt-5 grid gap-2 sm:grid-cols-2" aria-live="polite">
@@ -136,7 +150,10 @@ export function StepExecute({
           })}
         </ol>
 
-        <ul className="mt-6 divide-y divide-border-subtle border-y border-border-subtle" aria-label="Recipient status">
+        <ul
+          className="mt-6 divide-y divide-border-subtle border-y border-border-subtle"
+          aria-label="Recipient status"
+        >
           {run.recipients.map((r, i) => {
             const st = rowState(i, n, finished ? DURATION_MS : elapsed, r.status)
             const settled = st === 'sent' || st === 'failed'
@@ -144,7 +161,9 @@ export function StepExecute({
               <li key={`${r.memberId}-${i}`} className="flex items-center gap-3 py-3">
                 <Avatar initials={initialsOf(r.name)} color="" size={32} />
                 <div className="min-w-0 flex-1">
-                  <div className="truncate text-[13.5px] font-medium text-text-primary">{r.name || 'Unnamed'}</div>
+                  <div className="truncate text-[13.5px] font-medium text-text-primary">
+                    {r.name || 'Unnamed'}
+                  </div>
                   <div className="truncate text-[12px] text-text-muted">
                     {r.method}
                     {settled && (
@@ -157,7 +176,9 @@ export function StepExecute({
                     )}
                   </div>
                 </div>
-                <span className="num hidden text-[13.5px] text-text-primary sm:inline">{usd(r.amount)}</span>
+                <span className="num hidden text-[13.5px] text-text-primary sm:inline">
+                  {usd(r.amount)}
+                </span>
                 <StatusPill state={st} />
               </li>
             )
@@ -167,16 +188,25 @@ export function StepExecute({
         {finished && (
           <div className="mt-6">
             <div className="flex items-start gap-3 rounded-[10px] border border-border-subtle bg-bg-elevated p-4">
-              <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-positive-soft text-positive" aria-hidden="true">
+              <span
+                className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-positive-soft text-positive"
+                aria-hidden="true"
+              >
                 <IconCheck width={14} height={14} />
               </span>
               <div className="min-w-0 flex-1">
-                <h2 className="font-display text-[22px] leading-tight text-text-primary" role="status">
-                  {failed === 0 ? 'Payroll complete' : `Payroll complete with ${failed} failed payment${failed === 1 ? '' : 's'}`}
+                <h2
+                  className="font-display text-[22px] leading-tight text-text-primary"
+                  role="status"
+                >
+                  {failed === 0
+                    ? 'Payroll complete'
+                    : `Payroll complete with ${failed} failed payment${failed === 1 ? '' : 's'}`}
                 </h2>
                 <p className="mt-1 text-[13px] text-text-secondary">
-                  Recorded {formatRunDate(run.createdAt)} · run <span className="font-mono tabular-nums">{run.id}</span>. A receipt is recorded for{' '}
-                  {n === 1 ? 'the payment' : `each of the ${n} payments`}.
+                  Recorded {formatRunDate(run.createdAt)} · run{' '}
+                  <span className="font-mono tabular-nums">{run.id}</span>. A receipt is recorded
+                  for {n === 1 ? 'the payment' : `each of the ${n} payments`}.
                 </p>
                 <div className="mt-3 max-w-sm">
                   <TotalsLedger subtotal={run.total} fee={run.fee} recipients={n} />

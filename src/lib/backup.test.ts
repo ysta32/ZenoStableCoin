@@ -25,7 +25,12 @@ describe('backup', () => {
     expect(parseBackup('{nope', isValid)).toEqual({ ok: false, error: 'Not valid JSON' })
   })
   it('rejects non-Zeno payloads', () => {
-    for (const raw of ['null', '[]', '5', JSON.stringify({ app: 'other', version: 2, state: sample })]) {
+    for (const raw of [
+      'null',
+      '[]',
+      '5',
+      JSON.stringify({ app: 'other', version: 2, state: sample }),
+    ]) {
       expect(parseBackup(raw, isValid)).toEqual({ ok: false, error: 'Not a Zeno backup' })
     }
   })

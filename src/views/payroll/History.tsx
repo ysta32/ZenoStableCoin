@@ -12,12 +12,16 @@ export function History() {
   return (
     <section className="mt-10" aria-labelledby="past-runs-title">
       <div className="mb-3 flex items-baseline justify-between">
-        <h2 id="past-runs-title" className="font-display text-[22px] leading-tight text-text-primary">
+        <h2
+          id="past-runs-title"
+          className="font-display text-[22px] leading-tight text-text-primary"
+        >
           Past runs
         </h2>
         {payrollRuns.length > 0 && (
           <span className="text-[12.5px] text-text-muted">
-            <span className="num">{payrollRuns.length}</span> run{payrollRuns.length === 1 ? '' : 's'}
+            <span className="num">{payrollRuns.length}</span> run
+            {payrollRuns.length === 1 ? '' : 's'}
           </span>
         )}
       </div>
@@ -43,7 +47,15 @@ export function History() {
   )
 }
 
-function RunRow({ run, expanded, onToggle }: { run: PayrollRun; expanded: boolean; onToggle: () => void }) {
+function RunRow({
+  run,
+  expanded,
+  onToggle,
+}: {
+  run: PayrollRun
+  expanded: boolean
+  onToggle: () => void
+}) {
   const panelId = `run-panel-${run.id}`
   const n = run.recipients.length
   const failed = run.recipients.filter((r) => r.status === 'failed').length
@@ -64,15 +76,23 @@ function RunRow({ run, expanded, onToggle }: { run: PayrollRun; expanded: boolea
             className={`shrink-0 text-text-muted transition-transform duration-150 ${expanded ? 'rotate-180' : ''}`}
           />
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-[13.5px] font-medium text-text-primary">{formatRunDate(run.createdAt)}</span>
+            <span className="block truncate text-[13.5px] font-medium text-text-primary">
+              {formatRunDate(run.createdAt)}
+            </span>
             <span className="block truncate text-[12px] text-text-muted">
               {n} recipient{n === 1 ? '' : 's'} · fee <span className="num">{usd(run.fee)}</span>
             </span>
           </span>
           <span className="hidden sm:inline-flex">
-            {failed > 0 ? <Pill tone="negative">{failed} failed</Pill> : <Pill tone="positive">Settled</Pill>}
+            {failed > 0 ? (
+              <Pill tone="negative">{failed} failed</Pill>
+            ) : (
+              <Pill tone="positive">Settled</Pill>
+            )}
           </span>
-          <span className="num shrink-0 text-right text-[13.5px] text-text-primary sm:w-28">{usd(round2(run.total + run.fee))}</span>
+          <span className="num shrink-0 text-right text-[13.5px] text-text-primary sm:w-28">
+            {usd(round2(run.total + run.fee))}
+          </span>
         </button>
         <button
           type="button"
@@ -85,16 +105,29 @@ function RunRow({ run, expanded, onToggle }: { run: PayrollRun; expanded: boolea
         </button>
       </div>
       {expanded && (
-        <div id={panelId} className="border-t border-border-subtle bg-bg-elevated px-4 py-2 sm:px-5">
+        <div
+          id={panelId}
+          className="border-t border-border-subtle bg-bg-elevated px-4 py-2 sm:px-5"
+        >
           <ul className="divide-y divide-border-subtle">
             {run.recipients.map((r, i) => (
-              <li key={`${r.memberId}-${i}`} className="flex flex-wrap items-center gap-x-3 gap-y-1 py-2.5">
-                <span className="min-w-0 basis-full truncate text-[13px] text-text-primary sm:basis-auto sm:flex-1">{r.name || 'Unnamed'}</span>
+              <li
+                key={`${r.memberId}-${i}`}
+                className="flex flex-wrap items-center gap-x-3 gap-y-1 py-2.5"
+              >
+                <span className="min-w-0 basis-full truncate text-[13px] text-text-primary sm:basis-auto sm:flex-1">
+                  {r.name || 'Unnamed'}
+                </span>
                 <MethodBadge method={r.method} />
-                <span className="font-mono tabular-nums text-[12px] text-text-muted" title={r.txHash}>
+                <span
+                  className="font-mono tabular-nums text-[12px] text-text-muted"
+                  title={r.txHash}
+                >
                   {shortHash(r.txHash)}
                 </span>
-                <span className="num ml-auto w-24 text-right text-[13px] text-text-primary">{usd(r.amount)}</span>
+                <span className="num ml-auto w-24 text-right text-[13px] text-text-primary">
+                  {usd(r.amount)}
+                </span>
               </li>
             ))}
           </ul>

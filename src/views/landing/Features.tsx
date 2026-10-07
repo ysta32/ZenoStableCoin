@@ -1,7 +1,11 @@
 import { SVGProps } from 'react'
 import { LIApprove, LICurrencies, LIExport, LIImport, LIKeyboard, LIYield, Section } from './shared'
 
-const FEATURES: { icon: (p: SVGProps<SVGSVGElement>) => JSX.Element; title: string; body: string }[] = [
+const FEATURES: {
+  icon: (p: SVGProps<SVGSVGElement>) => JSX.Element
+  title: string
+  body: string
+}[] = [
   {
     icon: LICurrencies,
     title: 'Multi-currency payouts',

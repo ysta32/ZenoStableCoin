@@ -73,7 +73,15 @@ export function downloadReceipt(run: PayrollRun): void {
   const date = new Date(run.createdAt).toISOString()
   const rows: (string | number)[][] = [
     ['run_id', 'date', 'recipient', 'method', 'amount_usd', 'status', 'tx_hash'],
-    ...run.recipients.map((r) => [run.id, date, r.name, r.method, toCents(r.amount).toFixed(2), r.status, r.txHash]),
+    ...run.recipients.map((r) => [
+      run.id,
+      date,
+      r.name,
+      r.method,
+      toCents(r.amount).toFixed(2),
+      r.status,
+      r.txHash,
+    ]),
     [run.id, date, 'Network fee (0.2%)', '', run.fee.toFixed(2), '', ''],
     [run.id, date, 'Total debited', '', round2(run.total + run.fee).toFixed(2), '', ''],
   ]

@@ -10,7 +10,15 @@ import { Container, GitHubIcon, REPO_URL } from './shared'
 const zeno = PROVIDERS.find((p) => p.id === 'zeno')
 
 /** Mount-only fade; never hides content waiting for scroll. */
-function Rise({ children, delay = 0, className = '' }: { children: ReactNode; delay?: number; className?: string }) {
+function Rise({
+  children,
+  delay = 0,
+  className = '',
+}: {
+  children: ReactNode
+  delay?: number
+  className?: string
+}) {
   const reduce = useReducedMotion()
   if (reduce) return <div className={className}>{children}</div>
   return (
@@ -38,7 +46,11 @@ export function Hero() {
     void preloadView.dashboard()
   }
   return (
-    <section id="product" aria-labelledby="hero-title" className="scroll-mt-20 pb-28 pt-14 sm:pt-20 lg:pb-44">
+    <section
+      id="product"
+      aria-labelledby="hero-title"
+      className="scroll-mt-20 pb-28 pt-14 sm:pt-20 lg:pb-44"
+    >
       <Container>
         <div className="grid gap-x-10 gap-y-12 lg:grid-cols-12">
           <Rise className="lg:col-span-8">
@@ -55,11 +67,17 @@ export function Hero() {
               Payroll that settles in <em className="italic">minutes</em>, not days.
             </h1>
             <p className="mt-6 max-w-[600px] text-[18px] leading-[1.6] text-text-secondary">
-              Pay contractors in 100+ countries in USDC or USDT from a single treasury, and let the cash you have not
-              paid out yet earn yield from tokenized Treasury bills.
+              Pay contractors in 100+ countries in USDC or USDT from a single treasury, and let the
+              cash you have not paid out yet earn yield from tokenized Treasury bills.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-3">
-              <Button variant="primary" size="lg" onClick={() => navigate('app')} onMouseEnter={prefetch} onFocus={prefetch}>
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={() => navigate('app')}
+                onMouseEnter={prefetch}
+                onFocus={prefetch}
+              >
                 Open the demo
               </Button>
               <a
@@ -87,7 +105,11 @@ export function Hero() {
                 >
                   <dt className="text-[13px] text-text-secondary">{k}</dt>
                   <dd className="lg:text-right">
-                    <span className={`block text-[17px] text-text-primary ${mono ? 'num' : 'font-medium'}`}>{v}</span>
+                    <span
+                      className={`block text-[17px] text-text-primary ${mono ? 'num' : 'font-medium'}`}
+                    >
+                      {v}
+                    </span>
                     <span className="block text-[12px] text-text-muted">{note}</span>
                   </dd>
                 </div>

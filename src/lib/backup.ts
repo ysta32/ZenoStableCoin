@@ -14,7 +14,11 @@ export type Persisted = {
 export type BackupResult = { ok: true; state: Persisted } | { ok: false; error: string }
 
 export function serializeBackup(p: Persisted): string {
-  return JSON.stringify({ app: 'zeno', version: BACKUP_VERSION, exportedAt: new Date().toISOString(), state: p }, null, 2)
+  return JSON.stringify(
+    { app: 'zeno', version: BACKUP_VERSION, exportedAt: new Date().toISOString(), state: p },
+    null,
+    2,
+  )
 }
 
 export function parseBackup(json: string, isValid: (x: unknown) => x is Persisted): BackupResult {

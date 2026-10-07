@@ -2,15 +2,27 @@ import type { Method } from '../../data'
 import { formatUSD } from '../../lib/money'
 import { toCents } from './ledger'
 
-export type RailCode = 'INSUFFICIENT_BALANCE' | 'NO_RECIPIENTS' | 'ZERO_AMOUNT' | 'DUPLICATE_WALLET' | 'MISSING_WALLET'
+export type RailCode =
+  'INSUFFICIENT_BALANCE' | 'NO_RECIPIENTS' | 'ZERO_AMOUNT' | 'DUPLICATE_WALLET' | 'MISSING_WALLET'
 
 export type Rail = { code: RailCode; message: string; memberIds?: string[] }
 
 export type RailsResult = { blockers: Rail[]; warnings: Rail[] }
 
-export type RailsRecipient = { memberId: string; name: string; method: Method; amount: number; wallet?: string }
+export type RailsRecipient = {
+  memberId: string
+  name: string
+  method: Method
+  amount: number
+  wallet?: string
+}
 
-export type RailsInput = { recipients: RailsRecipient[]; total: number; fee: number; balance: number }
+export type RailsInput = {
+  recipients: RailsRecipient[]
+  total: number
+  fee: number
+  balance: number
+}
 
 const ONCHAIN_METHODS: readonly Method[] = ['USDC', 'USDT']
 

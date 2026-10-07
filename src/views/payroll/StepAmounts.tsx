@@ -50,13 +50,19 @@ export function StepAmounts({ onNext }: { onNext: () => void }) {
     <>
       <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="font-display text-[26px] leading-tight text-text-primary">Set payroll amounts</h2>
+          <h2 className="font-display text-[26px] leading-tight text-text-primary">
+            Set payroll amounts
+          </h2>
           <p className="mt-1 text-[13.5px] text-text-secondary">
             Amounts are in USD. Stablecoin recipients settle 1:1.
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="secondary" onClick={() => setImportOpen(true)} className="flex-1 sm:flex-none">
+          <Button
+            variant="secondary"
+            onClick={() => setImportOpen(true)}
+            className="flex-1 sm:flex-none"
+          >
             Import CSV
           </Button>
           <Button variant="secondary" onClick={handleAdd} className="flex-1 sm:flex-none">
@@ -80,7 +86,9 @@ export function StepAmounts({ onNext }: { onNext: () => void }) {
           {team.length === 0 && (
             <li className="px-6 py-12 text-center">
               <div className="text-[14px] font-medium text-text-primary">No recipients yet</div>
-              <div className="mt-1 text-[13px] text-text-secondary">Add a member or import a CSV to start.</div>
+              <div className="mt-1 text-[13px] text-text-secondary">
+                Add a member or import a CSV to start.
+              </div>
             </li>
           )}
           {team.map((m) => (
@@ -110,7 +118,13 @@ export function StepAmounts({ onNext }: { onNext: () => void }) {
       </Card>
 
       <div className="mt-6 flex justify-end">
-        <Button variant="primary" size="lg" onClick={onNext} disabled={blocked} className="w-full sm:w-auto">
+        <Button
+          variant="primary"
+          size="lg"
+          onClick={onNext}
+          disabled={blocked}
+          className="w-full sm:w-auto"
+        >
           Continue to review <IconArrowRight width={16} height={16} />
         </Button>
       </div>
@@ -156,7 +170,9 @@ function MemberRow({
               className={`${control} w-full`}
             />
           ) : (
-            <div className="truncate text-[13.5px] font-medium text-text-primary">{m.name || 'Unnamed'}</div>
+            <div className="truncate text-[13.5px] font-medium text-text-primary">
+              {m.name || 'Unnamed'}
+            </div>
           )}
           <div className="truncate text-[12px] text-text-muted">{m.role}</div>
         </div>
@@ -218,7 +234,9 @@ function MemberRow({
 
       <div className="col-span-2 md:col-span-1 md:text-right">
         <div className="relative md:ml-auto md:w-40">
-          <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[13px] text-text-muted">$</span>
+          <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[13px] text-text-muted">
+            $
+          </span>
           <input
             type="number"
             inputMode="decimal"

@@ -32,7 +32,10 @@ for (const route of routes) {
       .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
       .analyze()
     const report = results.violations
-      .map((v) => `${v.id} (${v.impact}): ${v.help}\n${v.nodes.map((n) => `    ${n.target.join(' ')}`).join('\n')}`)
+      .map(
+        (v) =>
+          `${v.id} (${v.impact}): ${v.help}\n${v.nodes.map((n) => `    ${n.target.join(' ')}`).join('\n')}`,
+      )
       .join('\n')
     expect(results.violations, `Violations on ${route}:\n${report}`).toEqual([])
   })
@@ -56,7 +59,10 @@ test('404 route has a skip-link target and passes axe', async ({ page }) => {
     .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
     .analyze()
   const report = results.violations
-    .map((v) => `${v.id} (${v.impact}): ${v.help}\n${v.nodes.map((n) => `    ${n.target.join(' ')}`).join('\n')}`)
+    .map(
+      (v) =>
+        `${v.id} (${v.impact}): ${v.help}\n${v.nodes.map((n) => `    ${n.target.join(' ')}`).join('\n')}`,
+    )
     .join('\n')
   expect(results.violations, `Violations on 404:\n${report}`).toEqual([])
 })

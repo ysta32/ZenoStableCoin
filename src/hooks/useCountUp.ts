@@ -5,7 +5,10 @@ const prefersReducedMotion = () =>
   window.matchMedia &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-export function useCountUp(target: number, opts: { durationMs?: number; start?: boolean; decimals?: number } = {}) {
+export function useCountUp(
+  target: number,
+  opts: { durationMs?: number; start?: boolean; decimals?: number } = {},
+) {
   const { durationMs = 1200, start = true, decimals = 0 } = opts
   const [value, setValue] = useState(start ? 0 : target)
   const rafRef = useRef<number | null>(null)

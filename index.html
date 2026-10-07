@@ -10,7 +10,11 @@
           var s = localStorage.getItem('zeno.theme')
           if (s === 'light' || s === 'dark' || s === 'system') t = s
         } catch (e) {}
-        var dark = t === 'dark' || (t === 'system' && !!window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        var dark =
+          t === 'dark' ||
+          (t === 'system' &&
+            !!window.matchMedia &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches)
         if (dark) document.documentElement.classList.add('dark')
       })()
     </script>
@@ -26,10 +30,16 @@
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F1110" />
     <meta name="color-scheme" content="light dark" />
     <title>Zeno — Stablecoin payroll for global teams</title>
-    <meta name="description" content="An open-source prototype of stablecoin payroll for teams paying contractors worldwide." />
+    <meta
+      name="description"
+      content="An open-source prototype of stablecoin payroll for teams paying contractors worldwide."
+    />
     <meta name="author" content="Zeno Labs" />
     <meta property="og:title" content="Zeno — Stablecoin payroll for global teams" />
-    <meta property="og:description" content="An open-source prototype of stablecoin payroll for teams paying contractors worldwide." />
+    <meta
+      property="og:description"
+      content="An open-source prototype of stablecoin payroll for teams paying contractors worldwide."
+    />
     <meta property="og:site_name" content="Zeno" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://zeno-stable-coin.vercel.app/og-cover.png" />
@@ -38,22 +48,72 @@
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Zeno — Stablecoin payroll for global teams" />
-    <meta name="twitter:description" content="An open-source prototype of stablecoin payroll for teams paying contractors worldwide." />
+    <meta
+      name="twitter:description"
+      content="An open-source prototype of stablecoin payroll for teams paying contractors worldwide."
+    />
     <meta name="twitter:image" content="https://zeno-stable-coin.vercel.app/og-cover.png" />
     <style>
       /* Splash-only tokens; mirror src/styles.css so the splash matches before CSS loads. */
-      html { --splash-bg: #F6F5F1; --splash-fg: #565B62; --splash-mark: #0B5D45; background: var(--splash-bg); }
-      html.dark { --splash-bg: #0F1110; --splash-fg: #A6ABA6; --splash-mark: #4CB88F; }
-      @keyframes zenoFade { to { opacity: 1 } }
-      @media (prefers-reduced-motion: reduce) { .zeno-splash { animation: none !important; opacity: 1 !important } }
+      html {
+        --splash-bg: #f6f5f1;
+        --splash-fg: #565b62;
+        --splash-mark: #0b5d45;
+        background: var(--splash-bg);
+      }
+      html.dark {
+        --splash-bg: #0f1110;
+        --splash-fg: #a6aba6;
+        --splash-mark: #4cb88f;
+      }
+      @keyframes zenoFade {
+        to {
+          opacity: 1;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .zeno-splash {
+          animation: none !important;
+          opacity: 1 !important;
+        }
+      }
     </style>
   </head>
-  <body style="margin:0">
+  <body style="margin: 0">
     <div id="root">
-      <div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center">
-        <div class="zeno-splash" style="color:var(--splash-fg);font-family:'Geist Variable',Geist,ui-sans-serif,system-ui,sans-serif;display:flex;align-items:center;gap:10px;opacity:0;animation:zenoFade 0.2s ease-out 0.25s forwards">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="color:var(--splash-mark)"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M3 12A9 9 0 0 0 21 12Z" fill="currentColor"/></svg>
-          <span style="font-size:14px;font-weight:500">Loading Zeno</span>
+      <div
+        style="
+          position: fixed;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        <div
+          class="zeno-splash"
+          style="
+            color: var(--splash-fg);
+            font-family: 'Geist Variable', Geist, ui-sans-serif, system-ui, sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            animation: zenoFade 0.2s ease-out 0.25s forwards;
+          "
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+            style="color: var(--splash-mark)"
+          >
+            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5" />
+            <path d="M3 12A9 9 0 0 0 21 12Z" fill="currentColor" />
+          </svg>
+          <span style="font-size: 14px; font-weight: 500">Loading Zeno</span>
         </div>
       </div>
     </div>

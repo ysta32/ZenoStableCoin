@@ -71,7 +71,9 @@ export function Dashboard() {
 
           <Card className="p-6">
             <h2 className="font-display text-xl">Next payroll</h2>
-            <div className="num mt-3 text-[28px] font-semibold tracking-tight">{formatUSD(monthly)}</div>
+            <div className="num mt-3 text-[28px] font-semibold tracking-tight">
+              {formatUSD(monthly)}
+            </div>
             <div className="text-[12.5px] text-text-secondary">
               Month end · {nextPayroll.label}{' '}
               <span className="text-text-muted">· {nextPayroll.inLabel}</span>

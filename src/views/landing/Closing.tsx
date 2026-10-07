@@ -11,7 +11,10 @@ export function FinalCta() {
     void preloadView.dashboard()
   }
   return (
-    <section aria-labelledby="cta-title" className="mt-28 border-y border-border-subtle bg-bg-surface sm:mt-36">
+    <section
+      aria-labelledby="cta-title"
+      className="mt-28 border-y border-border-subtle bg-bg-surface sm:mt-36"
+    >
       <Container className="grid gap-8 py-16 sm:py-20 lg:grid-cols-12 lg:items-end">
         <div className="lg:col-span-7">
           <h2
@@ -21,11 +24,18 @@ export function FinalCta() {
             Run a payroll end to end, <em className="italic">in the browser.</em>
           </h2>
           <p className="mt-4 max-w-[520px] text-[17px] leading-[1.6] text-text-secondary">
-            The demo seeds a small team and a funded treasury. Nothing to install and no account needed.
+            The demo seeds a small team and a funded treasury. Nothing to install and no account
+            needed.
           </p>
         </div>
         <div className="flex flex-wrap gap-3 lg:col-span-5 lg:justify-end">
-          <Button variant="primary" size="lg" onClick={() => navigate('app')} onMouseEnter={prefetch} onFocus={prefetch}>
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={() => navigate('app')}
+            onMouseEnter={prefetch}
+            onFocus={prefetch}
+          >
             Open the demo
           </Button>
           <a

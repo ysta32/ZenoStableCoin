@@ -49,17 +49,20 @@ function validate(f: FormState): Errors {
   if (!f.role.trim()) e.role = 'Enter a role.'
   if (f.email.trim() && !EMAIL_RE.test(f.email.trim())) e.email = 'Enter a valid email address.'
   const amount = Number(f.amount)
-  if (!f.amount.trim() || !Number.isFinite(amount) || amount <= 0) e.amount = 'Enter an amount greater than 0.'
+  if (!f.amount.trim() || !Number.isFinite(amount) || amount <= 0)
+    e.amount = 'Enter an amount greater than 0.'
   if (f.method !== 'EUR Bank') {
     const w = f.wallet.trim()
     if (!w) e.wallet = `A wallet address is required to pay in ${f.method}.`
-    else if (!isEvmAddress(w)) e.wallet = 'Enter a valid EVM address: 0x followed by 40 hex characters.'
+    else if (!isEvmAddress(w))
+      e.wallet = 'Enter a valid EVM address: 0x followed by 40 hex characters.'
   }
   return e
 }
 
 export function Team() {
-  const { team, goToPayroll, addMember, updateMember, removeMember, defaultMethod, toast } = useApp()
+  const { team, goToPayroll, addMember, updateMember, removeMember, defaultMethod, toast } =
+    useApp()
   const [query, setQuery] = useState('')
   const [panel, setPanel] = useState<{ mode: 'add' } | { mode: 'edit'; id: string } | null>(null)
   const returnFocus = useRef<HTMLElement | null>(null)
@@ -68,14 +71,17 @@ export function Team() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
     if (!q) return team
-    return team.filter((m) => [m.name, m.role, m.country, m.email ?? ''].some((s) => s.toLowerCase().includes(q)))
+    return team.filter((m) =>
+      [m.name, m.role, m.country, m.email ?? ''].some((s) => s.toLowerCase().includes(q)),
+    )
   }, [team, query])
 
   const monthly = useMemo(() => team.reduce((s, m) => s + m.amount, 0), [team])
   const editing = panel?.mode === 'edit' ? team.find((m) => m.id === panel.id) : undefined
 
   const open = (p: NonNullable<typeof panel>) => {
-    returnFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    returnFocus.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null
     setPanel(p)
   }
   const close = () => {
@@ -90,7 +96,9 @@ export function Team() {
   return (
     <div className="flex h-full flex-col">
       <TopBar title="Team">
-        <Button variant="secondary" onClick={goToPayroll}>Run payroll</Button>
+        <Button variant="secondary" onClick={goToPayroll}>
+          Run payroll
+        </Button>
         <button
           ref={addRef}
           type="button"
@@ -104,13 +112,17 @@ export function Team() {
         <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="eyebrow">Monthly commitment</p>
-            <p className="num mt-1 text-[28px] font-semibold leading-none tracking-tight text-text-primary">{formatUSD(monthly)}</p>
+            <p className="num mt-1 text-[28px] font-semibold leading-none tracking-tight text-text-primary">
+              {formatUSD(monthly)}
+            </p>
             <p className="mt-1.5 text-[13px] text-text-secondary">
               across {team.length} {team.length === 1 ? 'contractor' : 'contractors'}
             </p>
           </div>
           <div className="w-full sm:w-72">
-            <label htmlFor="team-search" className="sr-only">Search contractors</label>
+            <label htmlFor="team-search" className="sr-only">
+              Search contractors
+            </label>
             <input
               id="team-search"
               type="search"
@@ -134,7 +146,9 @@ export function Team() {
                   : `Nobody matches “${query}”. Try a different name, role, or country.`}
               </p>
               {team.length === 0 && (
-                <Button className="mt-5" onClick={() => open({ mode: 'add' })}>Add contractor</Button>
+                <Button className="mt-5" onClick={() => open({ mode: 'add' })}>
+                  Add contractor
+                </Button>
               )}
             </div>
           ) : (
@@ -155,20 +169,28 @@ export function Team() {
                     <div className="flex min-w-0 items-center gap-3">
                       <Avatar initials={m.initials} color={m.avatarColor} size={36} />
                       <div className="min-w-0">
-                        <div className="truncate text-[14px] font-medium text-text-primary">{m.name || 'Unnamed'}</div>
+                        <div className="truncate text-[14px] font-medium text-text-primary">
+                          {m.name || 'Unnamed'}
+                        </div>
                         <div className="truncate text-[12.5px] text-text-secondary">{m.role}</div>
                       </div>
                     </div>
                     <div className="order-3 col-span-2 text-[12.5px] text-text-secondary md:order-none md:col-span-1">
                       {m.country}
                     </div>
-                    <div className="order-4 col-span-2 md:order-none md:col-span-1"><MethodBadge method={m.method} /></div>
+                    <div className="order-4 col-span-2 md:order-none md:col-span-1">
+                      <MethodBadge method={m.method} />
+                    </div>
                     <div className="num text-right text-[14px] text-text-primary">
                       {formatUSD(m.amount)}
                       <span className="font-sans text-[12px] text-text-muted">/mo</span>
                     </div>
                     <div className="order-5 col-span-2 flex justify-end md:order-none md:col-span-1">
-                      <Button variant="ghost" size="sm" onClick={() => open({ mode: 'edit', id: m.id })}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => open({ mode: 'edit', id: m.id })}
+                      >
                         Edit<span className="sr-only"> {m.name}</span>
                       </Button>
                     </div>
@@ -211,7 +233,10 @@ export function Team() {
   )
 }
 
-type SavedValues = Pick<Member, 'name' | 'role' | 'country' | 'countryCode' | 'method' | 'amount'> & {
+type SavedValues = Pick<
+  Member,
+  'name' | 'role' | 'country' | 'countryCode' | 'method' | 'amount'
+> & {
   wallet?: string
   email?: string
 }
@@ -256,7 +281,8 @@ function MemberPanel({
 
   const errors = validate(form)
   const show = (k: keyof FormState) => (submitted || touched[k] ? errors[k] : undefined)
-  const set = <K extends keyof FormState>(k: K, v: FormState[K]) => setForm((f) => ({ ...f, [k]: v }))
+  const set = <K extends keyof FormState>(k: K, v: FormState[K]) =>
+    setForm((f) => ({ ...f, [k]: v }))
   const blur = (k: keyof FormState) => () => setTouched((t) => ({ ...t, [k]: true }))
 
   const countries = useMemo(() => {
@@ -342,7 +368,9 @@ function MemberPanel({
               {member ? 'Edit contractor' : 'Add contractor'}
             </h2>
             <p className="mt-1 text-[13px] text-text-secondary">
-              {member ? 'Changes apply to the next payroll run.' : 'They will appear in your next payroll run.'}
+              {member
+                ? 'Changes apply to the next payroll run.'
+                : 'They will appear in your next payroll run.'}
             </p>
           </div>
           <button
@@ -355,7 +383,12 @@ function MemberPanel({
           </button>
         </header>
 
-        <form id="member-form" onSubmit={submit} noValidate className="flex-1 space-y-5 overflow-y-auto px-6 py-6">
+        <form
+          id="member-form"
+          onSubmit={submit}
+          noValidate
+          className="flex-1 space-y-5 overflow-y-auto px-6 py-6"
+        >
           <Field label="Full name" error={show('name')} htmlFor="mf-name">
             <input
               ref={nameRef}
@@ -407,7 +440,9 @@ function MemberPanel({
                 className={inputCls(false)}
               >
                 {countries.map((c) => (
-                  <option key={c.code} value={c.code}>{c.name}</option>
+                  <option key={c.code} value={c.code}>
+                    {c.name}
+                  </option>
                 ))}
               </select>
             </Field>
@@ -426,7 +461,9 @@ function MemberPanel({
             </Field>
           </div>
           <fieldset>
-            <legend className="mb-1.5 text-[13px] font-medium text-text-primary">Payout method</legend>
+            <legend className="mb-1.5 text-[13px] font-medium text-text-primary">
+              Payout method
+            </legend>
             <div className="grid grid-cols-3 gap-1 rounded-[8px] bg-bg-inset p-1" role="radiogroup">
               {METHODS.map((m) => (
                 <label
@@ -451,7 +488,12 @@ function MemberPanel({
             </div>
           </fieldset>
           {needsWallet && (
-            <Field label="Wallet address" error={show('wallet')} htmlFor="mf-wallet" hint="EVM address that receives the payout.">
+            <Field
+              label="Wallet address"
+              error={show('wallet')}
+              htmlFor="mf-wallet"
+              hint="EVM address that receives the payout."
+            >
               <input
                 id="mf-wallet"
                 name="wallet"
@@ -474,15 +516,23 @@ function MemberPanel({
             {onRemove &&
               (confirmRemove ? (
                 <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="sm" onClick={() => setConfirmRemove(false)}>Keep</Button>
-                  <Button variant="danger" size="sm" onClick={onRemove}>Confirm remove</Button>
+                  <Button variant="ghost" size="sm" onClick={() => setConfirmRemove(false)}>
+                    Keep
+                  </Button>
+                  <Button variant="danger" size="sm" onClick={onRemove}>
+                    Confirm remove
+                  </Button>
                 </div>
               ) : (
-                <Button variant="danger" size="sm" onClick={() => setConfirmRemove(true)}>Remove</Button>
+                <Button variant="danger" size="sm" onClick={() => setConfirmRemove(true)}>
+                  Remove
+                </Button>
               ))}
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="secondary" onClick={onClose}>Cancel</Button>
+            <Button variant="secondary" onClick={onClose}>
+              Cancel
+            </Button>
             <button
               type="submit"
               form="member-form"
@@ -520,15 +570,22 @@ function Field({
 }) {
   return (
     <div>
-      <label htmlFor={htmlFor} className="mb-1.5 flex items-baseline justify-between text-[13px] font-medium text-text-primary">
+      <label
+        htmlFor={htmlFor}
+        className="mb-1.5 flex items-baseline justify-between text-[13px] font-medium text-text-primary"
+      >
         <span>{label}</span>
         {optional && <span className="text-[12px] font-normal text-text-muted">Optional</span>}
       </label>
       {children}
       {error ? (
-        <p id={`${htmlFor}-err`} role="alert" className="mt-1.5 text-[12.5px] text-negative">{error}</p>
+        <p id={`${htmlFor}-err`} role="alert" className="mt-1.5 text-[12.5px] text-negative">
+          {error}
+        </p>
       ) : hint ? (
-        <p id={`${htmlFor}-hint`} className="mt-1.5 text-[12.5px] text-text-muted">{hint}</p>
+        <p id={`${htmlFor}-hint`} className="mt-1.5 text-[12.5px] text-text-muted">
+          {hint}
+        </p>
       ) : null}
     </div>
   )

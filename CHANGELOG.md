@@ -4,6 +4,25 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] - 2026-10-07
+
+### Added
+
+- Payroll safety rails: a run is blocked when the treasury cannot cover total plus fee, when a stablecoin recipient has no wallet, or when there are no recipients; duplicate wallets and zero amounts are flagged. Executing now requires typing the exact debit amount, checked before anything is recorded.
+- "Demo · simulated funds" badge in the app bar and plain-language disclaimers on the landing page, so nobody mistakes the demo for a live product.
+- Your data in Settings: export a JSON backup, import one (validated), or reset the demo data.
+- Landing "Built in the open" section linking source, CI, release notes and the security policy.
+- Accessibility gate: Playwright + axe-core checks every route against WCAG 2.1 AA in CI, plus a skip-to-content link and reduced-motion support.
+- Security headers on production (CSP with a hashed inline script, HSTS, frame-ancestors none, COOP, Referrer-Policy, Permissions-Policy), documented in `docs/SECURITY-HEADERS.md`.
+- Hardened validation of saved browser state: size and item limits, EVM wallet format, non-negative balances, prototype-pollution-safe parsing (62 new tests).
+- GitHub project hygiene: SECURITY.md with private vulnerability reporting, code of conduct, issue forms, PR template, Dependabot, CODEOWNERS.
+- CI hardening (least-privilege permissions, concurrency cancel, format check, `npm audit` on production deps) and a tag-driven release workflow that publishes GitHub Releases with notes from this changelog and a dist archive.
+
+### Changed
+
+- Seeded demo team members now carry placeholder wallet addresses so the sample payroll passes the new rails.
+- Public site no longer sits behind Vercel authentication.
+
 ## [1.0.0] - 2026-10-07
 
 ### Added

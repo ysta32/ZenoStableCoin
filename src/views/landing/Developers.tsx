@@ -49,13 +49,43 @@ function highlight(code: string): ReactNode[] {
     const start = m.index ?? 0
     if (start > last) out.push(code.slice(last, start))
     const [whole, comment, str, colon, num, kw, key] = m
-    if (comment) out.push(<span key={k++} className="italic text-text-muted">{comment}</span>)
+    if (comment)
+      out.push(
+        <span key={k++} className="italic text-text-muted">
+          {comment}
+        </span>,
+      )
     else if (str && colon) {
-      out.push(<span key={k++} className="text-text-primary">{str}</span>, colon)
-    } else if (str) out.push(<span key={k++} className="text-brand-500">{str}</span>)
-    else if (num) out.push(<span key={k++} className="text-warning">{num}</span>)
-    else if (kw) out.push(<span key={k++} className="text-info-500">{kw}</span>)
-    else if (key) out.push(<span key={k++} className="text-text-primary">{key}</span>)
+      out.push(
+        <span key={k++} className="text-text-primary">
+          {str}
+        </span>,
+        colon,
+      )
+    } else if (str)
+      out.push(
+        <span key={k++} className="text-brand-500">
+          {str}
+        </span>,
+      )
+    else if (num)
+      out.push(
+        <span key={k++} className="text-warning">
+          {num}
+        </span>,
+      )
+    else if (kw)
+      out.push(
+        <span key={k++} className="text-info-500">
+          {kw}
+        </span>,
+      )
+    else if (key)
+      out.push(
+        <span key={k++} className="text-text-primary">
+          {key}
+        </span>,
+      )
     else out.push(whole)
     last = start + whole.length
   }
@@ -101,8 +131,8 @@ export function Developers() {
       title="A small API shaped like your payroll."
       lead={
         <>
-          The prototype has no public API yet. This is the interface we are designing toward: idempotent runs, one
-          object per payment, and a webhook when a run settles.
+          The prototype has no public API yet. This is the interface we are designing toward:
+          idempotent runs, one object per payment, and a webhook when a run settles.
         </>
       }
     >
@@ -129,12 +159,16 @@ export function Developers() {
                   }`}
                 >
                   {t.label}
-                  {i === active && <span className="absolute inset-x-3 bottom-0 h-px bg-text-primary" />}
+                  {i === active && (
+                    <span className="absolute inset-x-3 bottom-0 h-px bg-text-primary" />
+                  )}
                 </button>
               ))}
             </div>
             <div className="flex items-center gap-3">
-              <span className="font-mono tabular-nums hidden text-[11.5px] text-text-muted sm:inline">{tab.file}</span>
+              <span className="font-mono tabular-nums hidden text-[11.5px] text-text-muted sm:inline">
+                {tab.file}
+              </span>
               <button
                 type="button"
                 onClick={copy}
@@ -146,7 +180,13 @@ export function Developers() {
               </button>
             </div>
           </div>
-          <div role="tabpanel" id={`panel-${tab.id}`} aria-labelledby={`tab-${tab.id}`} tabIndex={0} className="focus-ring">
+          <div
+            role="tabpanel"
+            id={`panel-${tab.id}`}
+            aria-labelledby={`tab-${tab.id}`}
+            tabIndex={0}
+            className="focus-ring"
+          >
             <pre className="font-mono tabular-nums overflow-x-auto px-5 py-5 text-[12.5px] leading-[1.75] text-text-secondary">
               <code>{highlight(tab.code)}</code>
             </pre>

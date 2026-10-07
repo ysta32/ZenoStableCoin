@@ -23,7 +23,8 @@ export function Payroll() {
   // If the view remounted mid-run, the most recent recorded run is the one being executed.
   const activeRun: PayrollRun | undefined =
     payrollStep === 2
-      ? (activeRunId ? payrollRuns.find((r) => r.id === activeRunId) : undefined) ?? payrollRuns[0]
+      ? ((activeRunId ? payrollRuns.find((r) => r.id === activeRunId) : undefined) ??
+        payrollRuns[0])
       : undefined
 
   // Context marks the whole Execute step as executing; once the run has settled, allow a new run.
@@ -66,13 +67,20 @@ export function Payroll() {
         </Button>
       </TopBar>
 
-      <nav aria-label="Payroll steps" className="border-b border-border-subtle bg-bg-base px-4 pt-5 sm:px-8">
+      <nav
+        aria-label="Payroll steps"
+        className="border-b border-border-subtle bg-bg-base px-4 pt-5 sm:px-8"
+      >
         <ol className="grid grid-cols-3 gap-2 sm:gap-4">
           {STEPS.map((s, i) => {
             const active = i === payrollStep
             const done = i < payrollStep
             return (
-              <li key={s} aria-current={active ? 'step' : undefined} className="flex min-w-0 flex-col">
+              <li
+                key={s}
+                aria-current={active ? 'step' : undefined}
+                className="flex min-w-0 flex-col"
+              >
                 <div className="flex min-w-0 items-center gap-2.5 pb-3.5">
                   <span
                     className={[
@@ -90,7 +98,11 @@ export function Payroll() {
                   <span
                     className={[
                       'truncate text-[13px]',
-                      active ? 'font-medium text-text-primary' : done ? 'text-text-primary' : 'text-text-muted',
+                      active
+                        ? 'font-medium text-text-primary'
+                        : done
+                          ? 'text-text-primary'
+                          : 'text-text-muted',
                       active ? '' : 'hidden sm:inline',
                     ].join(' ')}
                   >
@@ -98,7 +110,10 @@ export function Payroll() {
                     {done && <span className="sr-only"> (completed)</span>}
                   </span>
                 </div>
-                <div className={`h-[2px] ${active || done ? 'bg-brand-500' : 'bg-border-subtle'}`} aria-hidden="true" />
+                <div
+                  className={`h-[2px] ${active || done ? 'bg-brand-500' : 'bg-border-subtle'}`}
+                  aria-hidden="true"
+                />
               </li>
             )
           })}
@@ -115,8 +130,12 @@ export function Payroll() {
             transition={{ duration: 0.16, ease: 'easeOut' }}
           >
             {payrollStep === 0 && <StepAmounts onNext={() => setPayrollStep(1)} />}
-            {payrollStep === 1 && <StepReview onBack={() => setPayrollStep(0)} onExecuted={onExecuted} />}
-            {payrollStep === 2 && <StepExecute run={activeRun} onRestart={runAnother} onFinished={onFinished} />}
+            {payrollStep === 1 && (
+              <StepReview onBack={() => setPayrollStep(0)} onExecuted={onExecuted} />
+            )}
+            {payrollStep === 2 && (
+              <StepExecute run={activeRun} onRestart={runAnother} onFinished={onFinished} />
+            )}
           </motion.div>
         </AnimatePresence>
         {payrollStep !== 1 && <History />}

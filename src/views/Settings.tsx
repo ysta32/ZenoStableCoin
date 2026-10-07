@@ -18,7 +18,15 @@ const METHODS: { value: Method; label: string }[] = [
 
 export function Settings() {
   const {
-    theme, setTheme, defaultMethod, setDefaultMethod, resetDemo, isExecuting, toast, exportState, importState,
+    theme,
+    setTheme,
+    defaultMethod,
+    setDefaultMethod,
+    resetDemo,
+    isExecuting,
+    toast,
+    exportState,
+    importState,
   } = useApp()
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [importError, setImportError] = useState<string | null>(null)
@@ -77,14 +85,30 @@ export function Settings() {
           </Section>
 
           <Section title="Payout defaults" desc="Applied to new contractors you add.">
-            <Row label="Default payout method" desc="Existing contractors keep their current method.">
-              <Segmented label="Default payout method" options={METHODS} value={defaultMethod} onChange={setDefaultMethod} />
+            <Row
+              label="Default payout method"
+              desc="Existing contractors keep their current method."
+            >
+              <Segmented
+                label="Default payout method"
+                options={METHODS}
+                value={defaultMethod}
+                onChange={setDefaultMethod}
+              />
             </Row>
           </Section>
 
-          <Section title="Your data" desc="Everything is stored locally in this browser. Nothing is sent anywhere.">
-            <Row label="Export backup" desc="Download team, activity, payroll runs and treasury balances as JSON.">
-              <Button variant="secondary" size="sm" onClick={exportAll}>Export backup</Button>
+          <Section
+            title="Your data"
+            desc="Everything is stored locally in this browser. Nothing is sent anywhere."
+          >
+            <Row
+              label="Export backup"
+              desc="Download team, activity, payroll runs and treasury balances as JSON."
+            >
+              <Button variant="secondary" size="sm" onClick={exportAll}>
+                Export backup
+              </Button>
             </Row>
             <Row label="Import backup" desc="Replace current demo data with a Zeno backup file.">
               <div className="flex flex-col items-start gap-1.5 sm:items-end">
@@ -97,12 +121,33 @@ export function Settings() {
                   tabIndex={-1}
                   onChange={onFile}
                 />
-                <Button variant="secondary" size="sm" onClick={() => fileRef.current?.click()} disabled={isExecuting}>Import backup</Button>
-                {importError && <p role="alert" className="text-[12.5px] text-negative">{importError}</p>}
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => fileRef.current?.click()}
+                  disabled={isExecuting}
+                >
+                  Import backup
+                </Button>
+                {importError && (
+                  <p role="alert" className="text-[12.5px] text-negative">
+                    {importError}
+                  </p>
+                )}
               </div>
             </Row>
-            <Row label="Reset demo data" desc="Restores the seed team, balance and activity. This cannot be undone.">
-              <Button variant="danger" size="sm" onClick={() => setConfirmOpen(true)} disabled={isExecuting}>Reset demo data</Button>
+            <Row
+              label="Reset demo data"
+              desc="Restores the seed team, balance and activity. This cannot be undone."
+            >
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => setConfirmOpen(true)}
+                disabled={isExecuting}
+              >
+                Reset demo data
+              </Button>
             </Row>
           </Section>
         </div>
@@ -114,7 +159,9 @@ export function Settings() {
         description="This restores the seed team, balance and activity and clears payroll runs. This cannot be undone."
         footer={
           <>
-            <Button variant="ghost" size="sm" onClick={() => setConfirmOpen(false)}>Cancel</Button>
+            <Button variant="ghost" size="sm" onClick={() => setConfirmOpen(false)}>
+              Cancel
+            </Button>
             <Button
               variant="danger"
               size="sm"
@@ -169,12 +216,18 @@ function Segmented<T extends string>({
   onChange: (v: T) => void
 }) {
   return (
-    <div role="radiogroup" aria-label={label} className="inline-flex gap-1 rounded-[8px] bg-bg-inset p-1">
+    <div
+      role="radiogroup"
+      aria-label={label}
+      className="inline-flex gap-1 rounded-[8px] bg-bg-inset p-1"
+    >
       {options.map((o) => (
         <label
           key={o.value}
           className={`flex h-8 min-w-[64px] cursor-pointer items-center justify-center rounded-[6px] px-3 text-[13px] font-medium transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand-500 ${
-            value === o.value ? 'bg-bg-surface text-text-primary shadow-card' : 'text-text-secondary hover:text-text-primary'
+            value === o.value
+              ? 'bg-bg-surface text-text-primary shadow-card'
+              : 'text-text-secondary hover:text-text-primary'
           }`}
         >
           <input

@@ -34,8 +34,7 @@ export function Sparkline({
     y: 144 - (value / max) * 124,
   }))
   const path = points.map(({ x, y }, index) => `${index ? 'L' : 'M'}${x},${y}`).join(' ')
-  const area =
-    count > 0 ? `${path} L${points[count - 1].x},144 L${points[0].x},144 Z` : ''
+  const area = count > 0 ? `${path} L${points[count - 1].x},144 L${points[0].x},144 Z` : ''
   // Tooltip sits above the active column; pin it to the edge for the first/last column so it never overflows.
   const tooltipPos =
     active === null
@@ -107,9 +106,7 @@ export function Sparkline({
             className="pointer-events-none absolute top-0 whitespace-nowrap rounded-control border border-border-subtle bg-bg-elevated px-3 py-2 text-xs shadow-pop"
           >
             <span className="text-text-secondary">{months[active]}</span>
-            <span className="num ml-3 text-text-primary">
-              {formatUSD(values[active])}
-            </span>
+            <span className="num ml-3 text-text-primary">{formatUSD(values[active])}</span>
           </div>
         )}
       </div>

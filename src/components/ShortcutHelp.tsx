@@ -27,13 +27,22 @@ const shortcuts: { section: string; rows: Row[] }[] = [
   },
 ]
 
-
-function useDialogFocus(open: boolean, ref: React.RefObject<HTMLElement>, initial?: React.RefObject<HTMLElement>) {
+function useDialogFocus(
+  open: boolean,
+  ref: React.RefObject<HTMLElement>,
+  initial?: React.RefObject<HTMLElement>,
+) {
   useEffect(() => {
     if (!open) return
     const prev = document.activeElement as HTMLElement | null
     const items = () =>
-      ref.current ? Array.from(ref.current.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled]), [href], [tabindex]:not([tabindex="-1"])')) : []
+      ref.current
+        ? Array.from(
+            ref.current.querySelectorAll<HTMLElement>(
+              'button:not([disabled]), input:not([disabled]), [href], [tabindex]:not([tabindex="-1"])',
+            ),
+          )
+        : []
     const t = window.setTimeout(() => (initial?.current ?? ref.current)?.focus(), 30)
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Tab') return
@@ -119,7 +128,9 @@ export function ShortcutHelp() {
             className="w-full max-w-md overflow-hidden rounded-card border border-border-subtle bg-bg-surface shadow-pop"
           >
             <div className="flex items-center justify-between border-b border-border-subtle px-5 py-3.5">
-              <h2 className="font-display text-[18px] font-medium text-text-primary">Keyboard shortcuts</h2>
+              <h2 className="font-display text-[18px] font-medium text-text-primary">
+                Keyboard shortcuts
+              </h2>
               <button
                 ref={closeRef}
                 onClick={() => setOpen(false)}
@@ -135,11 +146,17 @@ export function ShortcutHelp() {
                   <div className="eyebrow mb-2">{group.section}</div>
                   <ul className="space-y-1.5">
                     {group.rows.map((r) => (
-                      <li key={r.label} className="flex items-center justify-between rounded-md px-2 py-1.5 text-[13px] text-text-secondary hover:bg-bg-inset">
+                      <li
+                        key={r.label}
+                        className="flex items-center justify-between rounded-md px-2 py-1.5 text-[13px] text-text-secondary hover:bg-bg-inset"
+                      >
                         <span>{r.label}</span>
                         <span className="flex items-center gap-1">
                           {r.keys.map((k, i) => (
-                            <kbd key={i} className="rounded border border-border-subtle bg-bg-inset px-1.5 py-0.5 font-mono tabular-nums text-[10.5px] text-text-primary">
+                            <kbd
+                              key={i}
+                              className="rounded border border-border-subtle bg-bg-inset px-1.5 py-0.5 font-mono tabular-nums text-[10.5px] text-text-primary"
+                            >
                               {k === '⌘' && !isMac ? 'Ctrl' : k}
                             </kbd>
                           ))}

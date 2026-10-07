@@ -8,7 +8,10 @@ const total = team.reduce((s, m) => s + m.amount, 0)
 
 function Vignette({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div aria-hidden="true" className="overflow-hidden rounded-[10px] border border-border-subtle bg-bg-surface shadow-card">
+    <div
+      aria-hidden="true"
+      className="overflow-hidden rounded-[10px] border border-border-subtle bg-bg-surface shadow-card"
+    >
       <div className="flex items-center justify-between border-b border-border-subtle px-4 py-2.5">
         <span className="text-[12.5px] font-medium text-text-primary">{title}</span>
         <span className="text-[11px] text-text-muted">Demo</span>
@@ -23,7 +26,9 @@ function FundFigure() {
     <Vignette title="Treasury">
       <div className="px-4 py-4">
         <div className="text-[11px] uppercase tracking-[0.08em] text-text-muted">Balance</div>
-        <div className="num mt-1 text-[24px] font-semibold tracking-tight text-text-primary">{formatUSD(treasury.balance, { cents: true })}</div>
+        <div className="num mt-1 text-[24px] font-semibold tracking-tight text-text-primary">
+          {formatUSD(treasury.balance, { cents: true })}
+        </div>
         <div className="mt-4 flex h-2 overflow-hidden rounded-[2px] bg-bg-inset">
           <div className="bg-brand-500" style={{ width: `${treasury.allocation[0].pct}%` }} />
           <div className="bg-brand-300" style={{ width: `${treasury.allocation[1].pct}%` }} />
@@ -32,7 +37,9 @@ function FundFigure() {
         <ul className="mt-3 grid grid-cols-3 gap-2 text-[11.5px]">
           {treasury.allocation.map((a, i) => (
             <li key={a.label} className="flex items-center gap-1.5 text-text-secondary">
-              <span className={`h-2 w-2 rounded-[2px] ${['bg-brand-500', 'bg-brand-300', 'bg-border'][i]}`} />
+              <span
+                className={`h-2 w-2 rounded-[2px] ${['bg-brand-500', 'bg-brand-300', 'bg-border'][i]}`}
+              />
               <span className="truncate">{a.label}</span>
               <span className="num ml-auto text-text-primary">{a.pct}%</span>
             </li>
@@ -142,11 +149,20 @@ export function HowItWorks() {
     >
       <ol className="border-t border-border-subtle">
         {STEPS.map((s, i) => (
-          <li key={s.title} className="grid gap-x-10 gap-y-5 border-b border-border-subtle py-8 last:border-b-0 last:pb-0 sm:py-10 sm:last:pb-0 lg:grid-cols-12">
-            <div className="num pt-1 text-[13px] text-text-muted lg:col-span-1">{String(i + 1).padStart(2, '0')}</div>
+          <li
+            key={s.title}
+            className="grid gap-x-10 gap-y-5 border-b border-border-subtle py-8 last:border-b-0 last:pb-0 sm:py-10 sm:last:pb-0 lg:grid-cols-12"
+          >
+            <div className="num pt-1 text-[13px] text-text-muted lg:col-span-1">
+              {String(i + 1).padStart(2, '0')}
+            </div>
             <div className="lg:col-span-4">
-              <h3 className="font-display text-[24px] leading-tight tracking-[-0.01em] text-text-primary">{s.title}</h3>
-              <p className="mt-2.5 max-w-[420px] text-[16px] leading-[1.6] text-text-secondary">{s.body}</p>
+              <h3 className="font-display text-[24px] leading-tight tracking-[-0.01em] text-text-primary">
+                {s.title}
+              </h3>
+              <p className="mt-2.5 max-w-[420px] text-[16px] leading-[1.6] text-text-secondary">
+                {s.body}
+              </p>
             </div>
             <div className="lg:col-span-6 lg:col-start-7">{s.figure}</div>
           </li>

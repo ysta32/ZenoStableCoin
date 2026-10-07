@@ -17,7 +17,10 @@ export function TotalsLedger({
   const after = balance === undefined ? undefined : round2(balance - debit)
   return (
     <dl className="text-[13.5px]">
-      <LedgerLine label={`Payouts · ${recipients} recipient${recipients === 1 ? '' : 's'}`} value={usd(subtotal)} />
+      <LedgerLine
+        label={`Payouts · ${recipients} recipient${recipients === 1 ? '' : 's'}`}
+        value={usd(subtotal)}
+      />
       <LedgerLine label="Network fee (0.2%)" value={usd(fee)} />
       <LedgerLine label="Total debit" value={usd(debit)} strong />
       {balance !== undefined && after !== undefined && (
@@ -57,7 +60,11 @@ function LedgerLine({
       ].join(' ')}
     >
       <dt className={strong ? '' : 'text-text-secondary'}>{label}</dt>
-      <dd className={`num ${strong ? 'text-[15px]' : ''} ${tone === 'negative' ? 'text-negative' : ''}`}>{value}</dd>
+      <dd
+        className={`num ${strong ? 'text-[15px]' : ''} ${tone === 'negative' ? 'text-negative' : ''}`}
+      >
+        {value}
+      </dd>
     </div>
   )
 }
