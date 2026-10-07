@@ -1,13 +1,44 @@
-import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, ReactNode } from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  ReactNode,
+} from 'react'
+import { parseBackup, serializeBackup, type Persisted } from '../lib/backup'
 import { isFiniteNum, isMethod, isObj, isPayrollRun } from '../lib/persistGuards'
-import { team as seedTeam, treasury as seedTreasury, recentActivity as seedActivity, Member, Method, Activity, ActivityType, PayrollRun, PayrollRunInput, Theme } from '../data'
+import {
+  team as seedTeam,
+  treasury as seedTreasury,
+  recentActivity as seedActivity,
+  Member,
+  Method,
+  Activity,
+  ActivityType,
+  PayrollRun,
+  PayrollRunInput,
+  Theme,
+} from '../data'
 
 export type { Activity, PayrollRun, PayrollRunInput, PayrollRecipient, Theme } from '../data'
 
-export type View = 'dashboard' | 'payroll' | 'treasury' | 'team' | 'transactions' | 'reports' | 'settings'
+export type View =
+  'dashboard' | 'payroll' | 'treasury' | 'team' | 'transactions' | 'reports' | 'settings'
 export type Route = 'landing' | 'app' | 'download' | 'notfound'
 
-const VIEWS: readonly View[] = ['dashboard', 'payroll', 'treasury', 'team', 'transactions', 'reports', 'settings']
+const VIEWS: readonly View[] = [
+  'dashboard',
+  'payroll',
+  'treasury',
+  'team',
+  'transactions',
+  'reports',
+  'settings',
+]
 const VIEW_LABELS: Record<View, string> = {
   dashboard: 'Dashboard',
   payroll: 'Payroll',
@@ -37,15 +68,6 @@ function parseLocation(pathname: string): Loc {
 
 const pathForView = (v: View) => (v === 'dashboard' ? '/app' : `/app/${v}`)
 
-type Persisted = {
-  team: Member[]
-  activity: Activity[]
-  payrollRuns: PayrollRun[]
-  treasuryBalance: number
-  treasuryYieldMtd: number
-  defaultMethod: Method
-}
-
 const isOptStr = (x: unknown) => x === undefined || typeof x === 'string'
 const isMember = (x: unknown): x is Member =>
   isObj(x) &&
@@ -60,7 +82,13 @@ const isMember = (x: unknown): x is Member =>
   typeof x.avatarColor === 'string' &&
   isOptStr(x.wallet) &&
   isOptStr(x.email)
-const ACTIVITY_TYPES: readonly string[] = ['Payroll', 'Yield', 'Deposit', 'Swap', 'Withdrawal'] satisfies ActivityType[]
+const ACTIVITY_TYPES: readonly string[] = [
+  'Payroll',
+  'Yield',
+  'Deposit',
+  'Swap',
+  'Withdrawal',
+] satisfies ActivityType[]
 const isActivity = (x: unknown): x is Activity =>
   isObj(x) &&
   typeof x.id === 'string' &&
@@ -72,6 +100,15 @@ const isActivity = (x: unknown): x is Activity =>
   (x.createdAt === undefined || isFiniteNum(x.createdAt))
 const arrayOf = <T,>(x: unknown, guard: (v: unknown) => v is T): T[] | null =>
   Array.isArray(x) && x.every(guard) ? (x as T[]) : null
+const isPersisted = (x: unknown): x is Persisted =>
+  isObj(x) &&
+  arrayOf(x.team, isMember) !== null &&
+  arrayOf(x.activity, isActivity) !== null &&
+  arrayOf(x.payrollRuns, isPayrollRun) !== null &&
+  isFiniteNum(x.treasuryBalance) &&
+  x.treasuryBalance >= 0 &&
+  isFiniteNum(x.treasuryYieldMtd) &&
+  isMethod(x.defaultMethod)
 
 function readJson(key: string): unknown {
   try {
@@ -101,8 +138,13 @@ function loadPersisted(): Persisted {
       team: arrayOf(v2.team, isMember) ?? seed.team,
       activity: arrayOf(v2.activity, isActivity) ?? seed.activity,
       payrollRuns: arrayOf(v2.payrollRuns, isPayrollRun) ?? seed.payrollRuns,
-      treasuryBalance: isFiniteNum(v2.treasuryBalance) && v2.treasuryBalance >= 0 ? v2.treasuryBalance : seed.treasuryBalance,
-      treasuryYieldMtd: isFiniteNum(v2.treasuryYieldMtd) ? v2.treasuryYieldMtd : seed.treasuryYieldMtd,
+      treasuryBalance:
+        isFiniteNum(v2.treasuryBalance) && v2.treasuryBalance >= 0
+          ? v2.treasuryBalance
+          : seed.treasuryBalance,
+      treasuryYieldMtd: isFiniteNum(v2.treasuryYieldMtd)
+        ? v2.treasuryYieldMtd
+        : seed.treasuryYieldMtd,
       defaultMethod: isMethod(v2.defaultMethod) ? v2.defaultMethod : seed.defaultMethod,
     }
   }
@@ -132,7 +174,8 @@ function loadTheme(): Theme {
 const round2 = (n: number) => Math.round(n * 100) / 100
 const genId = (prefix = '') => prefix + String(Date.now()) + Math.random().toString(36).slice(2, 6)
 const todayLabel = () => new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-const usd = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n)
+const usd = (n: number) =>
+  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n)
 
 function fakeTxHash(): string {
   const bytes = new Uint8Array(32)
@@ -201,6 +244,8 @@ type Ctx = {
   setPaletteOpen: (v: boolean) => void
 
   resetDemo: () => void
+  exportState: () => string
+  importState: (json: string) => { ok: true } | { ok: false; error: string }
 }
 
 const AppCtx = createContext<Ctx | null>(null)
@@ -212,7 +257,15 @@ export function useApp() {
 }
 
 const randAvatarColor = () => {
-  const pool = ['bg-emerald-600', 'bg-sky-600', 'bg-violet-600', 'bg-amber-600', 'bg-rose-600', 'bg-teal-600', 'bg-indigo-600']
+  const pool = [
+    'bg-emerald-600',
+    'bg-sky-600',
+    'bg-violet-600',
+    'bg-amber-600',
+    'bg-rose-600',
+    'bg-teal-600',
+    'bg-indigo-600',
+  ]
   return pool[Math.floor(Math.random() * pool.length)]
 }
 
@@ -252,7 +305,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
   // Debounced persistence of the versioned state blob, flushed on page hide.
   const snapshotRef = useRef<Persisted>(initial)
   useEffect(() => {
-    snapshotRef.current = { team, activity, payrollRuns, treasuryBalance, treasuryYieldMtd, defaultMethod }
+    snapshotRef.current = {
+      team,
+      activity,
+      payrollRuns,
+      treasuryBalance,
+      treasuryYieldMtd,
+      defaultMethod,
+    }
     const id = window.setTimeout(() => savePersisted(snapshotRef.current), SAVE_DEBOUNCE_MS)
     return () => clearTimeout(id)
   }, [team, activity, payrollRuns, treasuryBalance, treasuryYieldMtd, defaultMethod])
@@ -266,7 +326,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   // Theme: html.dark for 'dark', or 'system' while the OS prefers dark.
   useLayoutEffect(() => {
     const root = document.documentElement
-    const mq = typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-color-scheme: dark)') : null
+    const mq =
+      typeof window.matchMedia === 'function'
+        ? window.matchMedia('(prefers-color-scheme: dark)')
+        : null
     const apply = () => {
       const dark = theme === 'dark' || (theme === 'system' && !!mq?.matches)
       root.classList.toggle('dark', dark)
@@ -312,7 +375,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const navigate = useCallback((r: Route) => {
-    const path = r === 'app' ? '/app' : r === 'landing' ? '/' : r === 'download' ? '/download' : window.location.pathname
+    const path =
+      r === 'app'
+        ? '/app'
+        : r === 'landing'
+          ? '/'
+          : r === 'download'
+            ? '/download'
+            : window.location.pathname
     if (window.location.pathname !== path) window.history.pushState({ route: r }, '', path)
     setLoc({ route: r, view: 'dashboard' })
     setSidebarOpen(false)
@@ -343,7 +413,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const setView = useCallback((v: View) => {
     const path = pathForView(v)
-    if (window.location.pathname !== path) window.history.pushState({ route: 'app', view: v }, '', path)
+    if (window.location.pathname !== path)
+      window.history.pushState({ route: 'app', view: v }, '', path)
     setLoc({ route: 'app', view: v })
     setSidebarOpen(false)
   }, [])
@@ -358,39 +429,56 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setTeam((t) => t.map((m) => (m.id === id ? { ...m, amount } : m)))
   }, [])
 
-  const addMember = useCallback((m: Partial<Member>) => {
-    const id = String(Date.now()) + Math.random().toString(36).slice(2, 6)
-    const initials = (m.name || '').split(' ').map((s) => s[0]).join('').slice(0, 2).toUpperCase() || '??'
-    const newMember: Member = {
-      id,
-      name: m.name ?? '',
-      role: m.role ?? 'Contractor',
-      country: m.country ?? 'United States',
-      countryCode: m.countryCode ?? 'US',
-      method: m.method && isMethod(m.method) ? m.method : defaultMethod,
-      amount: m.amount ?? 3000,
-      initials,
-      avatarColor: m.avatarColor ?? randAvatarColor(),
-      ...(m.wallet !== undefined ? { wallet: m.wallet } : {}),
-      ...(m.email !== undefined ? { email: m.email } : {}),
-    }
-    setTeam((t) => [...t, newMember])
-    return id
-  }, [defaultMethod])
+  const addMember = useCallback(
+    (m: Partial<Member>) => {
+      const id = String(Date.now()) + Math.random().toString(36).slice(2, 6)
+      const initials =
+        (m.name || '')
+          .split(' ')
+          .map((s) => s[0])
+          .join('')
+          .slice(0, 2)
+          .toUpperCase() || '??'
+      const newMember: Member = {
+        id,
+        name: m.name ?? '',
+        role: m.role ?? 'Contractor',
+        country: m.country ?? 'United States',
+        countryCode: m.countryCode ?? 'US',
+        method: m.method && isMethod(m.method) ? m.method : defaultMethod,
+        amount: m.amount ?? 3000,
+        initials,
+        avatarColor: m.avatarColor ?? randAvatarColor(),
+        ...(m.wallet !== undefined ? { wallet: m.wallet } : {}),
+        ...(m.email !== undefined ? { email: m.email } : {}),
+      }
+      setTeam((t) => [...t, newMember])
+      return id
+    },
+    [defaultMethod],
+  )
 
   const replaceTeam = useCallback((members: Member[]) => {
     setTeam([...members])
   }, [])
 
   const updateMember = useCallback((id: string, patch: Partial<Member>) => {
-    setTeam((t) => t.map((m) => {
-      if (m.id !== id) return m
-      const next = { ...m, ...patch }
-      if (patch.name !== undefined) {
-        next.initials = patch.name.split(' ').map((s) => s[0]).join('').slice(0, 2).toUpperCase() || '??'
-      }
-      return next
-    }))
+    setTeam((t) =>
+      t.map((m) => {
+        if (m.id !== id) return m
+        const next = { ...m, ...patch }
+        if (patch.name !== undefined) {
+          next.initials =
+            patch.name
+              .split(' ')
+              .map((s) => s[0])
+              .join('')
+              .slice(0, 2)
+              .toUpperCase() || '??'
+        }
+        return next
+      }),
+    )
   }, [])
 
   const removeMember = useCallback((id: string) => {
@@ -433,73 +521,123 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setToasts((ts) => ts.filter((t) => t.id !== id))
   }, [])
 
-  const deposit = useCallback((amount: number, source: string) => {
-    if (!Number.isFinite(amount) || amount <= 0) return
-    const amt = round2(amount)
-    addTransaction({ type: 'Deposit', detail: `Deposit from ${source}`, amount: amt, date: todayLabel() })
-    toast(`Deposited ${usd(amt)} from ${source}`, 'green')
-  }, [addTransaction, toast])
+  const deposit = useCallback(
+    (amount: number, source: string) => {
+      if (!Number.isFinite(amount) || amount <= 0) return
+      const amt = round2(amount)
+      addTransaction({
+        type: 'Deposit',
+        detail: `Deposit from ${source}`,
+        amount: amt,
+        date: todayLabel(),
+      })
+      toast(`Deposited ${usd(amt)} from ${source}`, 'green')
+    },
+    [addTransaction, toast],
+  )
 
-  const withdraw = useCallback((amount: number, destination: string): boolean => {
-    if (!Number.isFinite(amount) || amount <= 0 || amount > balanceRef.current) return false
-    const amt = round2(amount)
-    addTransaction({ type: 'Withdrawal', detail: `Withdrawal to ${destination}`, amount: -amt, date: todayLabel() })
-    toast(`Withdrew ${usd(amt)} to ${destination}`, 'green')
-    return true
-  }, [addTransaction, toast])
+  const withdraw = useCallback(
+    (amount: number, destination: string): boolean => {
+      if (!Number.isFinite(amount) || amount <= 0 || amount > balanceRef.current) return false
+      const amt = round2(amount)
+      addTransaction({
+        type: 'Withdrawal',
+        detail: `Withdrawal to ${destination}`,
+        amount: -amt,
+        date: todayLabel(),
+      })
+      toast(`Withdrew ${usd(amt)} to ${destination}`, 'green')
+      return true
+    },
+    [addTransaction, toast],
+  )
 
-  const recordPayrollRun = useCallback((input: PayrollRunInput): PayrollRun => {
-    // Idempotent on clientRunId: a retried/double-submitted run never debits twice.
-    const existing = payrollRunsRef.current.find((r) => r.clientRunId === input.clientRunId)
-    if (existing) return existing
-    if (!Number.isFinite(input.total) || !Number.isFinite(input.fee) || input.total < 0 || input.fee < 0) {
-      throw new Error('Invalid payroll amounts')
-    }
-    const debit = round2(input.total + input.fee)
-    if (debit > balanceRef.current) throw new Error('Insufficient treasury balance')
-    const createdAt = Date.now()
-    const run: PayrollRun = {
-      id: genId('run_'),
-      clientRunId: input.clientRunId,
-      createdAt,
-      total: input.total,
-      fee: input.fee,
-      recipients: input.recipients.map((r) => ({ ...r, txHash: r.txHash || fakeTxHash() })),
-    }
-    // Commit the ref first so a second call in the same tick sees this run.
-    payrollRunsRef.current = [run, ...payrollRunsRef.current]
-    setPayrollRuns((rs) => [run, ...rs.filter((r) => r.clientRunId !== run.clientRunId)])
-    const month = new Date(createdAt).toLocaleString('en-US', { month: 'long' })
-    const n = run.recipients.length
-    addTransaction({
-      id: `act_${run.id}`,
-      type: 'Payroll',
-      detail: `${month} payroll · ${n} contractor${n === 1 ? '' : 's'}`,
-      amount: -debit,
-      date: todayLabel(),
-      createdAt,
-    })
-    return run
-  }, [addTransaction])
+  const recordPayrollRun = useCallback(
+    (input: PayrollRunInput): PayrollRun => {
+      // Idempotent on clientRunId: a retried/double-submitted run never debits twice.
+      const existing = payrollRunsRef.current.find((r) => r.clientRunId === input.clientRunId)
+      if (existing) return existing
+      if (
+        !Number.isFinite(input.total) ||
+        !Number.isFinite(input.fee) ||
+        input.total < 0 ||
+        input.fee < 0
+      ) {
+        throw new Error('Invalid payroll amounts')
+      }
+      const debit = round2(input.total + input.fee)
+      if (debit > balanceRef.current) throw new Error('Insufficient treasury balance')
+      const createdAt = Date.now()
+      const run: PayrollRun = {
+        id: genId('run_'),
+        clientRunId: input.clientRunId,
+        createdAt,
+        total: input.total,
+        fee: input.fee,
+        recipients: input.recipients.map((r) => ({ ...r, txHash: r.txHash || fakeTxHash() })),
+      }
+      // Commit the ref first so a second call in the same tick sees this run.
+      payrollRunsRef.current = [run, ...payrollRunsRef.current]
+      setPayrollRuns((rs) => [run, ...rs.filter((r) => r.clientRunId !== run.clientRunId)])
+      const month = new Date(createdAt).toLocaleString('en-US', { month: 'long' })
+      const n = run.recipients.length
+      addTransaction({
+        id: `act_${run.id}`,
+        type: 'Payroll',
+        detail: `${month} payroll · ${n} contractor${n === 1 ? '' : 's'}`,
+        amount: -debit,
+        date: todayLabel(),
+        createdAt,
+      })
+      return run
+    },
+    [addTransaction],
+  )
 
-  const resetDemo = useCallback(() => {
-    setTeam(seedTeam)
+  const applyState = useCallback((p: Persisted) => {
+    setTeam(p.team)
     setPayrollStep(0)
     setAuthorized(false)
-    setActivity(seedActivity)
-    setPayrollRuns([])
-    payrollRunsRef.current = []
-    setDefaultMethod('USDC')
-    setTreasuryBalance(seedTreasury.balance)
-    setTreasuryYieldMtd(seedTreasury.yieldMtd)
-    balanceTargetRef.current = seedTreasury.balance
-    balanceRef.current = seedTreasury.balance
-    try {
-      window.localStorage.removeItem(STATE_KEY)
-      window.localStorage.removeItem(LEGACY_TEAM_KEY)
-    } catch {}
+    setActivity(p.activity)
+    setPayrollRuns(p.payrollRuns)
+    payrollRunsRef.current = p.payrollRuns
+    setDefaultMethod(p.defaultMethod)
+    setTreasuryBalance(p.treasuryBalance)
+    setTreasuryYieldMtd(p.treasuryYieldMtd)
+    balanceTargetRef.current = p.treasuryBalance
+    balanceRef.current = p.treasuryBalance
+    snapshotRef.current = p
+    savePersisted(p)
+  }, [])
+
+  const resetDemo = useCallback(() => {
+    applyState(seedState())
     toast('Demo reset', 'green')
-  }, [toast])
+  }, [applyState, toast])
+
+  const exportState = useCallback(
+    () =>
+      serializeBackup({
+        team,
+        activity,
+        payrollRuns,
+        treasuryBalance,
+        treasuryYieldMtd,
+        defaultMethod,
+      }),
+    [team, activity, payrollRuns, treasuryBalance, treasuryYieldMtd, defaultMethod],
+  )
+
+  const importState = useCallback(
+    (json: string): { ok: true } | { ok: false; error: string } => {
+      const res = parseBackup(json, isPersisted)
+      if (!res.ok) return res
+      applyState(res.state)
+      toast('Backup imported', 'green')
+      return { ok: true }
+    },
+    [applyState, toast],
+  )
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -511,18 +649,83 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const isExecuting = view === 'payroll' && payrollStep === 2
 
-  const value = useMemo<Ctx>(() => ({
-    route, navigate, view, setView, goToPayroll,
-    sidebarOpen, setSidebarOpen,
-    team, replaceTeam, defaultMethod, setDefaultMethod, setAmount, addMember, updateMember, removeMember,
-    payrollStep, setPayrollStep, authorized, setAuthorized, isExecuting,
-    treasuryBalance, treasuryYieldMtd, activity, addTransaction,
-    deposit, withdraw, payrollRuns, recordPayrollRun,
-    theme, setTheme,
-    toasts, toast, dismissToast,
-    paletteOpen, setPaletteOpen,
-    resetDemo,
-  }), [route, navigate, view, setView, goToPayroll, sidebarOpen, team, replaceTeam, defaultMethod, setAmount, addMember, updateMember, removeMember, payrollStep, authorized, isExecuting, treasuryBalance, treasuryYieldMtd, activity, addTransaction, deposit, withdraw, payrollRuns, recordPayrollRun, theme, setTheme, toasts, toast, dismissToast, paletteOpen, resetDemo])
+  const value = useMemo<Ctx>(
+    () => ({
+      route,
+      navigate,
+      view,
+      setView,
+      goToPayroll,
+      sidebarOpen,
+      setSidebarOpen,
+      team,
+      replaceTeam,
+      defaultMethod,
+      setDefaultMethod,
+      setAmount,
+      addMember,
+      updateMember,
+      removeMember,
+      payrollStep,
+      setPayrollStep,
+      authorized,
+      setAuthorized,
+      isExecuting,
+      treasuryBalance,
+      treasuryYieldMtd,
+      activity,
+      addTransaction,
+      deposit,
+      withdraw,
+      payrollRuns,
+      recordPayrollRun,
+      theme,
+      setTheme,
+      toasts,
+      toast,
+      dismissToast,
+      paletteOpen,
+      setPaletteOpen,
+      resetDemo,
+      exportState,
+      importState,
+    }),
+    [
+      route,
+      navigate,
+      view,
+      setView,
+      goToPayroll,
+      sidebarOpen,
+      team,
+      replaceTeam,
+      defaultMethod,
+      setAmount,
+      addMember,
+      updateMember,
+      removeMember,
+      payrollStep,
+      authorized,
+      isExecuting,
+      treasuryBalance,
+      treasuryYieldMtd,
+      activity,
+      addTransaction,
+      deposit,
+      withdraw,
+      payrollRuns,
+      recordPayrollRun,
+      theme,
+      setTheme,
+      toasts,
+      toast,
+      dismissToast,
+      paletteOpen,
+      resetDemo,
+      exportState,
+      importState,
+    ],
+  )
 
   return <AppCtx.Provider value={value}>{children}</AppCtx.Provider>
 }

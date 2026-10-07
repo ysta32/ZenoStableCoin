@@ -10,7 +10,9 @@ const root = fileURLToPath(new URL('../', import.meta.url))
 // where Chromium blocks file:// resources.
 const font = (pkg, file) =>
   'data:font/woff2;base64,' +
-  readFileSync(path.join(root, 'node_modules/@fontsource-variable', pkg, 'files', file)).toString('base64')
+  readFileSync(path.join(root, 'node_modules/@fontsource-variable', pkg, 'files', file)).toString(
+    'base64',
+  )
 
 const html = (w, h) => `<!doctype html>
 <html><head><meta charset="utf-8"><style>
@@ -42,7 +44,9 @@ for (const t of targets) {
   await page.setContent(html(t.w, t.h))
   await page.evaluate(() => document.fonts.ready)
   const ok = await page.evaluate(
-    () => document.fonts.check('48px "Newsreader Variable"') && document.fonts.check('16px "Geist Variable"'),
+    () =>
+      document.fonts.check('48px "Newsreader Variable"') &&
+      document.fonts.check('16px "Geist Variable"'),
   )
   if (!ok) throw new Error('og: fonts failed to load')
   await page.screenshot({ path: path.join(root, t.file) })

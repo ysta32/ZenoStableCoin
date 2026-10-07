@@ -30,7 +30,16 @@ export function ToastHost() {
               </span>
             ) : t.tone === 'amber' ? (
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-warning-soft text-warning">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <path d="M12 9v4" />
                   <path d="M12 17h.01" />
                   <circle cx="12" cy="12" r="9" />

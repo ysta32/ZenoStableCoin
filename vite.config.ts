@@ -25,11 +25,17 @@ function swPrecache(): Plugin {
       const assets = readdirSync(assetsDir)
         .filter((f) => /\.(js|css|woff2?|ttf|otf|svg|png|webp)$/.test(f))
         // Fonts: precache only the latin subsets; other subsets load lazily via unicode-range.
-        .filter((f) => !/\.woff2?$/.test(f) || (f.includes('-latin-') && !f.includes('-latin-ext-')))
+        .filter(
+          (f) => !/\.woff2?$/.test(f) || (f.includes('-latin-') && !f.includes('-latin-ext-')),
+        )
         .sort()
         .map((f) => `/assets/${f}`)
       const html = readFileSync(path.join(dist, 'index.html'))
-      const build = createHash('sha256').update(html).update(assets.join('|')).digest('hex').slice(0, 10)
+      const build = createHash('sha256')
+        .update(html)
+        .update(assets.join('|'))
+        .digest('hex')
+        .slice(0, 10)
       const src = readFileSync(swPath, 'utf8')
       if (!src.includes('/*__PRECACHE__*/') || !src.includes('__BUILD__')) {
         throw new Error('zeno-sw-precache: placeholders missing in sw.js')
@@ -38,7 +44,7 @@ function swPrecache(): Plugin {
         swPath,
         src
           .replace('[] /*__PRECACHE__*/', JSON.stringify(assets) + ' /*__PRECACHE__*/')
-          .replace('__BUILD__', build)
+          .replace('__BUILD__', build),
       )
     },
   }

@@ -3,7 +3,13 @@ import { ReactNode, SVGProps } from 'react'
 export const REPO_URL = 'https://github.com/ysta32/ZenoStableCoin'
 
 /** Max-width content column used by every landing section. */
-export function Container({ children, className = '' }: { children: ReactNode; className?: string }) {
+export function Container({
+  children,
+  className = '',
+}: {
+  children: ReactNode
+  className?: string
+}) {
   return <div className={`mx-auto w-full max-w-[1120px] px-5 sm:px-8 ${className}`}>{children}</div>
 }
 
@@ -40,7 +46,9 @@ export function Section({
             <span>{label}</span>
           </div>
         </div>
-        <div className={`mt-6 grid grid-cols-1 gap-x-10 gap-y-10 ${stacked ? '' : 'lg:grid-cols-12'}`}>
+        <div
+          className={`mt-6 grid grid-cols-1 gap-x-10 gap-y-10 ${stacked ? '' : 'lg:grid-cols-12'}`}
+        >
           <div className={`min-w-0 ${stacked ? 'max-w-[720px]' : 'lg:col-span-4'}`}>
             <h2
               id={headingId}
@@ -143,7 +151,15 @@ export const LIMoon = (p: SVGProps<SVGSVGElement>) => (
 )
 
 /** External link styled as a quiet underline. */
-export function TextLink({ href, children, className = '' }: { href: string; children: ReactNode; className?: string }) {
+export function TextLink({
+  href,
+  children,
+  className = '',
+}: {
+  href: string
+  children: ReactNode
+  className?: string
+}) {
   const external = href.startsWith('http')
   return (
     <a

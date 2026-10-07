@@ -151,7 +151,11 @@ export function parseTeamCsv(text: string): { rows: TeamRow[]; errors: CsvError[
     }
     const rawAmount = value('amount')
     const amount = Number(rawAmount)
-    if (!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(rawAmount) || !Number.isFinite(amount) || amount < 0) {
+    if (
+      !/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(rawAmount) ||
+      !Number.isFinite(amount) ||
+      amount < 0
+    ) {
       reject('Amount must be a finite, non-negative decimal number')
       continue
     }

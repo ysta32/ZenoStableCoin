@@ -103,7 +103,9 @@ export function Calculator() {
   const zeno = rows.find((r) => r.id === 'zeno')
   const others = rows.filter((r) => r.id !== 'zeno').sort((a, b) => a.net - b.net)
   const best = others[0]
-  const settlement = Object.fromEntries(PROVIDERS.map((p) => [p.id, p.settlement.replace(/\s*\(illustrative\)/, '')]))
+  const settlement = Object.fromEntries(
+    PROVIDERS.map((p) => [p.id, p.settlement.replace(/\s*\(illustrative\)/, '')]),
+  )
 
   let summary = ''
   if (zeno && best) {
@@ -164,7 +166,10 @@ export function Calculator() {
         </div>
 
         <div className="min-w-0 lg:col-span-8">
-          <p className="font-display text-[21px] leading-[1.35] text-text-primary" aria-live="polite">
+          <p
+            className="font-display text-[21px] leading-[1.35] text-text-primary"
+            aria-live="polite"
+          >
             {summary}
           </p>
           <div className="mt-6 overflow-x-auto">
@@ -172,11 +177,24 @@ export function Calculator() {
               <caption className="sr-only">Estimated annual cost by provider</caption>
               <thead>
                 <tr className="border-b border-border text-left text-[12px] text-text-muted">
-                  <th scope="col" className="pb-2.5 font-normal">Provider</th>
-                  <th scope="col" className="hidden pb-2.5 font-normal sm:table-cell">Settlement</th>
-                  <th scope="col" className="pb-2.5 text-right font-normal">Fees / yr</th>
-                  <th scope="col" className="hidden pb-2.5 text-right font-normal min-[480px]:table-cell">Yield / yr</th>
-                  <th scope="col" className="pb-2.5 text-right font-normal">Net / yr</th>
+                  <th scope="col" className="pb-2.5 font-normal">
+                    Provider
+                  </th>
+                  <th scope="col" className="hidden pb-2.5 font-normal sm:table-cell">
+                    Settlement
+                  </th>
+                  <th scope="col" className="pb-2.5 text-right font-normal">
+                    Fees / yr
+                  </th>
+                  <th
+                    scope="col"
+                    className="hidden pb-2.5 text-right font-normal min-[480px]:table-cell"
+                  >
+                    Yield / yr
+                  </th>
+                  <th scope="col" className="pb-2.5 text-right font-normal">
+                    Net / yr
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -184,14 +202,24 @@ export function Calculator() {
                   <tr key={r.id} className="border-b border-border-subtle">
                     <th scope="row" className="py-3 pr-3 text-left font-medium text-text-primary">
                       {r.name}
-                      <sup className="num ml-0.5 text-[10px] font-normal text-text-muted">{i + 1}</sup>
+                      <sup className="num ml-0.5 text-[10px] font-normal text-text-muted">
+                        {i + 1}
+                      </sup>
                     </th>
-                    <td className="hidden py-3 pr-3 text-[13px] text-text-secondary sm:table-cell">{settlement[r.id]}</td>
-                    <td className="num py-3 text-right text-text-primary">{formatUSD(r.annualFees)}</td>
-                    <td className={`num hidden py-3 text-right min-[480px]:table-cell ${r.yieldEarned > 0 ? 'text-positive' : 'text-text-muted'}`}>
+                    <td className="hidden py-3 pr-3 text-[13px] text-text-secondary sm:table-cell">
+                      {settlement[r.id]}
+                    </td>
+                    <td className="num py-3 text-right text-text-primary">
+                      {formatUSD(r.annualFees)}
+                    </td>
+                    <td
+                      className={`num hidden py-3 text-right min-[480px]:table-cell ${r.yieldEarned > 0 ? 'text-positive' : 'text-text-muted'}`}
+                    >
                       {r.yieldEarned > 0 ? formatUSD(r.yieldEarned, { sign: true }) : '—'}
                     </td>
-                    <td className={`num py-3 text-right font-medium ${r.net < 0 ? 'text-positive' : 'text-text-primary'}`}>
+                    <td
+                      className={`num py-3 text-right font-medium ${r.net < 0 ? 'text-positive' : 'text-text-primary'}`}
+                    >
                       {r.net < 0 ? `${formatUSD(-r.net)} gain` : formatUSD(r.net)}
                     </td>
                   </tr>
@@ -200,7 +228,8 @@ export function Calculator() {
             </table>
           </div>
           <p className="mt-3 text-[12.5px] text-text-muted">
-            Net = fees minus yield. When modeled yield exceeds fees, net is shown as a gain. Illustrative. Not a quote.
+            Net = fees minus yield. When modeled yield exceeds fees, net is shown as a gain.
+            Illustrative. Not a quote.
           </p>
           <ol className="mt-6 space-y-2 border-t border-border-subtle pt-4 text-[12px] leading-[1.55] text-text-muted">
             {PROVIDERS.map((p, i) => (

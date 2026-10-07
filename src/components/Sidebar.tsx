@@ -1,7 +1,17 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Logo } from './Logo'
-import { IconDashboard, IconPayroll, IconTreasury, IconTeam, IconTx, IconReports, IconSettings, IconChevronDown, IconX } from './Icons'
+import {
+  IconDashboard,
+  IconPayroll,
+  IconTreasury,
+  IconTeam,
+  IconTx,
+  IconReports,
+  IconSettings,
+  IconChevronDown,
+  IconX,
+} from './Icons'
 import { onPlainClick } from '../lib/plainClick'
 import { useApp, View, Theme } from '../context/AppContext'
 import { preloadView } from '../preload'
@@ -47,7 +57,9 @@ function useHeadingFocusRestore() {
       timerRef.current = null
       // Never steal focus while any modal/dialog is present (palette, shortcut help, ...).
       if (document.querySelector('[aria-modal="true"], [role="dialog"]')) return
-      const target = document.querySelector<HTMLElement>('main h1') ?? document.querySelector<HTMLElement>('main')
+      const target =
+        document.querySelector<HTMLElement>('main h1') ??
+        document.querySelector<HTMLElement>('main')
       if (!target) return
       if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1')
       target.focus({ preventScroll: true })
@@ -68,7 +80,18 @@ function useHeadingFocusRestore() {
 }
 
 export function Sidebar() {
-  const { view, setView, navigate, toast, paletteOpen, setPaletteOpen, theme, setTheme, sidebarOpen, setSidebarOpen } = useApp()
+  const {
+    view,
+    setView,
+    navigate,
+    toast,
+    paletteOpen,
+    setPaletteOpen,
+    theme,
+    setTheme,
+    sidebarOpen,
+    setSidebarOpen,
+  } = useApp()
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const asideRef = useRef<HTMLElement>(null)
@@ -111,7 +134,13 @@ export function Sidebar() {
     returnFocusRef.current = document.activeElement as HTMLElement | null
     const aside = asideRef.current
     const focusables = () =>
-      aside ? Array.from(aside.querySelectorAll<HTMLElement>('button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])')) : []
+      aside
+        ? Array.from(
+            aside.querySelectorAll<HTMLElement>(
+              'button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])',
+            ),
+          )
+        : []
     const focusTimer = window.setTimeout(() => focusables()[0]?.focus(), 30)
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -194,7 +223,9 @@ export function Sidebar() {
           'flex w-[232px] shrink-0 flex-col border-r border-border-subtle bg-bg-sidebar',
           'max-lg:fixed max-lg:inset-y-0 max-lg:left-0 max-lg:z-50 max-lg:w-[280px] max-lg:max-w-[85vw] max-lg:overflow-y-auto max-lg:shadow-pop',
           'max-lg:transition-[transform,visibility] max-lg:duration-200 max-lg:ease-out',
-          sidebarOpen ? 'max-lg:translate-x-0 max-lg:visible' : 'max-lg:-translate-x-full max-lg:invisible',
+          sidebarOpen
+            ? 'max-lg:translate-x-0 max-lg:visible'
+            : 'max-lg:-translate-x-full max-lg:invisible',
         ].join(' ')}
       >
         <div className="flex items-start justify-between pr-3">
@@ -218,14 +249,26 @@ export function Sidebar() {
           <SectionLabel>Main</SectionLabel>
           <ul className="space-y-0.5">
             {mainNav.map((item) => (
-              <NavItem key={item.id} item={item} active={view === item.id} onClick={() => goView(item.id)} onPrefetch={() => preloadView[item.id]()} />
+              <NavItem
+                key={item.id}
+                item={item}
+                active={view === item.id}
+                onClick={() => goView(item.id)}
+                onPrefetch={() => preloadView[item.id]()}
+              />
             ))}
           </ul>
 
           <SectionLabel className="mt-7">Finance</SectionLabel>
           <ul className="space-y-0.5">
             {financeNav.map((item) => (
-              <NavItem key={item.id} item={item} active={view === item.id} onClick={() => goView(item.id)} onPrefetch={() => preloadView[item.id]()} />
+              <NavItem
+                key={item.id}
+                item={item}
+                active={view === item.id}
+                onClick={() => goView(item.id)}
+                onPrefetch={() => preloadView[item.id]()}
+              />
             ))}
           </ul>
 
@@ -238,15 +281,29 @@ export function Sidebar() {
             title="Command palette"
           >
             <span className="flex items-center gap-2">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
                 <circle cx="11" cy="11" r="7" />
                 <path d="m20 20-3.5-3.5" />
               </svg>
               Search…
             </span>
             <span className="flex items-center gap-1">
-              <kbd className="font-mono tabular-nums rounded border border-border-subtle bg-bg-inset px-1 py-px text-[10px]">{isMac ? '⌘' : 'Ctrl'}</kbd>
-              <kbd className="font-mono tabular-nums rounded border border-border-subtle bg-bg-inset px-1 py-px text-[10px]">K</kbd>
+              <kbd className="font-mono tabular-nums rounded border border-border-subtle bg-bg-inset px-1 py-px text-[10px]">
+                {isMac ? '⌘' : 'Ctrl'}
+              </kbd>
+              <kbd className="font-mono tabular-nums rounded border border-border-subtle bg-bg-inset px-1 py-px text-[10px]">
+                K
+              </kbd>
             </span>
           </button>
         </nav>
@@ -265,7 +322,10 @@ export function Sidebar() {
                 <button
                   role="menuitem"
                   className="focus-ring block min-h-[36px] w-full px-3 py-2.5 text-left text-[13px] text-text-secondary transition-colors hover:bg-bg-inset hover:text-text-primary"
-                  onClick={() => { setMenuOpen(false); toast('Only Acme Co is set up in this demo') }}
+                  onClick={() => {
+                    setMenuOpen(false)
+                    toast('Only Acme Co is set up in this demo')
+                  }}
                 >
                   Switch workspace
                 </button>
@@ -273,7 +333,10 @@ export function Sidebar() {
                 <button
                   role="menuitem"
                   className="focus-ring block min-h-[36px] w-full px-3 py-2.5 text-left text-[13px] text-text-secondary transition-colors hover:bg-bg-inset hover:text-text-primary"
-                  onClick={() => { setMenuOpen(false); toast('Signed out (demo)') }}
+                  onClick={() => {
+                    setMenuOpen(false)
+                    toast('Signed out (demo)')
+                  }}
                 >
                   Sign out
                 </button>
@@ -281,7 +344,11 @@ export function Sidebar() {
             )}
           </AnimatePresence>
 
-          <div role="radiogroup" aria-label="Theme" className="grid grid-cols-3 gap-0.5 rounded-control border border-border-subtle bg-bg-inset p-0.5">
+          <div
+            role="radiogroup"
+            aria-label="Theme"
+            className="grid grid-cols-3 gap-0.5 rounded-control border border-border-subtle bg-bg-inset p-0.5"
+          >
             {themeOptions.map((o, i) => {
               const on = theme === o.id
               return (
@@ -294,7 +361,9 @@ export function Sidebar() {
                   onClick={() => setTheme(o.id)}
                   className={[
                     'focus-ring min-h-[28px] rounded-[5px] px-2 text-[12px] transition-colors',
-                    on ? 'bg-bg-surface font-medium text-text-primary shadow-card' : 'text-text-muted hover:text-text-primary',
+                    on
+                      ? 'bg-bg-surface font-medium text-text-primary shadow-card'
+                      : 'text-text-muted hover:text-text-primary',
                   ].join(' ')}
                 >
                   {o.label}
@@ -310,12 +379,20 @@ export function Sidebar() {
             aria-label="Workspace menu"
             className="focus-ring flex w-full items-center gap-3 rounded-card border border-border-subtle bg-bg-surface px-3 py-2.5 text-left transition-colors hover:border-border"
           >
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-control bg-bg-inset text-[12px] font-semibold text-text-primary ring-1 ring-border-subtle">AC</div>
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-control bg-bg-inset text-[12px] font-semibold text-text-primary ring-1 ring-border-subtle">
+              AC
+            </div>
             <div className="min-w-0 flex-1">
-              <div className="text-[13.5px] font-medium leading-tight text-text-primary">Acme Co</div>
+              <div className="text-[13.5px] font-medium leading-tight text-text-primary">
+                Acme Co
+              </div>
               <div className="text-[11.5px] leading-tight text-text-muted">Demo workspace</div>
             </div>
-            <IconChevronDown width={14} height={14} className={`shrink-0 text-text-muted transition-transform ${menuOpen ? 'rotate-180' : ''}`} />
+            <IconChevronDown
+              width={14}
+              height={14}
+              className={`shrink-0 text-text-muted transition-transform ${menuOpen ? 'rotate-180' : ''}`}
+            />
           </button>
           <div className="flex items-center justify-between px-1 text-[11px] text-text-muted">
             <p>Prototype · mock data</p>
@@ -333,11 +410,27 @@ export function Sidebar() {
   )
 }
 
-function SectionLabel({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+function SectionLabel({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
   return <div className={`eyebrow px-3 pb-2 pt-2 ${className}`}>{children}</div>
 }
 
-function NavItem({ item, active, onClick, onPrefetch }: { item: { label: string; icon: React.FC<any>; badge?: string }; active: boolean; onClick: () => void; onPrefetch?: () => void }) {
+function NavItem({
+  item,
+  active,
+  onClick,
+  onPrefetch,
+}: {
+  item: { label: string; icon: React.FC<any>; badge?: string }
+  active: boolean
+  onClick: () => void
+  onPrefetch?: () => void
+}) {
   const Icon = item.icon
   return (
     <li>
@@ -348,7 +441,9 @@ function NavItem({ item, active, onClick, onPrefetch }: { item: { label: string;
         aria-current={active ? 'page' : undefined}
         className={[
           'focus-ring group flex min-h-[36px] w-full items-center gap-3 rounded-control px-3 py-2 text-[13.5px] transition-colors duration-150',
-          active ? 'bg-bg-surface font-medium text-text-primary shadow-card ring-1 ring-border-subtle' : 'text-text-secondary hover:bg-bg-inset hover:text-text-primary',
+          active
+            ? 'bg-bg-surface font-medium text-text-primary shadow-card ring-1 ring-border-subtle'
+            : 'text-text-secondary hover:bg-bg-inset hover:text-text-primary',
         ].join(' ')}
       >
         <Icon className={active ? 'text-brand-500' : ''} />

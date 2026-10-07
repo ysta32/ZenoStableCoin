@@ -11,7 +11,17 @@ type Action = {
 }
 
 export function CommandPalette() {
-  const { setView, goToPayroll, resetDemo, navigate, toast, isExecuting, setTheme, paletteOpen: open, setPaletteOpen: setOpen } = useApp()
+  const {
+    setView,
+    goToPayroll,
+    resetDemo,
+    navigate,
+    toast,
+    isExecuting,
+    setTheme,
+    paletteOpen: open,
+    setPaletteOpen: setOpen,
+  } = useApp()
   const [query, setQuery] = useState('')
   const [idx, setIdx] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -62,17 +72,31 @@ export function CommandPalette() {
         id: 'github',
         label: 'Open GitHub repo',
         hint: 'Link',
-        run: () => { window.open('https://github.com/ysta32/ZenoStableCoin', '_blank', 'noopener,noreferrer') },
+        run: () => {
+          window.open('https://github.com/ysta32/ZenoStableCoin', '_blank', 'noopener,noreferrer')
+        },
       },
-      { id: 'download', label: 'Install Zeno / Download', hint: 'Navigate', run: () => navigate('download') },
-      { id: 'home', label: 'Back to landing page', hint: 'Navigate', run: () => navigate('landing') },
+      {
+        id: 'download',
+        label: 'Install Zeno / Download',
+        hint: 'Navigate',
+        run: () => navigate('download'),
+      },
+      {
+        id: 'home',
+        label: 'Back to landing page',
+        hint: 'Navigate',
+        run: () => navigate('landing'),
+      },
     ]
   }, [setView, goToPayroll, resetDemo, navigate, toast, isExecuting, setTheme])
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
     if (!q) return actions
-    return actions.filter((a) => a.label.toLowerCase().includes(q) || a.hint.toLowerCase().includes(q))
+    return actions.filter(
+      (a) => a.label.toLowerCase().includes(q) || a.hint.toLowerCase().includes(q),
+    )
   }, [actions, query])
 
   // Global toggle: Cmd/Ctrl + K
@@ -183,7 +207,16 @@ export function CommandPalette() {
           >
             <div className="flex items-center gap-3 border-b border-border-subtle px-4">
               <span className="text-text-muted">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <circle cx="11" cy="11" r="7" />
                   <path d="m20 20-3.5-3.5" />
                 </svg>
@@ -196,7 +229,9 @@ export function CommandPalette() {
                 aria-label="Search commands"
                 className="h-12 flex-1 bg-transparent text-[14px] text-text-primary placeholder:text-text-muted outline-none"
               />
-              <kbd className="hidden rounded border border-border-subtle bg-bg-inset px-1.5 py-0.5 font-mono tabular-nums text-[10.5px] text-text-muted sm:inline">esc</kbd>
+              <kbd className="hidden rounded border border-border-subtle bg-bg-inset px-1.5 py-0.5 font-mono tabular-nums text-[10.5px] text-text-muted sm:inline">
+                esc
+              </kbd>
             </div>
 
             <ul ref={listRef} className="max-h-[320px] overflow-y-auto py-1.5">
@@ -216,12 +251,25 @@ export function CommandPalette() {
                     }}
                     className={[
                       'mx-1.5 flex cursor-pointer items-center justify-between rounded-control min-h-[36px] px-3 py-2 text-[13.5px]',
-                      active ? 'bg-bg-inset text-text-primary' : 'text-text-secondary hover:bg-bg-inset',
+                      active
+                        ? 'bg-bg-inset text-text-primary'
+                        : 'text-text-secondary hover:bg-bg-inset',
                     ].join(' ')}
                   >
                     <span className="flex items-center gap-2.5">
-                      <span className={`flex h-5 w-5 items-center justify-center rounded ${active ? 'bg-brand-50 text-brand-500' : 'bg-bg-inset text-text-muted'}`}>
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <span
+                        className={`flex h-5 w-5 items-center justify-center rounded ${active ? 'bg-brand-50 text-brand-500' : 'bg-bg-inset text-text-muted'}`}
+                      >
+                        <svg
+                          width="11"
+                          height="11"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
                           <path d="M5 12h14M13 5l7 7-7 7" />
                         </svg>
                       </span>
@@ -229,9 +277,13 @@ export function CommandPalette() {
                     </span>
                     <span className="flex items-center gap-2">
                       {a.shortcut && (
-                        <span className="hidden font-mono tabular-nums text-[10.5px] text-text-muted sm:inline">{a.shortcut}</span>
+                        <span className="hidden font-mono tabular-nums text-[10.5px] text-text-muted sm:inline">
+                          {a.shortcut}
+                        </span>
                       )}
-                      <span className="font-mono tabular-nums text-[10.5px] uppercase tracking-wider text-text-muted">{a.hint}</span>
+                      <span className="font-mono tabular-nums text-[10.5px] uppercase tracking-wider text-text-muted">
+                        {a.hint}
+                      </span>
                     </span>
                   </li>
                 )

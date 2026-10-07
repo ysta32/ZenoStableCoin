@@ -11,9 +11,17 @@ export function NotFound() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-bg-base px-6 text-center text-text-primary">
-      <div className="font-mono text-[12px] uppercase tracking-[0.14em] text-text-secondary">404</div>
-      <h1 className="mt-3 font-display text-[40px] font-semibold leading-tight tracking-tight">Page not found</h1>
+    <main
+      id="main"
+      tabIndex={-1}
+      className="flex min-h-screen flex-col items-center justify-center bg-bg-base px-6 text-center text-text-primary"
+    >
+      <div className="font-mono text-[12px] uppercase tracking-[0.14em] text-text-secondary">
+        404
+      </div>
+      <h1 className="mt-3 font-display text-[40px] font-semibold leading-tight tracking-tight">
+        Page not found
+      </h1>
       <p className="mt-3 max-w-md text-[15px] text-text-secondary">
         The page you were looking for doesn’t exist or has moved.
       </p>

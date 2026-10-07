@@ -2,7 +2,8 @@ import { ReactNode } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { useCountUp, useInView } from '../hooks/useCountUp'
 
-export type PillTone = 'neutral' | 'green' | 'blue' | 'purple' | 'amber' | 'positive' | 'negative' | 'warning' | 'brand'
+export type PillTone =
+  'neutral' | 'green' | 'blue' | 'purple' | 'amber' | 'positive' | 'negative' | 'warning' | 'brand'
 
 export function Pill({
   children,
@@ -85,7 +86,8 @@ export function Button({
       'bg-brand-500 text-text-inverse shadow-card hover:bg-brand-600 active:bg-brand-700 dark:active:bg-brand-400',
     secondary:
       'bg-bg-surface text-text-primary border border-border shadow-card hover:bg-bg-elevated hover:border-text-muted/40 active:bg-bg-inset',
-    ghost: 'text-text-secondary hover:text-text-primary hover:bg-text-primary/[0.05] active:bg-text-primary/[0.08]',
+    ghost:
+      'text-text-secondary hover:text-text-primary hover:bg-text-primary/[0.05] active:bg-text-primary/[0.08]',
     danger:
       'bg-bg-surface text-negative border border-negative/30 hover:bg-negative-soft hover:border-negative/50 active:bg-negative-soft',
   }
@@ -106,7 +108,11 @@ export function Button({
 
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`rounded-[10px] border border-border-subtle bg-bg-surface shadow-card ${className}`}>{children}</div>
+    <div
+      className={`rounded-[10px] border border-border-subtle bg-bg-surface shadow-card ${className}`}
+    >
+      {children}
+    </div>
   )
 }
 
@@ -114,11 +120,23 @@ export function Card({ children, className = '' }: { children: ReactNode; classN
  * Neutral initials avatar. `color` is kept for API compatibility but is
  * intentionally not rendered: Ledger avoids rainbow avatar fills.
  */
-export function Avatar({ initials, size = 36 }: { initials: string; color: string; size?: number }) {
+export function Avatar({
+  initials,
+  size = 36,
+}: {
+  initials: string
+  color: string
+  size?: number
+}) {
   return (
     <div
       className="flex shrink-0 select-none items-center justify-center rounded-full bg-bg-inset font-medium text-text-secondary ring-1 ring-inset ring-border-subtle"
-      style={{ width: size, height: size, fontSize: Math.max(10, Math.round(size * 0.34)), letterSpacing: '0.02em' }}
+      style={{
+        width: size,
+        height: size,
+        fontSize: Math.max(10, Math.round(size * 0.34)),
+        letterSpacing: '0.02em',
+      }}
       aria-hidden="true"
     >
       {initials}
@@ -162,7 +180,10 @@ export function CountUpNumber({
   const { ref, inView } = useInView<HTMLSpanElement>({ threshold: 0.3 })
   const start = when === 'mount' ? true : inView
   const value = useCountUp(target, { durationMs, start, decimals })
-  const formatted = value.toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
+  const formatted = value.toLocaleString(undefined, {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  })
   return (
     <span ref={ref} className={`tabular-nums ${className}`}>
       {prefix}

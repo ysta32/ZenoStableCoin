@@ -1,4 +1,12 @@
-import { useEffect, useId, useMemo, useRef, useState, type DragEvent, type KeyboardEvent } from 'react'
+import {
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type DragEvent,
+  type KeyboardEvent,
+} from 'react'
 import { createPortal } from 'react-dom'
 import { Button, MethodBadge } from '../../components/UI'
 import { IconDownload, IconX } from '../../components/Icons'
@@ -132,7 +140,8 @@ function ImportDialogBody({ onClose }: { onClose: () => void }) {
   }
 
   const valid = useMemo(
-    () => (entries ?? []).filter((e): e is PreviewEntry & { row: ParsedRow } => !!e.row && !e.error),
+    () =>
+      (entries ?? []).filter((e): e is PreviewEntry & { row: ParsedRow } => !!e.row && !e.error),
     [entries],
   )
   const invalidCount = (entries?.length ?? 0) - valid.length
@@ -218,7 +227,8 @@ function ImportDialogBody({ onClose }: { onClose: () => void }) {
             <div className="text-[13.5px] text-text-primary">
               {fileName ? (
                 <>
-                  <span className="text-text-secondary">Selected:</span> <span className="font-mono tabular-nums">{fileName}</span>
+                  <span className="text-text-secondary">Selected:</span>{' '}
+                  <span className="font-mono tabular-nums">{fileName}</span>
                 </>
               ) : (
                 'Drop a .csv file here, or choose one'
@@ -252,7 +262,10 @@ function ImportDialogBody({ onClose }: { onClose: () => void }) {
           </div>
 
           {fileError && (
-            <p role="alert" className="mt-4 rounded-[6px] bg-negative-soft px-3 py-2 text-[13px] text-negative">
+            <p
+              role="alert"
+              className="mt-4 rounded-[6px] bg-negative-soft px-3 py-2 text-[13px] text-negative"
+            >
               {fileError}
             </p>
           )}
@@ -278,26 +291,38 @@ function ImportDialogBody({ onClose }: { onClose: () => void }) {
                     key={`${e.line}-${i}`}
                     className={`flex flex-col gap-1 px-3 py-2.5 sm:flex-row sm:items-center sm:gap-3 ${e.error ? 'bg-negative-soft/60' : ''}`}
                   >
-                    <span className="num w-14 shrink-0 text-[11.5px] text-text-muted">Line {e.line}</span>
+                    <span className="num w-14 shrink-0 text-[11.5px] text-text-muted">
+                      Line {e.line}
+                    </span>
                     {e.row ? (
                       <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1">
-                        <span className="min-w-0 truncate text-[13px] font-medium text-text-primary">{e.row.name}</span>
+                        <span className="min-w-0 truncate text-[13px] font-medium text-text-primary">
+                          {e.row.name}
+                        </span>
                         <span className="text-[12px] text-text-muted">
                           {e.row.role} · {e.row.countryCode.toUpperCase()}
                         </span>
                         <MethodBadge method={e.row.method} />
-                        <span className="num ml-auto text-[13px] text-text-primary">{usd(e.row.amount)}</span>
+                        <span className="num ml-auto text-[13px] text-text-primary">
+                          {usd(e.row.amount)}
+                        </span>
                       </div>
                     ) : (
                       <span className="flex-1 text-[13px] text-text-secondary">Row not parsed</span>
                     )}
-                    {e.error && <span className="text-[12px] text-negative sm:max-w-[40%] sm:text-right">{e.error}</span>}
+                    {e.error && (
+                      <span className="text-[12px] text-negative sm:max-w-[40%] sm:text-right">
+                        {e.error}
+                      </span>
+                    )}
                   </li>
                 ))}
               </ul>
 
               <fieldset className="mt-5">
-                <legend className="text-[14px] font-semibold text-text-primary">How should these be added?</legend>
+                <legend className="text-[14px] font-semibold text-text-primary">
+                  How should these be added?
+                </legend>
                 <div className="mt-2 grid gap-2 sm:grid-cols-2">
                   <ModeOption
                     checked={mode === 'append'}
@@ -321,7 +346,8 @@ function ImportDialogBody({ onClose }: { onClose: () => void }) {
           <p className="text-[12.5px] text-text-secondary">
             {valid.length > 0 ? (
               <>
-                Adds <span className="num text-text-primary">{usd(importTotal)}</span> to this payroll
+                Adds <span className="num text-text-primary">{usd(importTotal)}</span> to this
+                payroll
               </>
             ) : (
               'Nothing to import yet'
@@ -331,8 +357,14 @@ function ImportDialogBody({ onClose }: { onClose: () => void }) {
             <Button variant="secondary" onClick={onClose} className="flex-1 sm:flex-none">
               Cancel
             </Button>
-            <Button variant="primary" onClick={confirm} disabled={valid.length === 0} className="flex-1 sm:flex-none">
-              {mode === 'replace' ? 'Replace with' : 'Import'} {valid.length || ''} member{valid.length === 1 ? '' : 's'}
+            <Button
+              variant="primary"
+              onClick={confirm}
+              disabled={valid.length === 0}
+              className="flex-1 sm:flex-none"
+            >
+              {mode === 'replace' ? 'Replace with' : 'Import'} {valid.length || ''} member
+              {valid.length === 1 ? '' : 's'}
             </Button>
           </div>
         </div>

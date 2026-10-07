@@ -9,7 +9,14 @@ import { ActivityIcon } from '../components/ActivityIcon'
 import { downloadCsv } from '../lib/csv'
 import { formatUSD } from '../lib/money'
 
-const FILTERS: ('All' | ActivityType)[] = ['All', 'Payroll', 'Yield', 'Deposit', 'Withdrawal', 'Swap']
+const FILTERS: ('All' | ActivityType)[] = [
+  'All',
+  'Payroll',
+  'Yield',
+  'Deposit',
+  'Withdrawal',
+  'Swap',
+]
 
 /** Activity dates are short strings ("Mar 5") unless createdAt is set; resolve to a timestamp. */
 function timestamp(a: Activity, now: number): number {
@@ -39,7 +46,9 @@ export function Transactions() {
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase()
     return all.filter(
-      ({ t }) => (filter === 'All' || t.type === filter) && (!q || `${t.type} ${t.detail}`.toLowerCase().includes(q)),
+      ({ t }) =>
+        (filter === 'All' || t.type === filter) &&
+        (!q || `${t.type} ${t.detail}`.toLowerCase().includes(q)),
     )
   }, [all, filter, query])
 
@@ -99,7 +108,9 @@ export function Transactions() {
             ))}
           </div>
           <div className="w-full lg:w-72">
-            <label htmlFor="tx-search" className="sr-only">Search transactions</label>
+            <label htmlFor="tx-search" className="sr-only">
+              Search transactions
+            </label>
             <input
               id="tx-search"
               type="search"

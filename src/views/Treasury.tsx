@@ -59,9 +59,7 @@ export function Treasury() {
           <Card className="min-w-0 p-5 sm:p-6 xl:col-span-2">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h2 className="text-sm text-text-secondary">Available balance</h2>
-              <Pill tone="neutral">
-                Demo · USDC / USDT
-              </Pill>
+              <Pill tone="neutral">Demo · USDC / USDT</Pill>
             </div>
             <div className="mt-5 flex flex-wrap items-baseline gap-2">
               <span className="num !font-display text-[40px] leading-none tracking-tight sm:text-[52px]">

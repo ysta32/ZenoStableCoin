@@ -10,7 +10,9 @@ let chromium
 try {
   ;({ chromium } = require('playwright'))
 } catch {
-  console.error('playwright not found. Run with NODE_PATH=/path/to/node_modules node scripts/icons.mjs')
+  console.error(
+    'playwright not found. Run with NODE_PATH=/path/to/node_modules node scripts/icons.mjs',
+  )
   process.exit(1)
 }
 
@@ -47,7 +49,10 @@ const browser = await chromium.launch()
 for (const [name, opts] of icons) {
   const page = await browser.newPage({ viewport: { width: opts.size, height: opts.size } })
   await page.setContent(`<body style="margin:0;background:transparent">${svg(opts)}</body>`)
-  const buf = await page.screenshot({ omitBackground: true, clip: { x: 0, y: 0, width: opts.size, height: opts.size } })
+  const buf = await page.screenshot({
+    omitBackground: true,
+    clip: { x: 0, y: 0, width: opts.size, height: opts.size },
+  })
   writeFileSync(path.join(out, name), buf)
   await page.close()
   console.log('wrote', name)

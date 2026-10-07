@@ -69,6 +69,11 @@ test('sample CSV can be reviewed, authorized, executed and found in history', as
   await expect(execute).toHaveText(/\$33,767\.40/)
   await expect(execute).toBeDisabled()
   await page.getByRole('checkbox', { name: /I authorize this payroll run/ }).check()
+  await expect(execute).toBeDisabled()
+  const confirmTotal = page.getByLabel('Type the total to confirm: 33,767.40')
+  await confirmTotal.fill('33,767.41')
+  await expect(execute).toBeDisabled()
+  await confirmTotal.fill('$33767.40')
   await expect(execute).toBeEnabled()
   await execute.click()
   await expect(page.getByRole('status').filter({ hasText: /^Payroll complete$/ })).toBeVisible({

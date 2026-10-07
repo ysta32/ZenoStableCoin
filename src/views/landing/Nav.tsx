@@ -10,13 +10,15 @@ const LINKS = [
   { href: '#product', label: 'Product' },
   { href: '#pricing', label: 'Pricing calculator' },
   { href: '#developers', label: 'Developers' },
+  { href: '#trust', label: 'Trust' },
   { href: '#faq', label: 'FAQ' },
 ]
 
 function ThemeToggle() {
   const { theme, setTheme } = useApp()
   const [systemDark, setSystemDark] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches,
+    () =>
+      typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches,
   )
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)')
@@ -92,13 +94,19 @@ export function Nav() {
           <a
             href={REPO_URL}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="inline-flex h-9 items-center gap-2 rounded-[6px] px-3 text-[14px] text-text-secondary transition-colors hover:bg-text-primary/[0.05] hover:text-text-primary focus-ring"
           >
             <GitHubIcon />
             GitHub
           </a>
-          <Button variant="primary" onClick={() => navigate('app')} onMouseEnter={prefetch} onFocus={prefetch} className="ml-1.5">
+          <Button
+            variant="primary"
+            onClick={() => navigate('app')}
+            onMouseEnter={prefetch}
+            onFocus={prefetch}
+            className="ml-1.5"
+          >
             Open the demo
           </Button>
         </div>
@@ -136,7 +144,10 @@ export function Nav() {
                 <li className="border-b border-border-subtle">
                   <a
                     href="/download"
-                    onClick={onPlainClick(() => navigate('download'), () => setOpen(false))}
+                    onClick={onPlainClick(
+                      () => navigate('download'),
+                      () => setOpen(false),
+                    )}
                     className="flex h-12 w-full items-center text-[16px] text-text-primary focus-ring"
                   >
                     Download
@@ -146,7 +157,7 @@ export function Nav() {
                   <a
                     href={REPO_URL}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     className="flex h-12 items-center gap-2 text-[16px] text-text-primary focus-ring"
                   >
                     <GitHubIcon /> GitHub
@@ -154,7 +165,12 @@ export function Nav() {
                 </li>
               </ul>
             </nav>
-            <Button variant="primary" size="lg" onClick={() => navigate('app')} className="mt-4 w-full">
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={() => navigate('app')}
+              className="mt-4 w-full"
+            >
               Open the demo
             </Button>
           </Container>

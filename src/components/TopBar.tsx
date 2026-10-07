@@ -3,7 +3,15 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useApp } from '../context/AppContext'
 import { IconRotate, IconCheck, IconX } from './Icons'
 
-export function TopBar({ title, subtitle, children }: { title: string; subtitle?: string; children?: ReactNode }) {
+export function TopBar({
+  title,
+  subtitle,
+  children,
+}: {
+  title: string
+  subtitle?: string
+  children?: ReactNode
+}) {
   const { resetDemo, isExecuting, toast, sidebarOpen, setSidebarOpen } = useApp()
   const [armed, setArmed] = useState(false)
   const armTimerRef = useRef<number | null>(null)
@@ -45,16 +53,36 @@ export function TopBar({ title, subtitle, children }: { title: string; subtitle?
           aria-controls="app-sidebar"
           aria-expanded={sidebarOpen}
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            aria-hidden="true"
+          >
             <path d="M4 7h16M4 12h16M4 17h16" />
           </svg>
         </button>
         <div className="min-w-0">
-          <h1 className="truncate font-display text-[22px] font-medium leading-tight text-text-primary sm:text-[26px]">{title}</h1>
+          <h1 className="truncate font-display text-[22px] font-medium leading-tight text-text-primary sm:text-[26px]">
+            {title}
+          </h1>
           {subtitle && <p className="truncate text-[13px] text-text-muted">{subtitle}</p>}
         </div>
       </div>
       <div className="flex flex-wrap items-center gap-2 max-sm:w-full sm:gap-3">
+        <span
+          className="inline-flex h-7 items-center rounded-full border border-border-subtle bg-bg-inset px-2.5 text-[11.5px] font-medium text-text-secondary"
+          title="Nothing here touches a real chain or bank. Balances and payouts are simulated."
+        >
+          Demo<span className="max-sm:hidden"> · simulated funds</span>
+          <span className="sr-only">
+            . Nothing here touches a real chain or bank. Balances and payouts are simulated.
+          </span>
+        </span>
         {children}
         <div className="relative">
           <AnimatePresence mode="wait" initial={false}>
@@ -94,11 +122,17 @@ export function TopBar({ title, subtitle, children }: { title: string; subtitle?
                 onClick={arm}
                 disabled={isExecuting}
                 className="focus-ring group inline-flex h-9 items-center gap-1.5 rounded-control border border-border-subtle bg-transparent px-2.5 text-[12px] text-text-muted transition-colors hover:border-border hover:text-text-primary disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-border-subtle disabled:hover:text-text-muted"
-                title={isExecuting ? 'Reset disabled while payroll is executing' : 'Reset demo state'}
+                title={
+                  isExecuting ? 'Reset disabled while payroll is executing' : 'Reset demo state'
+                }
                 aria-label="Reset demo"
                 aria-disabled={isExecuting}
               >
-                <IconRotate width={12} height={12} className="transition-transform group-hover:-rotate-90 group-disabled:transform-none" />
+                <IconRotate
+                  width={12}
+                  height={12}
+                  className="transition-transform group-hover:-rotate-90 group-disabled:transform-none"
+                />
                 Reset
               </motion.button>
             )}

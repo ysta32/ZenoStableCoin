@@ -32,7 +32,9 @@ export function Reports() {
     const qStartMonth = lastQ * 3
     const qEnd = new Date(lastQYear, qStartMonth + 3, 0)
     const qShort = ['Q1', 'Q2', 'Q3', 'Q4'][lastQ]
-    const startName = new Date(lastQYear, qStartMonth, 1).toLocaleDateString('en-US', { month: 'short' })
+    const startName = new Date(lastQYear, qStartMonth, 1).toLocaleDateString('en-US', {
+      month: 'short',
+    })
     const endName = qEnd.toLocaleDateString('en-US', { month: 'short' })
     const qRange = `${startName} 1 – ${endName} ${qEnd.getDate()}, ${lastQYear}`
     return {
@@ -61,8 +63,12 @@ export function Reports() {
       ready: true,
       onDownload: () => {
         const inSum = activity.filter((t) => t.amount > 0).reduce((s, t) => s + t.amount, 0)
-        const outSum = activity.filter((t) => t.amount < 0).reduce((s, t) => s + Math.abs(t.amount), 0)
-        const yieldSum = activity.filter((t) => t.type === 'Yield').reduce((s, t) => s + t.amount, 0)
+        const outSum = activity
+          .filter((t) => t.amount < 0)
+          .reduce((s, t) => s + Math.abs(t.amount), 0)
+        const yieldSum = activity
+          .filter((t) => t.type === 'Yield')
+          .reduce((s, t) => s + t.amount, 0)
         download(`zeno-pl-${period.qFile}.csv`, [
           ['Metric', 'Value (USD)'],
           ['Total inflows', inSum.toFixed(2)],
@@ -113,10 +119,20 @@ export function Reports() {
     period: `Tax year ${period.year}`,
     ready: true,
     onDownload: () =>
-      download(`1099-${(m.name || 'unnamed').replace(/\s+/g, '-').toLowerCase()}-${period.year}.csv`, [
-        ['Form', 'Recipient', 'Country', 'Method', 'YTD Payments (USD)', 'Tax year'],
-        ['1099-NEC', m.name || 'Unnamed', m.country, m.method, (m.amount * 4).toFixed(2), period.year],
-      ]),
+      download(
+        `1099-${(m.name || 'unnamed').replace(/\s+/g, '-').toLowerCase()}-${period.year}.csv`,
+        [
+          ['Form', 'Recipient', 'Country', 'Method', 'YTD Payments (USD)', 'Tax year'],
+          [
+            '1099-NEC',
+            m.name || 'Unnamed',
+            m.country,
+            m.method,
+            (m.amount * 4).toFixed(2),
+            period.year,
+          ],
+        ],
+      ),
   }))
 
   return (
@@ -127,7 +143,11 @@ export function Reports() {
           Generated from your payroll and treasury activity. Each report downloads as a CSV.
         </p>
         <ReportGroup title="Financial summaries" rows={summary} />
-        <ReportGroup title={`Contractor tax forms, ${period.year}`} rows={forms} empty="Add contractors to generate their 1099-NEC forms." />
+        <ReportGroup
+          title={`Contractor tax forms, ${period.year}`}
+          rows={forms}
+          empty="Add contractors to generate their 1099-NEC forms."
+        />
       </div>
     </div>
   )

@@ -18,7 +18,10 @@ function pct([lo, hi]: [number, number]): string {
 function feeModel(p: (typeof PROVIDERS)[number]): string {
   const parts: string[] = []
   if (p.feePct[1] > 0) parts.push(`${pct(p.feePct)} per payment`)
-  if (p.flatPerPayment > 0) parts.push(`${formatUSD(p.flatPerPayment, { cents: p.flatPerPayment % 1 !== 0 })} ${p.id === 'deel' ? 'per contractor / mo' : 'per wire'}`)
+  if (p.flatPerPayment > 0)
+    parts.push(
+      `${formatUSD(p.flatPerPayment, { cents: p.flatPerPayment % 1 !== 0 })} ${p.id === 'deel' ? 'per contractor / mo' : 'per wire'}`,
+    )
   return parts.join(' + ')
 }
 
@@ -30,7 +33,10 @@ const ROWS: { label: string; cell: (p: (typeof PROVIDERS)[number]) => string; mo
     cell: (p) => formatUSD(example.find((r) => r.id === p.id)?.annualFees ?? NaN),
     mono: true,
   },
-  { label: 'Yield on idle balance', cell: (p) => (p.id === 'zeno' ? `${(ASSUMED_APY * 100).toFixed(1)}% assumed` : 'None') },
+  {
+    label: 'Yield on idle balance',
+    cell: (p) => (p.id === 'zeno' ? `${(ASSUMED_APY * 100).toFixed(1)}% assumed` : 'None'),
+  },
   { label: 'Source code', cell: (p) => (p.id === 'zeno' ? 'Public on GitHub' : 'Closed') },
 ]
 
@@ -46,14 +52,18 @@ export function Comparison() {
       <ul className="border-t border-border md:hidden">
         {cols.map((p) => (
           <li key={p.id} className="border-b border-border-subtle py-5">
-            <h3 className={`font-display text-[20px] ${p.id === 'zeno' ? 'text-text-primary' : 'text-text-secondary'}`}>
+            <h3
+              className={`font-display text-[20px] ${p.id === 'zeno' ? 'text-text-primary' : 'text-text-secondary'}`}
+            >
               {p.id === 'swift' ? 'SWIFT wire' : p.name}
             </h3>
             <dl className="mt-3 space-y-2 text-[14px]">
               {ROWS.map((r) => (
                 <div key={r.label} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] gap-4">
                   <dt className="text-[13px] text-text-muted">{r.label}</dt>
-                  <dd className={`${p.id === 'zeno' ? 'text-text-primary' : 'text-text-secondary'} ${r.mono ? 'num' : ''}`}>
+                  <dd
+                    className={`${p.id === 'zeno' ? 'text-text-primary' : 'text-text-secondary'} ${r.mono ? 'num' : ''}`}
+                  >
                     {r.cell(p)}
                   </dd>
                 </div>
@@ -82,7 +92,10 @@ export function Comparison() {
           <tbody>
             {ROWS.map((r) => (
               <tr key={r.label} className="border-b border-border-subtle align-top">
-                <th scope="row" className="py-4 pr-4 text-left text-[13.5px] font-normal text-text-muted">
+                <th
+                  scope="row"
+                  className="py-4 pr-4 text-left text-[13.5px] font-normal text-text-muted"
+                >
                   {r.label}
                 </th>
                 {cols.map((p) => (
@@ -99,8 +112,8 @@ export function Comparison() {
         </table>
       </div>
       <p className="mt-4 text-[12.5px] text-text-muted">
-        Illustrative estimates from public list prices; see sources under the calculator. Zeno figures are prototype
-        assumptions, not live pricing.
+        Illustrative estimates from public list prices; see sources under the calculator. Zeno
+        figures are prototype assumptions, not live pricing.
       </p>
     </Section>
   )

@@ -70,18 +70,18 @@ Node 22 is what CI uses.
 
 ## Scripts
 
-| Script                               | What it does                                        |
-| ------------------------------------ | --------------------------------------------------- |
-| `npm run dev`                        | Start the Vite dev server                           |
-| `npm run build`                      | Type-check and build to `dist/`                     |
-| `npm run preview`                    | Serve the production build locally                  |
-| `npm run check`                      | Typecheck, lint and unit tests                      |
-| `npm run test`                       | Vitest unit tests                                   |
-| `npm run e2e`                        | Playwright end-to-end tests (port from `E2E_PORT`, default 4173) |
-| `npm run screenshots`                | Regenerate `docs/screenshots/`                      |
-| `npm run og`                         | Render `public/og-cover.png` and `docs/banner.png`  |
-| `npm run lint` / `typecheck`         | ESLint / TypeScript only                            |
-| `npm run format` / `format:check`    | Prettier write / check                              |
+| Script                            | What it does                                                     |
+| --------------------------------- | ---------------------------------------------------------------- |
+| `npm run dev`                     | Start the Vite dev server                                        |
+| `npm run build`                   | Type-check and build to `dist/`                                  |
+| `npm run preview`                 | Serve the production build locally                               |
+| `npm run check`                   | Typecheck, lint and unit tests                                   |
+| `npm run test`                    | Vitest unit tests                                                |
+| `npm run e2e`                     | Playwright end-to-end tests (port from `E2E_PORT`, default 4173) |
+| `npm run screenshots`             | Regenerate `docs/screenshots/`                                   |
+| `npm run og`                      | Render `public/og-cover.png` and `docs/banner.png`               |
+| `npm run lint` / `typecheck`      | ESLint / TypeScript only                                         |
+| `npm run format` / `format:check` | Prettier write / check                                           |
 
 ## Tech stack
 
