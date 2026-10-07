@@ -27,7 +27,7 @@ Stablecoin payroll for founders paying contractors across time zones. Fund once,
 - **Command palette.** Press `⌘K` / `Ctrl+K` to jump to any view, start a payroll run, reset the demo, or go back to the landing page. Arrow keys and Enter work.
 - **Keyboard shortcuts.** Press `g`, then a letter: `g d` Dashboard, `g p` Payroll, `g y` Treasury, `g t` Team, `g x` Transactions, `g r` Reports, `g s` Settings. Press `?` for the cheat sheet.
 - **Count-up numbers.** `useCountUp` eases stats up from zero with `requestAnimationFrame`, and can wait until the number scrolls into view. It respects `prefers-reduced-motion`.
-- **Light and dark themes.** Toggle from the landing nav or settings; follows the system by default.
+- **Light and dark themes.** Light by default; switch to dark or follow the system from the landing nav, the sidebar or Settings.
 - **Fast navigation.** Views are lazy-loaded. Hovering a sidebar item or a "Launch app" button prefetches the code before you click.
 - **Small touches.** Framer Motion page transitions, and an error boundary that can clear saved data and start fresh if something breaks.
 - **Routing without a router.** `/` is the landing page, `/app` the dashboard, and `/app/<view>` each other view (payroll, treasury, team, transactions, reports, settings), using the History API. `vercel.json` rewrites every path to `index.html`, so refreshes work.
