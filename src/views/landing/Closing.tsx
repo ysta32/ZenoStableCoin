@@ -2,6 +2,7 @@ import { Logo } from '../../components/Logo'
 import { Button } from '../../components/UI'
 import { useApp } from '../../context/AppContext'
 import { preloadView } from '../../preload'
+import { onPlainClick } from '../../lib/plainClick'
 import { Container, GitHubIcon, REPO_URL } from './shared'
 
 export function FinalCta() {
@@ -43,6 +44,7 @@ export function FinalCta() {
 }
 
 export function Footer() {
+  const { navigate } = useApp()
   return (
     <footer className="py-10">
       <Container className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
@@ -51,15 +53,32 @@ export function Footer() {
           <span className="text-[13px] text-text-muted">© 2026 Zeno</span>
         </div>
         <p className="text-[13px] text-text-muted">Prototype. No real funds move.</p>
-        <a
-          href={REPO_URL}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex h-9 items-center gap-2 self-start rounded-[6px] text-[13px] text-text-secondary hover:text-text-primary focus-ring sm:self-auto"
-        >
-          <GitHubIcon />
-          ysta32/ZenoStableCoin
-        </a>
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-1 self-start sm:self-auto">
+          <a
+            href="/download"
+            onClick={onPlainClick(() => navigate('download'))}
+            className="inline-flex h-9 items-center rounded-[6px] text-[13px] text-text-secondary hover:text-text-primary focus-ring"
+          >
+            Download
+          </a>
+          <a
+            href={`${REPO_URL}/releases`}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex h-9 items-center rounded-[6px] text-[13px] text-text-secondary hover:text-text-primary focus-ring"
+          >
+            Releases
+          </a>
+          <a
+            href={REPO_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex h-9 items-center gap-2 rounded-[6px] text-[13px] text-text-secondary hover:text-text-primary focus-ring"
+          >
+            <GitHubIcon />
+            ysta32/ZenoStableCoin
+          </a>
+        </div>
       </Container>
     </footer>
   )

@@ -5,7 +5,6 @@ import { Calculator } from './landing/Calculator'
 import { Features } from './landing/Features'
 import { Developers } from './landing/Developers'
 import { Comparison } from './landing/Comparison'
-import { Team } from './landing/Team'
 import { Faq } from './landing/Faq'
 import { FinalCta, Footer } from './landing/Closing'
 
@@ -27,7 +26,6 @@ export function Landing() {
           <Features />
           <Developers />
           <Comparison />
-          <Team />
           <Faq />
         </div>
         <FinalCta />

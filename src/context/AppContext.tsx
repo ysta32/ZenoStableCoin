@@ -1,10 +1,11 @@
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, ReactNode } from 'react'
+import { isFiniteNum, isMethod, isObj, isPayrollRun } from '../lib/persistGuards'
 import { team as seedTeam, treasury as seedTreasury, recentActivity as seedActivity, Member, Method, Activity, ActivityType, PayrollRun, PayrollRunInput, Theme } from '../data'
 
 export type { Activity, PayrollRun, PayrollRunInput, PayrollRecipient, Theme } from '../data'
 
 export type View = 'dashboard' | 'payroll' | 'treasury' | 'team' | 'transactions' | 'reports' | 'settings'
-export type Route = 'landing' | 'app' | 'notfound'
+export type Route = 'landing' | 'app' | 'download' | 'notfound'
 
 const VIEWS: readonly View[] = ['dashboard', 'payroll', 'treasury', 'team', 'transactions', 'reports', 'settings']
 const VIEW_LABELS: Record<View, string> = {
@@ -28,6 +29,7 @@ function parseLocation(pathname: string): Loc {
   const path = pathname.replace(/\/+$/, '') || '/'
   if (path === '/') return { route: 'landing', view: 'dashboard' }
   if (path === '/app') return { route: 'app', view: 'dashboard' }
+  if (path === '/download') return { route: 'download', view: 'dashboard' }
   const m = /^\/app\/([^/]+)$/.exec(path)
   if (m && (VIEWS as readonly string[]).includes(m[1])) return { route: 'app', view: m[1] as View }
   return { route: 'notfound', view: 'dashboard' }
@@ -44,10 +46,6 @@ type Persisted = {
   defaultMethod: Method
 }
 
-const METHODS: readonly Method[] = ['USDC', 'USDT', 'EUR Bank']
-const isMethod = (x: unknown): x is Method => typeof x === 'string' && (METHODS as readonly string[]).includes(x)
-const isObj = (x: unknown): x is Record<string, unknown> => typeof x === 'object' && x !== null && !Array.isArray(x)
-const isFiniteNum = (x: unknown): x is number => typeof x === 'number' && Number.isFinite(x)
 const isOptStr = (x: unknown) => x === undefined || typeof x === 'string'
 const isMember = (x: unknown): x is Member =>
   isObj(x) &&
@@ -72,8 +70,6 @@ const isActivity = (x: unknown): x is Activity =>
   typeof x.date === 'string' &&
   isFiniteNum(x.amount) &&
   (x.createdAt === undefined || isFiniteNum(x.createdAt))
-const isPayrollRun = (x: unknown): x is PayrollRun =>
-  isObj(x) && typeof x.id === 'string' && typeof x.clientRunId === 'string' && isFiniteNum(x.createdAt) && isFiniteNum(x.total) && isFiniteNum(x.fee) && Array.isArray(x.recipients)
 const arrayOf = <T,>(x: unknown, guard: (v: unknown) => v is T): T[] | null =>
   Array.isArray(x) && x.every(guard) ? (x as T[]) : null
 
@@ -316,7 +312,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const navigate = useCallback((r: Route) => {
-    const path = r === 'app' ? '/app' : r === 'landing' ? '/' : window.location.pathname
+    const path = r === 'app' ? '/app' : r === 'landing' ? '/' : r === 'download' ? '/download' : window.location.pathname
     if (window.location.pathname !== path) window.history.pushState({ route: r }, '', path)
     setLoc({ route: r, view: 'dashboard' })
     setSidebarOpen(false)
@@ -340,6 +336,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (route === 'landing') document.title = BASE_TITLE
+    else if (route === 'download') document.title = 'Download · Zeno'
     else if (route === 'notfound') document.title = 'Page not found · Zeno'
     else document.title = `${VIEW_LABELS[view]} · Zeno`
   }, [route, view])
