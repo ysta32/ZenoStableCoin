@@ -7,12 +7,24 @@ type TeamRow = Pick<Member, 'name' | 'role' | 'country' | 'countryCode' | 'metho
 }
 type CsvError = { line: number; message: string }
 
+const PLAIN_NUMBER = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/
+
+/**
+ * Spreadsheet apps evaluate cells starting with = + - @ TAB or CR as formulas.
+ * Prefix such text with an apostrophe; plain numbers (including negatives) pass through.
+ */
+function neutralizeFormula(cell: string | number): string {
+  const value = String(cell)
+  if (typeof cell === 'number' || PLAIN_NUMBER.test(value)) return value
+  return /^[=+\-@\t\r]/.test(value) ? `'${value}` : value
+}
+
 export function toCsv(rows: (string | number)[][]): string {
   return rows
     .map((row) =>
       row
         .map((cell) => {
-          const value = String(cell)
+          const value = neutralizeFormula(cell)
           return /[",\r\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value
         })
         .join(','),

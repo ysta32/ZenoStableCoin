@@ -3,7 +3,7 @@ import { Avatar, Button, Card, MethodBadge } from '../../components/UI'
 import { IconArrowRight, IconCheck, IconSpinner } from '../../components/Icons'
 import { useApp } from '../../context/AppContext'
 import type { PayrollRun } from '../../data'
-import { feeFor, memberError, newClientRunId, round2, usd } from './ledger'
+import { feeFor, memberError, newClientRunId, round2, sumCents, toCents, usd } from './ledger'
 import { TotalsLedger } from './TotalsLedger'
 
 const COMPLIANCE = ['Sanctions screening (Chainalysis)', 'KYC verified for all recipients', 'Tax documents on file']
@@ -20,7 +20,7 @@ export function StepReview({ onBack, onExecuted }: { onBack: () => void; onExecu
     return () => timers.forEach(clearTimeout)
   }, [])
 
-  const subtotal = useMemo(() => round2(team.reduce((s, m) => s + m.amount, 0)), [team])
+  const subtotal = useMemo(() => sumCents(team.map((m) => m.amount)), [team])
   const fee = feeFor(subtotal)
   const debit = round2(subtotal + fee)
   const invalid = team.filter((m) => memberError(m) !== null).length
@@ -50,7 +50,7 @@ export function StepReview({ onBack, onExecuted }: { onBack: () => void; onExecu
           memberId: m.id,
           name: m.name,
           method: m.method,
-          amount: m.amount,
+          amount: toCents(m.amount),
           status: 'sent' as const,
         })),
       })
@@ -103,7 +103,7 @@ export function StepReview({ onBack, onExecuted }: { onBack: () => void; onExecu
                     <MethodBadge method={m.method} />
                   </div>
                   <div className={`num w-28 text-right text-[13.5px] ${err ? 'text-negative' : 'text-text-primary'}`}>
-                    {usd(m.amount)}
+                    {usd(toCents(m.amount))}
                   </div>
                 </li>
               )

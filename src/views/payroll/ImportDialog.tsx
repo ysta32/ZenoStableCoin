@@ -5,7 +5,7 @@ import { IconDownload, IconX } from '../../components/Icons'
 import { useApp } from '../../context/AppContext'
 import type { Member } from '../../data'
 import { isEvmAddress, parseTeamCsv } from '../../lib/csv'
-import { amountError, usd } from './ledger'
+import { amountError, sumCents, toCents, usd } from './ledger'
 
 type ParsedRow = ReturnType<typeof parseTeamCsv>['rows'][number]
 type PreviewEntry = { line: number; row?: ParsedRow; error?: string }
@@ -109,7 +109,10 @@ function ImportDialogBody({ onClose }: { onClose: () => void }) {
       return
     }
     if (seq !== readSeq.current) return
-    const { rows, errors } = parseTeamCsv(text)
+    const parsed = parseTeamCsv(text)
+    const errors = parsed.errors
+    // Normalize to cents up front so preview, totals and imported members agree.
+    const rows = parsed.rows.map((r) => ({ ...r, amount: toCents(r.amount) }))
     const list: PreviewEntry[] = [
       ...rows.map((row) => ({ line: row.line, row, error: rowError(row) ?? undefined })),
       ...errors.map((e) => ({ line: e.line, error: e.message })),
@@ -133,7 +136,7 @@ function ImportDialogBody({ onClose }: { onClose: () => void }) {
     [entries],
   )
   const invalidCount = (entries?.length ?? 0) - valid.length
-  const importTotal = valid.reduce((s, e) => s + e.row.amount, 0)
+  const importTotal = sumCents(valid.map((e) => e.row.amount))
 
   const confirm = () => {
     if (valid.length === 0) return

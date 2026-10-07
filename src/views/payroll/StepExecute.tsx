@@ -30,7 +30,15 @@ function rowState(i: number, n: number, elapsedMs: number, final: PayrollRecipie
   return 'pending'
 }
 
-export function StepExecute({ run, onRestart }: { run: PayrollRun | undefined; onRestart: () => void }) {
+export function StepExecute({
+  run,
+  onRestart,
+  onFinished,
+}: {
+  run: PayrollRun | undefined
+  onRestart: () => void
+  onFinished: (runId: string | null) => void
+}) {
   const { setView } = useApp()
   const [now, setNow] = useState(() => Date.now())
   const startedAt = run?.createdAt ?? 0
@@ -42,6 +50,11 @@ export function StepExecute({ run, onRestart }: { run: PayrollRun | undefined; o
     const id = window.setInterval(() => setNow(Date.now()), 100)
     return () => clearInterval(id)
   }, [finished])
+
+  const runId = run?.id ?? null
+  useEffect(() => {
+    if (finished) onFinished(runId)
+  }, [finished, runId, onFinished])
 
   if (!run) {
     return (

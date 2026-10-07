@@ -4,7 +4,7 @@ import { IconArrowRight, IconPlus, IconX } from '../../components/Icons'
 import { useApp } from '../../context/AppContext'
 import type { Member, Method } from '../../data'
 import { ImportDialog } from './ImportDialog'
-import { MAX_AMOUNT, feeFor, memberError, round2 } from './ledger'
+import { MAX_AMOUNT, feeFor, memberError, sumCents, toCents } from './ledger'
 import { TotalsLedger } from './TotalsLedger'
 
 const COUNTRIES: { code: string; name: string }[] = [
@@ -35,7 +35,7 @@ export function StepAmounts({ onNext }: { onNext: () => void }) {
   const [freshIds, setFreshIds] = useState<Set<string>>(new Set())
   const [importOpen, setImportOpen] = useState(false)
 
-  const subtotal = useMemo(() => round2(team.reduce((s, m) => s + (Number(m.amount) || 0), 0)), [team])
+  const subtotal = useMemo(() => sumCents(team.map((m) => Number(m.amount) || 0)), [team])
   const invalid = useMemo(() => team.filter((m) => memberError(m) !== null).length, [team])
 
   const handleAdd = () => {
@@ -228,7 +228,7 @@ function MemberRow({
             value={m.amount === 0 ? '' : m.amount}
             onChange={(e) => {
               const v = e.target.value === '' ? 0 : Number(e.target.value)
-              setAmount(m.id, Number.isFinite(v) ? v : 0)
+              setAmount(m.id, toCents(v))
             }}
             placeholder="0.00"
             aria-label={`Amount in USD for ${label}`}

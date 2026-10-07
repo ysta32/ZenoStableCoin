@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Button, Pill, LiveDot } from '../components/UI'
 import { IconPlus, IconCheck } from '../components/Icons'
@@ -16,6 +16,9 @@ export function Payroll() {
   const { payrollStep, setPayrollStep, goToPayroll, isExecuting, toast, payrollRuns } = useApp()
   const reduce = useReducedMotion()
   const [activeRunId, setActiveRunId] = useState<string | null>(null)
+  // Run id whose settlement walkthrough has finished (null id = no run to show).
+  const [finishedRun, setFinishedRun] = useState<{ id: string | null } | null>(null)
+  const onFinished = useCallback((id: string | null) => setFinishedRun({ id }), [])
 
   // If the view remounted mid-run, the most recent recorded run is the one being executed.
   const activeRun: PayrollRun | undefined =
@@ -23,12 +26,16 @@ export function Payroll() {
       ? (activeRunId ? payrollRuns.find((r) => r.id === activeRunId) : undefined) ?? payrollRuns[0]
       : undefined
 
+  // Context marks the whole Execute step as executing; once the run has settled, allow a new run.
+  const running = isExecuting && !(finishedRun && finishedRun.id === (activeRun?.id ?? null))
+
   const restart = () => {
-    if (isExecuting) {
+    if (running) {
       toast('Wait for payroll to finish before restarting', 'amber')
       return
     }
     setActiveRunId(null)
+    setFinishedRun(null)
     goToPayroll()
   }
 
@@ -39,6 +46,7 @@ export function Payroll() {
 
   const runAnother = () => {
     setActiveRunId(null)
+    setFinishedRun(null)
     goToPayroll()
   }
 
@@ -51,8 +59,8 @@ export function Payroll() {
         <Button
           variant="primary"
           onClick={restart}
-          disabled={isExecuting}
-          title={isExecuting ? 'Wait for payroll to finish' : 'Restart from step 1'}
+          disabled={running}
+          title={running ? 'Wait for payroll to finish' : 'Restart from step 1'}
         >
           <IconPlus width={14} height={14} /> {payrollStep === 0 ? 'New run' : 'Restart'}
         </Button>
@@ -108,7 +116,7 @@ export function Payroll() {
           >
             {payrollStep === 0 && <StepAmounts onNext={() => setPayrollStep(1)} />}
             {payrollStep === 1 && <StepReview onBack={() => setPayrollStep(0)} onExecuted={onExecuted} />}
-            {payrollStep === 2 && <StepExecute run={activeRun} onRestart={runAnother} />}
+            {payrollStep === 2 && <StepExecute run={activeRun} onRestart={runAnother} onFinished={onFinished} />}
           </motion.div>
         </AnimatePresence>
         {payrollStep !== 1 && <History />}

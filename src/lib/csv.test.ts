@@ -15,6 +15,17 @@ describe('toCsv', () => {
     expect(toCsv([['a\rb', 'a\nb']])).toBe('"a\rb","a\nb"')
   })
   it('handles no rows', () => expect(toCsv([])).toBe(''))
+  it('neutralizes formula-leading text cells', () => {
+    expect(toCsv([['=SUM(A1:A2)', '+1+1', '-2+3', '@cmd', '\tx', '\rx']])).toBe(
+      `'=SUM(A1:A2),'+1+1,'-2+3,'@cmd,'\tx,"'\rx"`,
+    )
+  })
+  it('neutralizes formulas that also need quoting', () => {
+    expect(toCsv([['=HYPERLINK("http://x","y")']])).toBe(`"'=HYPERLINK(""http://x"",""y"")"`)
+  })
+  it('leaves plain numbers and numeric strings unchanged, including negatives', () => {
+    expect(toCsv([[-42, -42.5, '-42.50', '+7', '1e3', 0, 'Ana', 'a=b']])).toBe('-42,-42.5,-42.50,+7,1e3,0,Ana,a=b')
+  })
 })
 
 describe('parseTeamCsv', () => {
