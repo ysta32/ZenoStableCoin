@@ -7,7 +7,11 @@ describe('estimateAnnualCost', () => {
   it('calculates Zeno fees and subtracts annual idle-balance yield', () => {
     expect(ASSUMED_APY).toBe(0.045)
     expect(estimateAnnualCost(input)[0]).toEqual({
-      id: 'zeno', name: 'Zeno', annualFees: 2400, yieldEarned: 9000, net: -6600,
+      id: 'zeno',
+      name: 'Zeno',
+      annualFees: 2400,
+      yieldEarned: 9000,
+      net: -6600,
     })
   })
   it('uses the midpoint of the Wise fee range', () => {
@@ -36,18 +40,30 @@ describe('estimateAnnualCost', () => {
     }
   })
   it('grants yield only to Zeno', () => {
-    expect(estimateAnnualCost(input).slice(1).map((provider) => provider.yieldEarned)).toEqual([0, 0, 0])
+    expect(
+      estimateAnnualCost(input)
+        .slice(1)
+        .map((provider) => provider.yieldEarned),
+    ).toEqual([0, 0, 0])
   })
   it('scales fees and yield linearly', () => {
-    const doubled = estimateAnnualCost({ monthlyPayroll: 200000, contractors: 20, idleBalance: 400000 })
+    const doubled = estimateAnnualCost({
+      monthlyPayroll: 200000,
+      contractors: 20,
+      idleBalance: 400000,
+    })
     estimateAnnualCost(input).forEach((result, index) => {
       expect(doubled[index].annualFees).toBeCloseTo(result.annualFees * 2)
       expect(doubled[index].net).toBeCloseTo(result.net * 2)
     })
   })
   it.each([
-    { monthlyPayroll: -1 }, { contractors: -1 }, { idleBalance: -1 },
-    { monthlyPayroll: NaN }, { contractors: Infinity }, { idleBalance: Infinity },
+    { monthlyPayroll: -1 },
+    { contractors: -1 },
+    { idleBalance: -1 },
+    { monthlyPayroll: NaN },
+    { contractors: Infinity },
+    { idleBalance: Infinity },
     { contractors: 1.5 },
   ])('rejects invalid input %j', (invalid) => {
     expect(() => estimateAnnualCost({ ...input, ...invalid })).toThrow(RangeError)
