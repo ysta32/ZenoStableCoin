@@ -5,7 +5,22 @@ import { formatUSD } from '../../lib/money'
 export const FEE_RATE = 0.002
 export const MAX_AMOUNT = 1_000_000
 
-export const round2 = (n: number) => Math.round(n * 100) / 100
+/** Shift a number's decimal point by `places` via its string form, avoiding binary multiply error. */
+function shiftDecimal(n: number, places: number): number {
+  const [mantissa, exp = '0'] = String(n).split('e')
+  return Number(`${mantissa}e${Number(exp) + places}`)
+}
+
+/**
+ * Round to cents, half away from zero, using decimal (string) shifting so ties like
+ * 1.005 and 10.075 round up as written. Handles negatives and exponent-form input.
+ */
+export function round2(n: number): number {
+  if (!Number.isFinite(n)) return n
+  const sign = n < 0 ? -1 : 1
+  const result = shiftDecimal(Math.round(shiftDecimal(Math.abs(n), 2)), -2)
+  return result === 0 ? 0 : sign * result
+}
 
 /** Normalize a USD amount to whole cents; non-finite input becomes 0. */
 export const toCents = (n: number) => (Number.isFinite(n) ? round2(n) : 0)
