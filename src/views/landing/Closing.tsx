@@ -31,7 +31,7 @@ export function FinalCta() {
           <a
             href={REPO_URL}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="inline-flex h-11 items-center gap-2 rounded-[6px] border border-border bg-bg-surface px-5 text-[15px] font-medium text-text-primary shadow-card transition-colors hover:bg-bg-elevated focus-ring"
           >
             <GitHubIcon />
@@ -52,7 +52,6 @@ export function Footer() {
           <Logo size={24} />
           <span className="text-[13px] text-text-muted">© 2026 Zeno</span>
         </div>
-        <p className="text-[13px] text-text-muted">Prototype. No real funds move.</p>
         <div className="flex flex-wrap items-center gap-x-5 gap-y-1 self-start sm:self-auto">
           <a
             href="/download"
@@ -64,7 +63,7 @@ export function Footer() {
           <a
             href={`${REPO_URL}/releases`}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="inline-flex h-9 items-center rounded-[6px] text-[13px] text-text-secondary hover:text-text-primary focus-ring"
           >
             Releases
@@ -72,13 +71,18 @@ export function Footer() {
           <a
             href={REPO_URL}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="inline-flex h-9 items-center gap-2 rounded-[6px] text-[13px] text-text-secondary hover:text-text-primary focus-ring"
           >
             <GitHubIcon />
             ysta32/ZenoStableCoin
           </a>
         </div>
+      </Container>
+      <Container className="mt-6">
+        <p className="text-[13px] leading-relaxed text-text-muted">
+          Demo product — balances and payouts are simulated. No real funds, keys or chains.
+        </p>
       </Container>
     </footer>
   )

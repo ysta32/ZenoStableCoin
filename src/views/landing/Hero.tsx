@@ -65,13 +65,16 @@ export function Hero() {
               <a
                 href={REPO_URL}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="inline-flex h-11 items-center gap-2 rounded-[6px] border border-border bg-bg-surface px-5 text-[15px] font-medium text-text-primary shadow-card transition-colors hover:bg-bg-elevated focus-ring"
               >
                 <GitHubIcon />
                 View on GitHub
               </a>
             </div>
+            <p className="mt-3 text-[13px] leading-relaxed text-text-muted">
+              Demo product — balances and payouts are simulated. No real funds, keys or chains.
+            </p>
           </Rise>
           <Rise delay={0.06} className="lg:col-span-4 lg:pt-[52px]">
             <dl className="grid grid-cols-2 border-t border-border lg:grid-cols-1">

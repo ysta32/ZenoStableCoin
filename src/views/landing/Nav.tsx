@@ -10,6 +10,7 @@ const LINKS = [
   { href: '#product', label: 'Product' },
   { href: '#pricing', label: 'Pricing calculator' },
   { href: '#developers', label: 'Developers' },
+  { href: '#trust', label: 'Trust' },
   { href: '#faq', label: 'FAQ' },
 ]
 
@@ -92,7 +93,7 @@ export function Nav() {
           <a
             href={REPO_URL}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="inline-flex h-9 items-center gap-2 rounded-[6px] px-3 text-[14px] text-text-secondary transition-colors hover:bg-text-primary/[0.05] hover:text-text-primary focus-ring"
           >
             <GitHubIcon />
@@ -146,7 +147,7 @@ export function Nav() {
                   <a
                     href={REPO_URL}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     className="flex h-12 items-center gap-2 text-[16px] text-text-primary focus-ring"
                   >
                     <GitHubIcon /> GitHub
