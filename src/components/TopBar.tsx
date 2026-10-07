@@ -58,11 +58,9 @@ export function TopBar({ title, subtitle, children }: { title: string; subtitle?
         <span
           className="inline-flex h-7 items-center rounded-full border border-border-subtle bg-bg-inset px-2.5 text-[11.5px] font-medium text-text-secondary"
           title="Nothing here touches a real chain or bank. Balances and payouts are simulated."
-          aria-label="Demo: simulated funds. Nothing here touches a real chain or bank."
         >
-          <span aria-hidden="true">
-            Demo<span className="max-sm:hidden"> · simulated funds</span>
-          </span>
+          Demo<span className="max-sm:hidden"> · simulated funds</span>
+          <span className="sr-only">. Nothing here touches a real chain or bank. Balances and payouts are simulated.</span>
         </span>
         {children}
         <div className="relative">
