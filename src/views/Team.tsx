@@ -63,6 +63,7 @@ export function Team() {
   const [query, setQuery] = useState('')
   const [panel, setPanel] = useState<{ mode: 'add' } | { mode: 'edit'; id: string } | null>(null)
   const returnFocus = useRef<HTMLElement | null>(null)
+  const addRef = useRef<HTMLButtonElement | null>(null)
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -79,16 +80,25 @@ export function Team() {
   }
   const close = () => {
     setPanel(null)
-    requestAnimationFrame(() => returnFocus.current?.focus())
+    requestAnimationFrame(() => {
+      const el = returnFocus.current
+      if (el && el.isConnected) el.focus()
+      else addRef.current?.focus()
+    })
   }
 
   return (
     <div className="flex h-full flex-col">
       <TopBar title="Team">
         <Button variant="secondary" onClick={goToPayroll}>Run payroll</Button>
-        <Button variant="primary" onClick={() => open({ mode: 'add' })}>
+        <button
+          ref={addRef}
+          type="button"
+          onClick={() => open({ mode: 'add' })}
+          className="relative inline-flex h-9 select-none items-center justify-center gap-1.5 whitespace-nowrap rounded-[6px] bg-brand-500 px-3.5 text-[13.5px] font-medium text-text-inverse shadow-card transition-colors hover:bg-brand-600 focus-ring"
+        >
           <IconPlus width={14} height={14} /> Add contractor
-        </Button>
+        </button>
       </TopBar>
       <div className="flex-1 overflow-auto px-4 py-6 sm:px-8 sm:py-7">
         <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -234,6 +244,15 @@ function MemberPanel({
   const [touched, setTouched] = useState<Partial<Record<keyof FormState, boolean>>>({})
   const [submitted, setSubmitted] = useState(false)
   const [confirmRemove, setConfirmRemove] = useState(false)
+  const removeWrap = useRef<HTMLDivElement | null>(null)
+  const removeMounted = useRef(false)
+  useEffect(() => {
+    if (!removeMounted.current) {
+      removeMounted.current = true
+      return
+    }
+    removeWrap.current?.querySelector<HTMLElement>('button')?.focus()
+  }, [confirmRemove])
 
   const errors = validate(form)
   const show = (k: keyof FormState) => (submitted || touched[k] ? errors[k] : undefined)
@@ -260,6 +279,11 @@ function MemberPanel({
         return
       }
       if (e.key !== 'Tab' || !panelRef.current) return
+      if (!panelRef.current.contains(document.activeElement)) {
+        e.preventDefault()
+        panelRef.current.querySelector<HTMLElement>('input, select, button')?.focus()
+        return
+      }
       const items = panelRef.current.querySelectorAll<HTMLElement>(
         'button:not([disabled]), input:not([disabled]), select:not([disabled]), [href], [tabindex]:not([tabindex="-1"])',
       )
@@ -445,8 +469,8 @@ function MemberPanel({
           )}
         </form>
 
-        <footer className="sticky bottom-0 flex items-center justify-between gap-3 border-t border-border-subtle bg-bg-surface px-6 py-4">
-          <div>
+        <footer className="sticky bottom-0 flex flex-col-reverse gap-3 border-t border-border-subtle bg-bg-surface px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <div ref={removeWrap} className="[&>div]:flex-wrap">
             {onRemove &&
               (confirmRemove ? (
                 <div className="flex items-center gap-2">

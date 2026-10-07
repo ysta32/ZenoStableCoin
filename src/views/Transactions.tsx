@@ -14,9 +14,12 @@ const FILTERS: ('All' | ActivityType)[] = ['All', 'Payroll', 'Yield', 'Deposit',
 /** Activity dates are short strings ("Mar 5") unless createdAt is set; resolve to a timestamp. */
 function timestamp(a: Activity, now: number): number {
   if (a.createdAt) return a.createdAt
-  const parsed = new Date(`${a.date} ${new Date(now).getFullYear()} 12:00`).getTime()
+  const year = new Date(now).getFullYear()
+  const at = (y: number) => new Date(`${a.date} ${y} 00:00`).getTime()
+  const parsed = at(year)
   if (Number.isNaN(parsed)) return 0
-  return parsed > now + 86_400_000 ? new Date(`${a.date} ${new Date(now).getFullYear() - 1} 12:00`).getTime() : parsed
+  // A transaction cannot be dated after today: a future date belongs to the previous year.
+  return parsed > now ? at(year - 1) : parsed
 }
 
 export function Transactions() {
