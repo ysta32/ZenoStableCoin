@@ -82,7 +82,7 @@ export function Button({
   }
   const variants = {
     primary:
-      'bg-brand-500 text-text-inverse shadow-card hover:bg-brand-600 active:bg-brand-700',
+      'bg-brand-500 text-text-inverse shadow-card hover:bg-brand-600 active:bg-brand-700 dark:active:bg-brand-400',
     secondary:
       'bg-bg-surface text-text-primary border border-border shadow-card hover:bg-bg-elevated hover:border-text-muted/40 active:bg-bg-inset',
     ghost: 'text-text-secondary hover:text-text-primary hover:bg-text-primary/[0.05] active:bg-text-primary/[0.08]',
