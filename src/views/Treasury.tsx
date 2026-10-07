@@ -118,7 +118,7 @@ export function Treasury() {
             </div>
             <Sparkline
               values={[1200, 1350, 1420, 1590, 1730, 1842]}
-              label="Illustrative monthly yield, January to June"
+              label="Illustrative monthly yield, last six months"
             />
             <p className="mt-3 text-[11px] text-text-muted">Illustrative yield history</p>
 
