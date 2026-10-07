@@ -4,7 +4,7 @@ import { team as seedTeam, treasury as seedTreasury, recentActivity as seedActiv
 export type { Activity, PayrollRun, PayrollRunInput, PayrollRecipient, Theme } from '../data'
 
 export type View = 'dashboard' | 'payroll' | 'treasury' | 'team' | 'transactions' | 'reports' | 'settings'
-export type Route = 'landing' | 'app' | 'notfound'
+export type Route = 'landing' | 'app' | 'download' | 'notfound'
 
 const VIEWS: readonly View[] = ['dashboard', 'payroll', 'treasury', 'team', 'transactions', 'reports', 'settings']
 const VIEW_LABELS: Record<View, string> = {
@@ -28,6 +28,7 @@ function parseLocation(pathname: string): Loc {
   const path = pathname.replace(/\/+$/, '') || '/'
   if (path === '/') return { route: 'landing', view: 'dashboard' }
   if (path === '/app') return { route: 'app', view: 'dashboard' }
+  if (path === '/download') return { route: 'download', view: 'dashboard' }
   const m = /^\/app\/([^/]+)$/.exec(path)
   if (m && (VIEWS as readonly string[]).includes(m[1])) return { route: 'app', view: m[1] as View }
   return { route: 'notfound', view: 'dashboard' }
@@ -316,7 +317,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const navigate = useCallback((r: Route) => {
-    const path = r === 'app' ? '/app' : r === 'landing' ? '/' : window.location.pathname
+    const path = r === 'app' ? '/app' : r === 'landing' ? '/' : r === 'download' ? '/download' : window.location.pathname
     if (window.location.pathname !== path) window.history.pushState({ route: r }, '', path)
     setLoc({ route: r, view: 'dashboard' })
     setSidebarOpen(false)
@@ -340,6 +341,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (route === 'landing') document.title = BASE_TITLE
+    else if (route === 'download') document.title = 'Download · Zeno'
     else if (route === 'notfound') document.title = 'Page not found · Zeno'
     else document.title = `${VIEW_LABELS[view]} · Zeno`
   }, [route, view])

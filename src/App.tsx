@@ -9,6 +9,7 @@ import { ErrorBoundary } from './components/ErrorBoundary'
 import { NotFound } from './views/NotFound'
 
 const Landing = lazy(() => import('./views/Landing').then((m) => ({ default: m.Landing })))
+const Download = lazy(() => import('./views/Download').then((m) => ({ default: m.Download })))
 const Dashboard = lazy(() => import('./views/Dashboard').then((m) => ({ default: m.Dashboard })))
 const Payroll = lazy(() => import('./views/Payroll').then((m) => ({ default: m.Payroll })))
 const Treasury = lazy(() => import('./views/Treasury').then((m) => ({ default: m.Treasury })))
@@ -77,6 +78,18 @@ function Shell() {
         >
           <Suspense fallback={<div className="h-screen bg-bg-base" />}>
             <Landing />
+          </Suspense>
+        </motion.div>
+      ) : route === 'download' ? (
+        <motion.div
+          key="download"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <Suspense fallback={<div className="h-screen bg-bg-base" />}>
+            <Download />
           </Suspense>
         </motion.div>
       ) : route === 'notfound' ? (
