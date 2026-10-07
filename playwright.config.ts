@@ -7,10 +7,9 @@ export default defineConfig({
   testMatch: screenshots ? 'screenshots.spec.ts' : 'smoke.spec.ts',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: 0,
+  retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 2 : undefined,
   reporter: 'list',
-  outputDir: '/tmp/zeno-playwright-results',
   use: {
     baseURL: 'http://127.0.0.1:4173',
     viewport: { width: 1440, height: 900 },
@@ -25,7 +24,7 @@ export default defineConfig({
   webServer: {
     command: 'npm run build && npm run preview -- --host 127.0.0.1 --port 4173 --strictPort',
     url: 'http://127.0.0.1:4173',
-    reuseExistingServer: false,
+    reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },
 })
