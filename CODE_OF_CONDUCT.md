@@ -21,7 +21,7 @@ We want participation in this project to be a welcoming, harassment-free experie
 
 Maintainers may edit or remove comments, commits, issues, and other contributions that do not follow this Code of Conduct, and may temporarily or permanently ban contributors for behavior they deem inappropriate.
 
-To report a problem, contact the maintainer [@ysta32](https://github.com/ysta32) through a private GitHub message or by opening a private security advisory. All reports will be handled confidentially.
+To report a problem, contact the maintainer [@ysta32](https://github.com/ysta32) by using the repository's private **Report a vulnerability** form (Security tab), which only maintainers can read; mark the report as a conduct matter. All reports will be handled confidentially.
 
 ## Attribution
 

@@ -15,7 +15,7 @@ Zeno is a demo front-end app. It uses simulated funds only. It never holds real 
 
 Please do not open a public issue for security problems.
 
-1. Go to the repository's **Security** tab and choose **Report a vulnerability** (GitHub private vulnerability reporting), or open a draft from the **Security Advisories** tab.
+1. Go to the repository's **Security** tab and choose **Report a vulnerability** (GitHub private vulnerability reporting).
 2. Describe the issue, the affected version or commit, and steps to reproduce.
 3. Include a proof of concept or screenshots if you have them.
 
