@@ -18,9 +18,9 @@ export function InstallSection({ install, client }: { install: InstallState; cli
       title="Install it like any other app."
       lead={
         <>
-          Zeno is a web app your browser can install. It gets its own window and icon, and keeps
-          your data in the same local storage as the browser tab. There is no app store and no
-          installer.
+          Zeno is a web app your browser can install. It gets its own window and icon. There is no
+          app store and no installer. Depending on the browser, the installed app may keep its own
+          copy of the demo data; Safari keeps it separate from your tabs.
         </>
       }
     >

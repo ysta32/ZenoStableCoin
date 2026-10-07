@@ -2,12 +2,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
+import { initInstallPrompt } from './lib/installPrompt'
 import './styles.css'
+
+// Capture the install prompt before any lazy route chunk loads; it fires once.
+initInstallPrompt()
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )
 
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {

@@ -1,18 +1,5 @@
-import { useCallback, useEffect, useState } from 'react'
-
-/** Chromium-only event; not in lib.dom yet. */
-interface BeforeInstallPromptEvent extends Event {
-  prompt: () => Promise<void>
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>
-}
-
-function isStandalone(): boolean {
-  if (typeof window === 'undefined') return false
-  const nav = window.navigator as Navigator & { standalone?: boolean }
-  return (
-    window.matchMedia?.('(display-mode: standalone)').matches === true || nav.standalone === true
-  )
-}
+import { useSyncExternalStore } from 'react'
+import { getInstallSnapshot, promptInstall, subscribeInstall } from '../../lib/installPrompt'
 
 export type InstallState = {
   /** The browser offered an install prompt we can trigger. */
@@ -22,52 +9,10 @@ export type InstallState = {
   install: () => Promise<void>
 }
 
-/**
- * Local install-prompt hook for the download page. Captures
- * `beforeinstallprompt`, exposes `install()`, and reports installed state from
- * `appinstalled` or standalone display mode.
- */
+/** Reads the app-scope install prompt store (captured in main.tsx before any route loads). */
 export function useInstallPrompt(): InstallState {
-  const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null)
-  const [installed, setInstalled] = useState(isStandalone)
-
-  useEffect(() => {
-    const onPrompt = (e: Event) => {
-      e.preventDefault()
-      setDeferred(e as BeforeInstallPromptEvent)
-    }
-    const onInstalled = () => {
-      setDeferred(null)
-      setInstalled(true)
-    }
-    const mq = window.matchMedia?.('(display-mode: standalone)')
-    const onMode = (e: MediaQueryListEvent) => {
-      if (e.matches) setInstalled(true)
-    }
-    window.addEventListener('beforeinstallprompt', onPrompt)
-    window.addEventListener('appinstalled', onInstalled)
-    mq?.addEventListener?.('change', onMode)
-    return () => {
-      window.removeEventListener('beforeinstallprompt', onPrompt)
-      window.removeEventListener('appinstalled', onInstalled)
-      mq?.removeEventListener?.('change', onMode)
-    }
-  }, [])
-
-  const install = useCallback(async () => {
-    if (!deferred) return
-    // A captured prompt can only be shown once; drop it either way.
-    setDeferred(null)
-    try {
-      await deferred.prompt()
-      const { outcome } = await deferred.userChoice
-      if (outcome === 'accepted') setInstalled(true)
-    } catch {
-      // prompt() rejects if the event was already used; the page falls back to manual steps.
-    }
-  }, [deferred])
-
-  return { canInstall: deferred !== null && !installed, installed, install }
+  const snap = useSyncExternalStore(subscribeInstall, getInstallSnapshot, getInstallSnapshot)
+  return { canInstall: snap.canInstall, installed: snap.installed, install: promptInstall }
 }
 
 export type PlatformId = 'macos' | 'windows' | 'ios' | 'android'
