@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, ReactNode } from 'react'
-import { team as seedTeam, treasury as seedTreasury, recentActivity as seedActivity, Member, Method, Activity, PayrollRun, PayrollRunInput, Theme } from '../data'
+import { team as seedTeam, treasury as seedTreasury, recentActivity as seedActivity, Member, Method, Activity, ActivityType, PayrollRun, PayrollRunInput, Theme } from '../data'
 
 export type { Activity, PayrollRun, PayrollRunInput, PayrollRecipient, Theme } from '../data'
 
@@ -48,10 +48,30 @@ const METHODS: readonly Method[] = ['USDC', 'USDT', 'EUR Bank']
 const isMethod = (x: unknown): x is Method => typeof x === 'string' && (METHODS as readonly string[]).includes(x)
 const isObj = (x: unknown): x is Record<string, unknown> => typeof x === 'object' && x !== null && !Array.isArray(x)
 const isFiniteNum = (x: unknown): x is number => typeof x === 'number' && Number.isFinite(x)
+const isOptStr = (x: unknown) => x === undefined || typeof x === 'string'
 const isMember = (x: unknown): x is Member =>
-  isObj(x) && typeof x.id === 'string' && typeof x.name === 'string' && typeof x.method === 'string' && isFiniteNum(x.amount)
+  isObj(x) &&
+  typeof x.id === 'string' &&
+  typeof x.name === 'string' &&
+  typeof x.role === 'string' &&
+  typeof x.country === 'string' &&
+  typeof x.countryCode === 'string' &&
+  isMethod(x.method) &&
+  isFiniteNum(x.amount) &&
+  typeof x.initials === 'string' &&
+  typeof x.avatarColor === 'string' &&
+  isOptStr(x.wallet) &&
+  isOptStr(x.email)
+const ACTIVITY_TYPES: readonly string[] = ['Payroll', 'Yield', 'Deposit', 'Swap', 'Withdrawal'] satisfies ActivityType[]
 const isActivity = (x: unknown): x is Activity =>
-  isObj(x) && typeof x.id === 'string' && typeof x.type === 'string' && typeof x.detail === 'string' && typeof x.date === 'string' && isFiniteNum(x.amount)
+  isObj(x) &&
+  typeof x.id === 'string' &&
+  typeof x.type === 'string' &&
+  ACTIVITY_TYPES.includes(x.type) &&
+  typeof x.detail === 'string' &&
+  typeof x.date === 'string' &&
+  isFiniteNum(x.amount) &&
+  (x.createdAt === undefined || isFiniteNum(x.createdAt))
 const isPayrollRun = (x: unknown): x is PayrollRun =>
   isObj(x) && typeof x.id === 'string' && typeof x.clientRunId === 'string' && isFiniteNum(x.createdAt) && isFiniteNum(x.total) && isFiniteNum(x.fee) && Array.isArray(x.recipients)
 const arrayOf = <T,>(x: unknown, guard: (v: unknown) => v is T): T[] | null =>
@@ -354,6 +374,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       amount: m.amount ?? 3000,
       initials,
       avatarColor: m.avatarColor ?? randAvatarColor(),
+      ...(m.wallet !== undefined ? { wallet: m.wallet } : {}),
+      ...(m.email !== undefined ? { email: m.email } : {}),
     }
     setTeam((t) => [...t, newMember])
     return id
@@ -422,9 +444,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [addTransaction, toast])
 
   const withdraw = useCallback((amount: number, destination: string): boolean => {
-    if (!Number.isFinite(amount) || amount <= 0) return false
+    if (!Number.isFinite(amount) || amount <= 0 || amount > balanceRef.current) return false
     const amt = round2(amount)
-    if (amt > balanceRef.current) return false
     addTransaction({ type: 'Withdrawal', detail: `Withdrawal to ${destination}`, amount: -amt, date: todayLabel() })
     toast(`Withdrew ${usd(amt)} to ${destination}`, 'green')
     return true

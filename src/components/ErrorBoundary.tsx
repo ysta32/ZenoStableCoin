@@ -23,6 +23,7 @@ export class ErrorBoundary extends Component<Props, State> {
   reload = () => {
     try {
       window.localStorage.removeItem('zeno.team')
+      window.localStorage.removeItem('zeno.state.v2')
     } catch {}
     window.location.assign('/')
   }
