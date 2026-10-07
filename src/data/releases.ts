@@ -13,6 +13,18 @@ export type Release = {
 /** Newest first. Every tag here exists on GitHub. */
 export const RELEASES: Release[] = [
   {
+    tag: 'v1.1.0',
+    date: '2026-10-07',
+    title: 'Trust',
+    summary:
+      'Payroll safety rails, honest demo labelling, backups, an accessibility gate and hardened security.',
+    notes: [
+      'Runs are blocked when the treasury cannot cover them or a recipient has no wallet, and executing requires typing the exact total.',
+      'Export, import or reset your demo data from Settings; a demo badge makes the simulated funds obvious.',
+      'Every route passes WCAG 2.1 AA checks in CI; production ships a strict Content-Security-Policy and hardened state validation.',
+    ],
+  },
+  {
     tag: 'v1.0.0',
     date: '2026-10-07',
     title: 'Installable app and download page',
