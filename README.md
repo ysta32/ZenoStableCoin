@@ -13,27 +13,28 @@ Stablecoin payroll for founders paying contractors across time zones. Fund once,
 - **Landing** (`/`): the pitch. How it works, features, a comparison with Deel, Wise, and SWIFT, a sample API call, and buttons into the app.
 - **Dashboard** (`/app`): treasury balance, yield, monthly payroll, a growth sparkline, the next scheduled run, and recent activity.
 - **Payroll**: the main event. Three steps:
-  1. **Set amounts.** Edit each contractor's USD amount, add or remove people, or hit "Import CSV" (it loads a built-in sample set).
+  1. **Set amounts.** Edit each contractor's USD amount, add or remove people, or hit "Import CSV" (choose a file or drag and drop one; a sample is at `/sample-team.csv`).
   2. **Review & confirm.** Simulated checks tick off, then you tick the authorize box.
-  3. **Execute.** A scripted run (validating, compliance, minting, distributing) flips each person from Processing to Sent. Confetti at the end.
-- **Treasury**: balance, yield, and allocation (T-bill tokens, USDC, USDT). The balance drifts a little every few seconds so it feels live. Deposit and Withdraw just show demo toasts.
-- **Team**, **Transactions**, **Reports**, **Settings**: lighter screens that live together in `src/views/Simple.tsx`. Transactions and Reports export real CSV files, built from the mock data. Settings has a "Reset demo" button.
+  3. **Execute.** A scripted run (validating, compliance, minting, distributing) flips each person from Processing to Sent.
+- **Treasury**: balance, yield, and allocation (T-bill tokens, USDC, USDT). The balance drifts a little every few seconds so it feels live. Deposit and Withdraw change the balance.
+- **Team**, **Transactions**, **Reports**, **Settings**: lighter screens, each in its own file under `src/views/`. Transactions and Reports export real CSV files, built from the mock data. Settings has a "Reset demo" button.
 
 ## How it works
 
 - **One context for all state.** `src/context/AppContext.tsx` holds the route, the current view, the team, the payroll step, treasury numbers, the activity feed, and toasts. Views read and write through `useApp()`.
-- **Your team sticks around.** Team edits save to `localStorage` (`zeno.team`). Everything else resets on reload.
+- **Your team sticks around.** App state persists in `localStorage` under the key `zeno.state.v2`; "Reset demo" clears it.
 - **A fake-but-lively economy.** Timers nudge the treasury balance every 3 to 5 seconds, tick yield every 12 seconds, and drop a new "yield accrued" entry into the feed about every 70 seconds.
 - **Command palette.** Press `⌘K` / `Ctrl+K` to jump to any view, start a payroll run, reset the demo, or go back to the landing page. Arrow keys and Enter work.
 - **Keyboard shortcuts.** Press `g`, then a letter: `g d` Dashboard, `g p` Payroll, `g y` Treasury, `g t` Team, `g x` Transactions, `g r` Reports, `g s` Settings. Press `?` for the cheat sheet.
 - **Count-up numbers.** `useCountUp` eases stats up from zero with `requestAnimationFrame`, and can wait until the number scrolls into view. It respects `prefers-reduced-motion`.
+- **Light and dark themes.** Toggle from the landing nav or settings; follows the system by default.
 - **Fast navigation.** Views are lazy-loaded. Hovering a sidebar item or a "Launch app" button prefetches the code before you click.
-- **Small touches.** Framer Motion page transitions, `canvas-confetti` on payroll success, and an error boundary that can clear saved data and start fresh if something breaks.
-- **Routing without a router.** `/` shows the landing page and `/app` shows the app, using the History API. `vercel.json` rewrites every path to `index.html`, so refreshes work.
+- **Small touches.** Framer Motion page transitions, and an error boundary that can clear saved data and start fresh if something breaks.
+- **Routing without a router.** `/` is the landing page, `/app` the dashboard, and `/app/<view>` each other view (payroll, treasury, team, transactions, reports, settings), using the History API. `vercel.json` rewrites every path to `index.html`, so refreshes work.
 
 ## Tech
 
-React 18, TypeScript, Vite, Tailwind CSS, Framer Motion, canvas-confetti. Deployed on Vercel.
+React 18, TypeScript, Vite, Tailwind CSS, Framer Motion. Deployed on Vercel.
 
 ## Run it
 
@@ -42,6 +43,10 @@ npm install
 npm run dev       # start the dev server
 npm run build     # type-check and build to dist/
 npm run preview   # serve the production build locally
+npm run check     # typecheck, lint, unit tests
+npm run test      # unit tests
+npm run e2e       # Playwright end-to-end tests
+npm run screenshots
 ```
 
 ## The business idea

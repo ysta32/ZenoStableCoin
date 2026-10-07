@@ -1,7 +1,7 @@
 import { FormEvent, useMemo, useRef, useState } from 'react'
-import { Card, Pill, LiveDot, Button } from '../components/UI'
+import { Card, Pill, Button } from '../components/UI'
 import { treasury } from '../data'
-import { IconTrendUp, IconArrowRight, IconPlus, IconRefresh } from '../components/Icons'
+import { IconTrendUp, IconArrowRight, IconPlus } from '../components/Icons'
 import { useApp, formatActivityDate } from '../context/AppContext'
 import { TopBar } from '../components/TopBar'
 import { ActivityIcon } from '../components/ActivityIcon'
@@ -22,7 +22,7 @@ export function Treasury() {
   } = useApp()
   const [transfer, setTransfer] = useState<'deposit' | 'withdraw' | null>(null)
   const recent = activity.slice(0, 5)
-  const allocationTones = ['bg-text-secondary', 'bg-text-muted/60', 'bg-border']
+  const allocationTones = ['bg-brand-500', 'bg-brand-300', 'bg-text-muted']
 
   const { ytdProjected, avgApy } = useMemo(() => {
     const now = new Date()
@@ -59,8 +59,8 @@ export function Treasury() {
           <Card className="min-w-0 p-5 sm:p-6 xl:col-span-2">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h2 className="text-sm text-text-secondary">Available balance</h2>
-              <Pill tone="positive">
-                <LiveDot /> USDC / USDT
+              <Pill tone="neutral">
+                Demo · USDC / USDT
               </Pill>
             </div>
             <div className="mt-5 flex flex-wrap items-baseline gap-2">
@@ -140,13 +140,6 @@ export function Treasury() {
             <div className="flex items-center justify-between border-b border-border-subtle px-6 py-4">
               <div className="flex items-center gap-2">
                 <h3 className="font-display text-xl">Recent activity</h3>
-                <button
-                  onClick={() => toast('Data up to date', 'green')}
-                  className="focus-ring flex h-9 w-9 items-center justify-center rounded-control text-text-muted hover:bg-bg-inset hover:text-text-primary"
-                  title="Refresh"
-                >
-                  <IconRefresh width={14} height={14} />
-                </button>
               </div>
               <Button variant="ghost" size="sm" onClick={() => setView('transactions')}>
                 View all <IconArrowRight width={12} height={12} />

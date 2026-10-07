@@ -14,8 +14,16 @@ const LINKS = [
 
 function ThemeToggle() {
   const { theme, setTheme } = useApp()
-  const isDark =
-    theme === 'dark' || (theme === 'system' && typeof document !== 'undefined' && document.documentElement.classList.contains('dark'))
+  const [systemDark, setSystemDark] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches,
+  )
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    const onChange = (e: MediaQueryListEvent) => setSystemDark(e.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+  const isDark = theme === 'dark' || (theme === 'system' && systemDark)
   return (
     <button
       type="button"

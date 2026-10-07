@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { Button, Pill, LiveDot } from '../components/UI'
+import { Button, Pill } from '../components/UI'
 import { IconPlus, IconCheck } from '../components/Icons'
 import { useApp } from '../context/AppContext'
 import { TopBar } from '../components/TopBar'
@@ -53,8 +53,8 @@ export function Payroll() {
   return (
     <div className="flex h-full flex-col">
       <TopBar title="Payroll">
-        <Pill tone="positive" className="hidden h-7 px-2.5 sm:inline-flex">
-          <LiveDot /> Live · USDC/USDT
+        <Pill tone="neutral" className="hidden h-7 px-2.5 sm:inline-flex">
+          Demo · USDC/USDT
         </Pill>
         <Button
           variant="primary"
