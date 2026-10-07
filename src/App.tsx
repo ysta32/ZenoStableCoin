@@ -1,5 +1,5 @@
 import { Suspense, lazy, useEffect, useRef } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, MotionConfig, motion } from 'framer-motion'
 import { AppProvider, useApp, View } from './context/AppContext'
 import { Sidebar } from './components/Sidebar'
 import { ToastHost } from './components/Toast'
@@ -112,7 +112,7 @@ function Shell() {
           className="relative flex h-screen w-screen overflow-hidden bg-bg-base"
         >
           <Sidebar />
-          <main className="relative flex-1 overflow-hidden">
+          <main id="main" tabIndex={-1} className="relative flex-1 overflow-hidden outline-none">
             <AnimatePresence mode="wait">
               <motion.div
                 key={view}
@@ -143,12 +143,20 @@ function Shell() {
 export default function App() {
   return (
     <ErrorBoundary>
-      <AppProvider>
-        <Shell />
-        <CommandPalette />
-        <ShortcutHelp />
-        <ToastHost />
-      </AppProvider>
+      <MotionConfig reducedMotion="user">
+        <AppProvider>
+          <a
+            href="#main"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100] focus:rounded-md focus:bg-bg-base focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-text-primary focus:shadow-lg focus:outline focus:outline-2 focus:outline-offset-2"
+          >
+            Skip to main content
+          </a>
+          <Shell />
+          <CommandPalette />
+          <ShortcutHelp />
+          <ToastHost />
+        </AppProvider>
+      </MotionConfig>
     </ErrorBoundary>
   )
 }
