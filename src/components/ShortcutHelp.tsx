@@ -62,9 +62,10 @@ export function ShortcutHelp() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.12 }}
-          className="fixed inset-0 z-[180] flex items-center justify-center bg-black/55 backdrop-blur-[2px]"
+          className="fixed inset-0 z-[180] flex items-center justify-center bg-text-primary/40 px-4"
           onClick={() => setOpen(false)}
           role="dialog"
+          aria-modal="true"
           aria-label="Keyboard shortcuts"
         >
           <motion.div
@@ -73,13 +74,13 @@ export function ShortcutHelp() {
             exit={{ opacity: 0, scale: 0.97, y: -4 }}
             transition={{ duration: 0.16, ease: 'easeOut' }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-md overflow-hidden rounded-xl border border-border-subtle bg-bg-elevated shadow-2xl"
+            className="w-full max-w-md overflow-hidden rounded-card border border-border-subtle bg-bg-surface shadow-pop"
           >
             <div className="flex items-center justify-between border-b border-border-subtle px-5 py-3.5">
-              <h2 className="text-[14px] font-semibold text-text-primary">Keyboard shortcuts</h2>
+              <h2 className="font-display text-[18px] font-medium text-text-primary">Keyboard shortcuts</h2>
               <button
                 onClick={() => setOpen(false)}
-                className="rounded-md px-1.5 py-0.5 text-[11px] text-text-muted transition-colors hover:bg-white/[0.04] hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-500/30"
+                className="focus-ring rounded-control px-2 py-1.5 text-[11px] text-text-muted transition-colors hover:bg-bg-inset hover:text-text-primary"
                 aria-label="Close shortcuts"
               >
                 Esc
@@ -88,14 +89,14 @@ export function ShortcutHelp() {
             <div className="max-h-[60vh] overflow-y-auto px-5 py-4">
               {shortcuts.map((group) => (
                 <div key={group.section} className="mb-4 last:mb-0">
-                  <div className="mb-2 text-[10.5px] font-medium uppercase tracking-[0.12em] text-text-muted">{group.section}</div>
+                  <div className="eyebrow mb-2">{group.section}</div>
                   <ul className="space-y-1.5">
                     {group.rows.map((r) => (
-                      <li key={r.label} className="flex items-center justify-between rounded-md px-2 py-1.5 text-[13px] text-text-secondary hover:bg-white/[0.02]">
+                      <li key={r.label} className="flex items-center justify-between rounded-md px-2 py-1.5 text-[13px] text-text-secondary hover:bg-bg-inset">
                         <span>{r.label}</span>
                         <span className="flex items-center gap-1">
                           {r.keys.map((k, i) => (
-                            <kbd key={i} className="rounded border border-border-subtle bg-white/[0.05] px-1.5 py-0.5 font-mono text-[10.5px] text-text-primary">
+                            <kbd key={i} className="rounded border border-border-subtle bg-bg-inset px-1.5 py-0.5 num text-[10.5px] text-text-primary">
                               {k === '⌘' && !isMac ? 'Ctrl' : k}
                             </kbd>
                           ))}

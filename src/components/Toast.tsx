@@ -6,7 +6,7 @@ export function ToastHost() {
   const { toasts, dismissToast } = useApp()
   return (
     <div
-      className="pointer-events-none fixed right-5 top-5 z-[100] flex flex-col gap-2"
+      className="pointer-events-none fixed bottom-4 right-4 z-[100] flex max-w-[calc(100vw-2rem)] flex-col items-end gap-2 sm:bottom-5 sm:right-5"
       role="status"
       aria-live="polite"
       aria-atomic="false"
@@ -16,20 +16,20 @@ export function ToastHost() {
           <motion.button
             key={t.id}
             onClick={() => dismissToast(t.id)}
-            initial={{ opacity: 0, x: 20, scale: 0.98 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 20, scale: 0.98 }}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 6 }}
             transition={{ duration: 0.18, ease: 'easeOut' }}
-            className="pointer-events-auto group flex items-center gap-2.5 rounded-xl border border-border-subtle bg-bg-elevated px-3.5 py-2.5 text-[13px] shadow-xl backdrop-blur transition-colors hover:border-border hover:bg-bg-surface focus:outline-none focus:ring-2 focus:ring-brand-500/30"
+            className="pointer-events-auto focus-ring group flex min-h-[40px] items-center gap-2.5 rounded-card border border-border-subtle bg-bg-surface px-3.5 py-2.5 text-left text-[13px] shadow-pop transition-colors hover:border-border"
             title="Click to dismiss"
             aria-label={`${t.msg} (click to dismiss)`}
           >
             {t.tone === 'green' ? (
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-brand-500/20 text-brand-400">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-positive-soft text-positive">
                 <IconCheck width={12} height={12} />
               </span>
             ) : t.tone === 'amber' ? (
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-500/20 text-amber-400">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-warning-soft text-warning">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 9v4" />
                   <path d="M12 17h.01" />
@@ -37,7 +37,7 @@ export function ToastHost() {
                 </svg>
               </span>
             ) : (
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/[0.06] text-text-muted">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-bg-inset text-text-muted">
                 <span className="h-1.5 w-1.5 rounded-full bg-text-muted" />
               </span>
             )}
